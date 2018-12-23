@@ -88,7 +88,6 @@ def retrieve_texts(data_path, num_samples, max_input_length, max_target_length):
     return input_texts, target_texts, input_lists, target_lists, input_tokens, target_tokens
 
 
-
 class DataObject:
     def __init__(self, input_texts, target_texts, input_lists, target_lists, input_tokens, target_tokens):
         self.input_texts = input_texts
