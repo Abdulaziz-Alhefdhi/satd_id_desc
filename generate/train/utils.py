@@ -168,11 +168,11 @@ def token_integer_mapping(input_tokens, target_tokens):
 def build_model(latent_dim, num_encoder_tokens, num_decoder_tokens):
     # Encoder
     encoder_inputs = Input(shape=(None,))
-    en_x = Embedding(num_encoder_tokens, latent_dim, mask_zero=True)(encoder_inputs)
+    en_x = Embedding(num_encoder_tokens+1, latent_dim, mask_zero=True)(encoder_inputs)
     encoder_outputs, state_h, state_c = LSTM(latent_dim, return_sequences=True, return_state=True)(en_x)
     # Decoder
     decoder_inputs = Input(shape=(None,))
-    de_x = Embedding(num_decoder_tokens, latent_dim, mask_zero=True)(decoder_inputs)
+    de_x = Embedding(num_decoder_tokens+1, latent_dim, mask_zero=True)(decoder_inputs)
     decoder_outputs = LSTM(latent_dim, return_sequences=True)(de_x, initial_state=[state_h, state_c])
     # Attention Mechanism
     attention = dot([decoder_outputs, encoder_outputs], axes=[2, 2])

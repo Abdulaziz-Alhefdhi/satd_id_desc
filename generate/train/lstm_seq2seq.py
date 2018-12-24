@@ -8,8 +8,8 @@ from keras.models import load_model
 
 
 batch_size = 16      # Batch size for training.
-###epochs = 30          # Number of epochs to train for.
-epochs = 4
+epochs = 30          # Number of epochs to train for.
+###epochs = 4
 latent_dim = 2048     # Latent dimensionality of the encoding space.
 num_samples = 1000000  # Number of samples to train on.
 ###num_samples = 20000  # Number of samples to train on.
@@ -59,22 +59,23 @@ for i, (input_list, target_list) in enumerate(zip(do.input_lists, do.target_list
             decoder_target_data[i, t-1, target_token_index[token]] = 1.
 
 # Build the encoder-decoder model
-###encoder_inputs, decoder_inputs, decoder_outputs = build_model(latent_dim, num_encoder_tokens, num_decoder_tokens)
-###model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
-model_name = 'td_att_seq_2048-26.hdf5'
-model = load_model('/home/aziz/experiments/trained_models/td/generate/checkpoints/'+model_name)
-print("model name:", model_name)
+encoder_inputs, decoder_inputs, decoder_outputs = build_model(latent_dim, num_encoder_tokens, num_decoder_tokens)
+model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
+###model_name = 'td_att_seq_2048-26.hdf5'
+###model = load_model('/home/aziz/experiments/trained_models/td/generate/checkpoints/'+model_name)
+###print("model name:", model_name)
 # Compile & run training
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['acc'])
 # Save model after each epoch
-checkpointer = ModelCheckpoint(filepath= '/home/aziz/experiments/trained_models/td/generate/checkpoints/td_att_seq_2048-26+{epoch:02d}.hdf5', verbose=1)
+checkpointer = ModelCheckpoint(filepath= '/home/aziz/experiments/trained_models/td/generate/checkpoints/td_att_seq_2048-{epoch:02d}.hdf5', verbose=1)
+###checkpointer = ModelCheckpoint(filepath= '/home/aziz/experiments/trained_models/td/generate/checkpoints/td_att_seq_2048-26+{epoch:02d}.hdf5', verbose=1)
 summary = model.summary()
 print("Training started at:", datetime.datetime.now())
 print("================")
 # Note that 'decoder_target_data' needs to be one-hot encoded, rather than sequences of integers like 'decoder_input_data'!
 model.fit([encoder_input_data, decoder_input_data], decoder_target_data, batch_size=batch_size, epochs=epochs,
           callbacks=[checkpointer], validation_split=0.1)
-model.fit([encoder_input_data, decoder_input_data], decoder_target_data, batch_size=batch_size, epochs=epochs, callbacks=[checkpointer])
+###model.fit([encoder_input_data, decoder_input_data], decoder_target_data, batch_size=batch_size, epochs=epochs, callbacks=[checkpointer])
 # Save model
 model.save('/home/aziz/experiments/trained_models/td/generate/td_att_seq_2048.h5')
 ###model.save('/home/aa043/sea/trained_models/code2pseudo/reduced_surface/c2p_att_redsurf.h5')
@@ -113,3 +114,4 @@ for target in do.target_texts:
 		i += 1
 print(i, len(do.target_texts), '%.2f' % (i/len(do.target_texts)*100))
 """
+
