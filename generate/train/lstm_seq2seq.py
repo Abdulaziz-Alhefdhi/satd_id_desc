@@ -74,7 +74,7 @@ print("================")
 # Note that 'decoder_target_data' needs to be one-hot encoded, rather than sequences of integers like 'decoder_input_data'!
 model.fit([encoder_input_data, decoder_input_data], decoder_target_data, batch_size=batch_size, epochs=epochs,
           callbacks=[checkpointer], validation_split=0.1)
-model.fit([encoder_input_data, decoder_input_data], decoder_target_data, batch_size=batch_size, epochs=epochs, callbacks=[checkpointer])
+###model.fit([encoder_input_data, decoder_input_data], decoder_target_data, batch_size=batch_size, epochs=epochs, callbacks=[checkpointer])
 # Save model
 model.save('/home/aziz/experiments/trained_models/td/generate/td_att_seq_2048.h5')
 ###model.save('/home/aa043/sea/trained_models/code2pseudo/reduced_surface/c2p_att_redsurf.h5')
