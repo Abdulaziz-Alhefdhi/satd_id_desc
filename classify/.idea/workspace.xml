@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="96077e08-fd45-446d-a55f-1097f071612a" name="Default Changelist" comment="" />
+    <list default="true" id="96077e08-fd45-446d-a55f-1097f071612a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clean_data.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/produce_parsable.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../generate/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../generate/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../testartifactname/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../testartifactname/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../testartifactname/src/main/java/ASTToSBT.java" beforeDir="false" afterPath="$PROJECT_DIR$/../testartifactname/src/main/java/ASTToSBT.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../testartifactname/target/classes/ASTToSBT.class" beforeDir="false" afterPath="$PROJECT_DIR$/../testartifactname/target/classes/ASTToSBT.class" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,23 +22,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/produce_parsable.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="222">
-              <caret line="47" column="8" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="8" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/clean_data.py">
+        <entry file="file://$PROJECT_DIR$/preprocess/after_javaparser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="11" column="26" lean-forward="true" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
+            <state relative-caret-position="184">
+              <caret line="31" column="20" lean-forward="true" selection-start-line="31" selection-start-column="20" selection-end-line="31" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -53,6 +49,9 @@
         <option value="$PROJECT_DIR$/produce_parsable.py" />
         <option value="$PROJECT_DIR$/clean_ast_seqs.py" />
         <option value="$PROJECT_DIR$/clean_data.py" />
+        <option value="$PROJECT_DIR$/preprocess/produce_parsable_neg.py" />
+        <option value="$PROJECT_DIR$/preprocess/clean_data.py" />
+        <option value="$PROJECT_DIR$/preprocess/after_javaparser.py" />
       </list>
     </option>
   </component>
@@ -68,6 +67,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -75,16 +75,20 @@
               <item name="classify" type="b2602c69:ProjectViewProjectNode" />
               <item name="classify" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="classify" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classify" type="462c0819:PsiDirectoryNode" />
+              <item name="preprocess" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../backlog_grooming" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -167,17 +171,17 @@
       <workItem from="1545095832671" duration="82000" />
       <workItem from="1545095925559" duration="32756000" />
       <workItem from="1545269559127" duration="1328000" />
+      <workItem from="1545785328144" duration="7208000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34272000" />
+    <option name="totallyTimeSpent" value="41480000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13503043" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13669065" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -206,7 +210,7 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/produce_parsable.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
+        <state relative-caret-position="874">
           <caret line="47" column="8" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="8" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
@@ -218,6 +222,46 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="209">
           <caret line="11" column="26" lean-forward="true" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/preprocess/produce_parsable.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/preprocess/produce_parsable_neg.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="91" column="43" selection-start-line="91" selection-start-column="43" selection-end-line="91" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/preprocess/clean_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="602">
+          <caret line="49" column="51" selection-start-line="49" selection-start-column="51" selection-end-line="49" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/preprocess/Shuffle_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="545">
+          <caret line="39" column="28" lean-forward="true" selection-start-line="39" selection-start-column="28" selection-end-line="39" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/preprocess/after_javaparser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="31" column="20" lean-forward="true" selection-start-line="31" selection-start-column="20" selection-end-line="31" selection-end-column="20" />
         </state>
       </provider>
     </entry>

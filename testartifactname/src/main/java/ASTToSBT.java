@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class ASTToSBT {
 
     public static void main(String[] args) {
-        File projectDir = new File("/home/aa043/sea/data/td/ours/processing");
+        File projectDir = new File("/home/aa043/sea/data/td/ours/processing/neg_code");
         //File projectDir = new File("C:\\Users\\ahh14\\OneDrive\\Documents\\UOW\\docgen\\testartifactname\\src\\main\\java\\thisone");
         StringBuffer codeSB = new StringBuffer();
         StringBuffer commentSB = new StringBuffer();
@@ -114,7 +114,7 @@ public class ASTToSBT {
         }).explore(projectDir);
 
 
-        if (writeToDisk("/home/aa043/sea/data/td/ours/processing/ast_seqs.txt", codeSB.toString()))
+        if (writeToDisk("/home/aa043/sea/data/td/ours/processing/neg_ast_seqs.txt", codeSB.toString()))
             System.out.println("Code sequences have been written to disk.");
         //if (writeToDisk("/home/aa043/sea/output/method2javadoc/sequence_code-javadoc/aggregated/all_javadocs.txt", commentSB.toString()))
           //  System.out.println("The full JavaDocs file has been written to disk");
