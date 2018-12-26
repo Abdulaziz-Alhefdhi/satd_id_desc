@@ -3,8 +3,18 @@ import re
 
 
 # Retrieve data from disk
-with open('/home/aa043/sea/data/td/ours/pos.json', 'r') as f:
-    tds = json.load(f)
+with open('/home/aziz/experiments/data/td/pos.json', 'r') as f:
+    td_pos = json.load(f)
+
+# Retrieve data from disk
+with open('/home/aziz/experiments/data/td/neg.json', 'r') as f:
+    td_neg = json.load(f)
+
+print(len(td_pos))
+print(len(td_neg))
+
+import sys
+sys.exit()
 
 # Extract comments and code fragments
 codes, comments = [], []

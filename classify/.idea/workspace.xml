@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="96077e08-fd45-446d-a55f-1097f071612a" name="Default Changelist" comment="" />
+    <list default="true" id="96077e08-fd45-446d-a55f-1097f071612a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clean_data.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/produce_parsable.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../generate/test/lstm_seq2seq.py" beforeDir="false" afterPath="$PROJECT_DIR$/../generate/test/lstm_seq2seq.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,23 +19,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/produce_parsable.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/preprocess/produce_parsable.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="222">
-              <caret line="47" column="8" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="8" />
+            <state relative-caret-position="532">
+              <caret line="28" column="42" selection-start-line="28" selection-start-column="42" selection-end-line="28" selection-end-column="42" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/clean_data.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="11" column="26" lean-forward="true" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
             </state>
           </provider>
         </entry>
@@ -53,6 +49,7 @@
         <option value="$PROJECT_DIR$/produce_parsable.py" />
         <option value="$PROJECT_DIR$/clean_ast_seqs.py" />
         <option value="$PROJECT_DIR$/clean_data.py" />
+        <option value="$PROJECT_DIR$/preprocess/produce_parsable.py" />
       </list>
     </option>
   </component>
@@ -75,6 +72,11 @@
               <item name="classify" type="b2602c69:ProjectViewProjectNode" />
               <item name="classify" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="classify" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classify" type="462c0819:PsiDirectoryNode" />
+              <item name="preprocess" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -84,7 +86,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../backlog_grooming" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -167,17 +169,19 @@
       <workItem from="1545095832671" duration="82000" />
       <workItem from="1545095925559" duration="32756000" />
       <workItem from="1545269559127" duration="1328000" />
+      <workItem from="1545782549554" duration="1070000" />
+      <workItem from="1545785121556" duration="190000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34272000" />
+    <option name="totallyTimeSpent" value="35532000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13503043" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13835086" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -204,20 +208,15 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/produce_parsable.py">
+    <entry file="file://$PROJECT_DIR$/produce_parsable.py" />
+    <entry file="file://$PROJECT_DIR$/clean_data.py" />
+    <entry file="file://$PROJECT_DIR$/preprocess/produce_parsable.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="47" column="8" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="8" />
+        <state relative-caret-position="532">
+          <caret line="28" column="42" selection-start-line="28" selection-start-column="42" selection-end-line="28" selection-end-column="42" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/clean_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="11" column="26" lean-forward="true" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
         </state>
       </provider>
     </entry>
