@@ -11,8 +11,8 @@ batch_size = 256      # Batch size for training.
 epochs = 20          # Number of epochs to train for.
 latent_dim = 512     # Latent dimensionality of the encoding space.
 num_samples = 1000000  # Number of samples to train on.
-train_path = '/home/aziz/experiments/data/td/processing/train/'  # Path to the data txt files on disk.
-test_path = '/home/aziz/experiments/data/td/processing/test/'
+train_path = '/home/aa043/sea/gpu/experiments/data/td/processing/train/'  # Path to the data txt files on disk.
+test_path = '/home/aa043/sea/gpu/experiments/data/td/processing/test/'
 ###max_input_length = 1000000
 ###epochs = 4
 ###num_samples = 20000  # Number of samples to train on.
@@ -69,19 +69,29 @@ for i, feature in enumerate(test_do.features):
     for t, token in enumerate(feature):
         test_model_inputs[i, t] = input_token_index[token]
 # Build, train, and test the model
-model = build_model(latent_dim, num_input_tokens)
+###model = build_model(latent_dim, num_input_tokens)
+model_name = 'td_pred_512-10.hdf5'
+model = load_model('/home/aa043/sea/gpu/experiments/trained_models/td/classify/checkpoints/'+model_name)
+print("model name:", model_name)
 model.summary()
-print("Training started at:", datetime.datetime.now())
-print("================")
-checkpointer = ModelCheckpoint(filepath= '/home/aziz/experiments/trained_models/td/classify/checkpoints/td_pred_512-{epoch:02d}.hdf5', verbose=1)
-model.fit(model_inputs, model_outputs, batch_size=batch_size, epochs=epochs, callbacks=[checkpointer], validation_split=0.1)
-model.save('/home/aziz/experiments/trained_models/td/classify/td_pred_512.h5')
-print("================")
-print("Training completed at:", datetime.datetime.now())
-score, acc = model.evaluate(test_model_inputs, test_model_outputs, batch_size=batch_size)
-print("================")
-print('Test accuracy:', acc)
-print('Test score:', score)
+###print("Training started at:", datetime.datetime.now())
+###print("================")
+###checkpointer = ModelCheckpoint(filepath= '/home/aziz/experiments/trained_models/td/classify/checkpoints/td_pred_512-{epoch:02d}.hdf5', verbose=1)
+###model.fit(model_inputs, model_outputs, batch_size=batch_size, epochs=epochs, callbacks=[checkpointer], validation_split=0.1)
+###model.save('/home/aziz/experiments/trained_models/td/classify/td_pred_512.h5')
+###print("================")
+###print("Training completed at:", datetime.datetime.now())
+###score, acc = model.evaluate(test_model_inputs, test_model_outputs, batch_size=batch_size)
+###print("================")
+###print('Test accuracy:', acc)
+###print('Test score:', score)
+predictions = model.predict_classes(test_model_inputs[:3], verbose=1)
+for i in range(3):
+    print(predictions[i][0].dtype, test_model_outputs.dtype)
+    if predictions[i][0] == test_model_outputs[i]:
+        print("Yes!")
+    else:
+        print("No :(")
 
 
 
