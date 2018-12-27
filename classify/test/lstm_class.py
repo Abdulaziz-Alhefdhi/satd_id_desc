@@ -58,13 +58,13 @@ input_token_index, reverse_input_token_index = token_integer_mapping(train_do.vo
 # Define model's input/output training/testing data
 # Training data
 model_inputs = np.zeros((n_input_samples, max_input_seq_length), dtype='int32')
-model_outputs = np.array(train_do.labels)
+model_outputs = np.array(train_do.labels, dtype='int32')
 for i, feature in enumerate(train_do.features):
     for t, token in enumerate(feature):
         model_inputs[i, t] = input_token_index[token]
 # Testing data
 test_model_inputs = np.zeros((test_n_input_samples, test_max_input_seq_length), dtype='int32')
-test_model_outputs = np.array(test_do.labels)
+test_model_outputs = np.array(test_do.labels, dtype='int32')
 for i, feature in enumerate(test_do.features):
     for t, token in enumerate(feature):
         test_model_inputs[i, t] = input_token_index[token]
