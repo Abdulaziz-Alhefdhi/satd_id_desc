@@ -9,7 +9,7 @@ from keras.models import load_model
 
 batch_size = 256      # Batch size for training.
 epochs = 10          # Number of epochs to train for.
-latent_dim = 1024     # Latent dimensionality of the encoding space.
+latent_dim = 256     # Latent dimensionality of the encoding space.
 num_samples = 1000000  # Number of samples to train on.
 train_path = '/home/aziz/experiments/data/td/processing/train/'  # Path to the data txt files on disk.
 test_path = '/home/aziz/experiments/data/td/processing/test/'
