@@ -9,7 +9,7 @@ from keras.models import load_model
 
 batch_size = 256      # Batch size for training.
 epochs = 10          # Number of epochs to train for.
-latent_dim = 1024     # Latent dimensionality of the encoding space.
+latent_dim = 256     # Latent dimensionality of the encoding space.
 num_samples = 1000000  # Number of samples to train on.
 train_path = '/home/aziz/experiments/data/td/processing/train/'  # Path to the data txt files on disk.
 test_path = '/home/aziz/experiments/data/td/processing/test/'
@@ -48,9 +48,9 @@ model = build_model(latent_dim, num_input_tokens)
 model.summary()
 print("Training started at:", datetime.datetime.now())
 print("================")
-checkpointer = ModelCheckpoint(filepath= '/home/aziz/experiments/trained_models/td/classify/dim1024_b256/td_pred_512-{epoch:02d}.hdf5', verbose=1)
+checkpointer = ModelCheckpoint(filepath= '/home/aziz/experiments/trained_models/td/classify/dim256_b256/td_pred-{epoch:02d}.hdf5', verbose=1)
 model.fit(model_inputs, model_outputs, batch_size=batch_size, epochs=epochs, callbacks=[checkpointer], validation_split=0.1)
-model.save('/home/aziz/experiments/trained_models/td/classify/td_pred_512.h5')
+model.save('/home/aziz/experiments/trained_models/td/classify/td_pred_dim256_b256.h5')
 print("================")
 print("Training completed at:", datetime.datetime.now())
 
