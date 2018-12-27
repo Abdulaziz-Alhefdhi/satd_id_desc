@@ -32,16 +32,16 @@ seqs_testing    = seqs[int(len(seqs)*0.9):]
 labels_training = labels[:int(len(labels)*0.9)]
 labels_testing  = labels[int(len(labels)*0.9):]
 # Write files
-with open('/home/aa043/sea/data/td/ours/processing/seqs.txt', 'w', encoding='utf-8') as f:
+with open('/home/aa043/sea/data/td/ours/processing/features.txt', 'w', encoding='utf-8') as f:
     for line in seqs:
         f.write(line + '\n')
 with open('/home/aa043/sea/data/td/ours/processing/labels.txt', 'w', encoding='utf-8') as f:
     for line in labels:
         f.write(str(line) + '\n')
-with open('/home/aa043/sea/data/td/ours/processing/train/seqs.txt', 'w', encoding='utf-8') as f:
+with open('/home/aa043/sea/data/td/ours/processing/train/features.txt', 'w', encoding='utf-8') as f:
     for line in seqs_training:
         f.write(line + '\n')
-with open('/home/aa043/sea/data/td/ours/processing/test/seqs.txt', 'w', encoding='utf-8') as f:
+with open('/home/aa043/sea/data/td/ours/processing/test/features.txt', 'w', encoding='utf-8') as f:
     for line in seqs_testing:
         f.write(line + '\n')
 with open('/home/aa043/sea/data/td/ours/processing/train/labels.txt', 'w', encoding='utf-8') as f:
