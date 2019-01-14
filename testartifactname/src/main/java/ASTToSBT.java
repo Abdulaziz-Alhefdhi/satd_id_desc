@@ -251,7 +251,7 @@ public class ASTToSBT {
                                         String[] type = node.getClass().toString().split("\\.");
                                         System.out.println(type[type.length-2]+"."")"+type[type.length-1]+"_"+(node));
                                         //System.out.println(node);
-                                        //System.out.println("===============================================");
+                                        //System.out.println467("===============================================");
                                     }
                                 }.visitPostOrder(node);  //process(node);
                                 tokenizedMethod = tokenize( new JavaParser().parse(ParseStart.INTERFACE_BODY, new StringProvider(node.toString())) );
