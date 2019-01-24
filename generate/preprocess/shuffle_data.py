@@ -3,9 +3,9 @@ from random import sample
 # Variable declarations
 input_texts, target_texts, input_tokens, target_tokens = [], [], set(), set()
 # Retrieve dat from files
-with open('clean_ast_seqs.txt', 'r', encoding='utf-8') as f:
+with open('/home/aa043/sea/data/td/ours/v2/generate/ast_seqs.txt', 'r', encoding='utf-8') as f:
     input_lines = f.read().split('\n')
-with open('clean_comments.txt', 'r', encoding='utf-8') as f:
+with open('/home/aa043/sea/data/td/ours/v2/generate/comments.txt', 'r', encoding='utf-8') as f:
     target_lines = f.read().split('\n')
 # Remove last (empty) items
 input_lines = input_lines[:-1]
@@ -25,17 +25,23 @@ input_lines_training  = input_lines[:int(len(input_lines)*0.9)]
 input_lines_testing   = input_lines[int(len(input_lines)*0.9):]
 target_lines_training = target_lines[:int(len(target_lines)*0.9)]
 target_lines_testing  = target_lines[int(len(target_lines)*0.9):]
-# Write training and testing files
-with open('train/clean_ast_seqs.txt', 'w', encoding='utf-8') as f:
+# Write files
+with open('/home/aa043/sea/data/td/ours/v2/generate/inputs.txt', 'w', encoding='utf-8') as f:
+    for line in input_lines:
+        f.write(line + '\n')
+with open('/home/aa043/sea/data/td/ours/v2/generate/targets.txt', 'w', encoding='utf-8') as f:
+    for line in target_lines:
+        f.write(line + '\n')
+with open('/home/aa043/sea/data/td/ours/v2/generate/train/inputs.txt', 'w', encoding='utf-8') as f:
     for line in input_lines_training:
         f.write(line + '\n')
-with open('test/clean_ast_seqs.txt', 'w', encoding='utf-8') as f:
+with open('/home/aa043/sea/data/td/ours/v2/generate/test/inputs.txt', 'w', encoding='utf-8') as f:
     for line in input_lines_testing:
         f.write(line + '\n')
-with open('train/clean_comments.txt', 'w', encoding='utf-8') as f:
+with open('/home/aa043/sea/data/td/ours/v2/generate/train/targets.txt', 'w', encoding='utf-8') as f:
     for line in target_lines_training:
         f.write(line + '\n')
-with open('test/clean_comments.txt', 'w', encoding='utf-8') as f:
+with open('/home/aa043/sea/data/td/ours/v2/generate/test/targets.txt', 'w', encoding='utf-8') as f:
     for line in target_lines_testing:
         f.write(line + '\n')
 

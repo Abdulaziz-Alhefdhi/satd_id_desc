@@ -22,7 +22,11 @@ import java.util.stream.Collectors;
 public class ASTToSBT {
 
     public static void main(String[] args) {
-        File projectDir = new File("/home/aa043/sea/data/td/ours/processing/neg_code");
+
+        String data_dir   = "/home/aa043/sea/data/td/ours/v2/generate";
+        String write_path = "/home/aa043/sea/data/td/ours/v2/generate/draft_ast_seqs.txt";
+
+        File projectDir = new File(data_dir);
         //File projectDir = new File("C:\\Users\\ahh14\\OneDrive\\Documents\\UOW\\docgen\\testartifactname\\src\\main\\java\\thisone");
         StringBuffer codeSB = new StringBuffer();
         StringBuffer commentSB = new StringBuffer();
@@ -114,7 +118,7 @@ public class ASTToSBT {
         }).explore(projectDir);
 
 
-        if (writeToDisk("/home/aa043/sea/data/td/ours/processing/neg_ast_seqs.txt", codeSB.toString()))
+        if (writeToDisk(write_path, codeSB.toString()))
             System.out.println("Code sequences have been written to disk.");
         //if (writeToDisk("/home/aa043/sea/output/method2javadoc/sequence_code-javadoc/aggregated/all_javadocs.txt", commentSB.toString()))
           //  System.out.println("The full JavaDocs file has been written to disk");
@@ -229,36 +233,3 @@ public class ASTToSBT {
 
 }
 
-
-/*
-                                //System.out.println(node);
-                                //System.out.println(((MethodDeclaration) node).getModifiers());
-
-                                new TreeVisitor() {
-                                    @Override
-                                    public void process(Node node) {
-                                        //System.out.println("Hi");
-                                        String[] type = node.getClass().toString().split("\\.");
-                                        //System.out.println(type[type.length-2]+".""("+type[type.length-1]);
-                                        //System.out.println(node);
-                                        //System.out.println("===============================================");
-                                    }
-                                }.visitPreOrder(node);  //process(node);
-                                new TreeVisitor() {
-                                    @Override
-                                    public void process(Node node) {
-                                        //System.out.println("Hi");
-                                        String[] type = node.getClass().toString().split("\\.");
-                                        System.out.println(type[type.length-2]+"."")"+type[type.length-1]+"_"+(node));
-                                        //System.out.println(node);
-                                        //System.out.println467("===============================================");
-                                    }
-                                }.visitPostOrder(node);  //process(node);
-                                tokenizedMethod = tokenize( new JavaParser().parse(ParseStart.INTERFACE_BODY, new StringProvider(node.toString())) );
-                                modifiedComment = oneLineComment(comment);
-                                codeSB.append(tokenizedMethod + "\n");
-                                commentSB.append(modifiedComment + "\n");
-                                currentFileCode.append(tokenizedMethod + "\n");
-                                currentFileComments.append(modifiedComment + "\n");
-                                //System.out.println(++i);
-*/
