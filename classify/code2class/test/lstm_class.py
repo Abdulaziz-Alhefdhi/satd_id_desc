@@ -3,13 +3,13 @@ from keras.models import load_model
 import numpy as np
 import pickle
 
-batch_size = 256      # Batch size for training.
-latent_dim = 256     # Latent dimensionality of the encoding space.
+batch_size = 64      # Batch size for training.
+latent_dim = 128     # Latent dimensionality of the encoding space.
 num_samples = 1000000  # Number of samples to train on.
-###train_path = '/home/aa043/sea/gpu/experiments/data/td/processing/train/'  # Path to the data txt files on disk.
-###test_path = '/home/aa043/sea/gpu/experiments/data/td/processing/test/'
-train_path = '/home/aziz/experiments/data/td/processing/train/'  # Path to the data txt files on disk.
-test_path = '/home/aziz/experiments/data/td/processing/test/'
+###train_path = '/home/aziz/experiments/data/td/code2class/v2/train/'  # Path to the data txt files on disk.
+###test_path = '/home/aziz/experiments/data/td/code2class/v2/test/'
+train_path = '/home/aa043/sea/gpu/experiments/data/td/code2class/v2/train/'  # Path to the data txt files on disk.
+test_path = '/home/aa043/sea/gpu/experiments/data/td/code2class/v2/test/'
 max_input_length = 6000 # Number of largest acceptibale input length
 
 # Get data
@@ -32,21 +32,21 @@ print("================")
 
 # Replace unseen-before tokens with: <unknown>
 # Find
-# print('Finding unseen-before test tokens...')
-# unseen_tokens = []
-# for token in test_do.vocab:
-#     if token not in train_do.vocab:
-#         unseen_tokens.append(token)
-# # Replace
-# print('Replacing them with "<unknown>"...')
-# for i in range(len(test_do.features)):
-#     for j in range(len(test_do.features[i])):
-#         if test_do.features[i][j] in unseen_tokens:
-#             test_do.features[i][j] = "<unknown>"
+print('Finding unseen-before test tokens...')
+unseen_tokens = []
+for token in test_do.vocab:
+    if token not in train_do.vocab:
+        unseen_tokens.append(token)
+# Replace
+print('Replacing them with "<unknown>"...')
+for i in range(len(test_do.features)):
+    for j in range(len(test_do.features[i])):
+        if test_do.features[i][j] in unseen_tokens:
+            test_do.features[i][j] = "<unknown>"
 # Or, retrieve already-processed features from disk to save time
-print("Retrieving features from disk...")
-with open(test_path+'features.pkl', 'rb') as f:
-    test_do.features = pickle.load(f)
+# print("Retrieving features from disk...")
+# with open(test_path+'features.pkl', 'rb') as f:
+#     test_do.features = pickle.load(f)
 # Convert labels to integers
 print("Converting labels from strings to integers...")
 for i in range(len(test_do.labels)):
@@ -68,10 +68,10 @@ test_model_outputs = np.array(test_do.labels, dtype='int32')
 for i, feature in enumerate(test_do.features):
     for t, token in enumerate(feature):
         test_model_inputs[i, t] = input_token_index[token]
-# Build, train, and test the model
-model_name = 'td_pred-04.hdf5'
-###model = load_model('/home/aa043/sea/gpu/experiments/trained_models/td/classify/dim256_b256/'+model_name)
-model = load_model('/home/aziz/experiments/trained_models/td/classify/dim256_b256/'+model_name)
+# Test the model
+model_name = 'td_pred-10.hdf5'
+model = load_model('/home/aa043/sea/gpu/experiments/trained_models/td/classify/v2/dim128_b64/'+model_name)
+###model = load_model('/home/aziz/experiments/trained_models/td/classify/v2/dim128_b64/'+model_name)
 print("model name:", model_name)
 model.summary()
 predictions = model.predict_classes(test_model_inputs, verbose=1, batch_size=batch_size)
@@ -88,7 +88,7 @@ for pred, lbl in zip(predictions, test_do.labels):
 print("TPs =", tp, "- TNs =", tn, "- FPs =", fp, "- FNs =", fn, "- Total # of testing samples =", tp+tn+fp+fn)
 p, r = tp/(tp+fp), tp/(tp+fn)
 f1 = 2*p*r/(p+r)
-print("Precision =", "%.2f"%p, "- Recall =", "%.2f"%r, "- F1 Socre =", "%.2f"%f1)
+print("Precision =", "%.3f" % p, "- Recall =", "%.3f" % r, "- F1 Score =", "%.3f" % f1)
 
 
 

@@ -1,6 +1,6 @@
 from keras.models import Sequential
 from keras.layers import LSTM, Dense, Embedding
-from keras.callbacks import ModelCheckpoint
+import pickle
 
 
 def preprocess(data_path, num_samples, max_input_length):
@@ -88,3 +88,7 @@ def build_model(latent_dim, num_input_tokens, drop_prob=0.2):
 
     return model
 
+
+def write_to_file(data, path):
+    with open(path, 'wb') as f:
+        pickle.dump(data, f)
