@@ -8,9 +8,9 @@ def tokenize_data(data_path, num_samples, max_input_length, max_target_length):
     # Variable declarations
     input_texts, target_texts, input_tokens, target_tokens = [], [], set(), set()
     # Retrieve dat from files
-    with open(data_path + 'clean_ast_seqs.txt', 'r', encoding='utf-8') as f:
+    with open(data_path + 'inputs.txt', 'r', encoding='utf-8') as f:
         input_lines = f.read().split('\n')
-    with open(data_path + 'clean_comments.txt', 'r', encoding='utf-8') as f:
+    with open(data_path + 'targets.txt', 'r', encoding='utf-8') as f:
         target_lines = f.read().split('\n')
     # input_lines = input_lines[:-1]
     # target_lines = target_lines[:-1]

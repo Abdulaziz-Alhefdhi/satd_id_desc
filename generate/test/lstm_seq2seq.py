@@ -10,9 +10,9 @@ max_input_length = 6000  # Number of largest acceptable input length
 max_target_length = 1100  # Number of largest acceptable target length
 
 ###path_to_train_data = '/home/aa043/sea/data/td/ours/processing/train/'
-path_to_train_data = '/home/aziz/experiments/data/td/train/'
+path_to_train_data = '/home/aziz/experiments/data/td/v2/train/'
 ###path_to_test_data = '/home/aa043/sea/data/td/ours/processing/test/'
-path_to_test_data = '/home/aziz/experiments/data/td/test/'
+path_to_test_data = '/home/aziz/experiments/data/td/v2/test/'
 
 # Get train data
 input_texts, target_texts, input_lists, target_lists, input_tokens, target_tokens = \
@@ -63,7 +63,7 @@ input_token_index, target_token_index, reverse_input_token_index, reverse_target
 
 # Load the trained model
 ###model_path = '/home/aa043/sea/trained_models/td/generate/td_att_seq_2048-24.hdf5'
-model_path = '/home/aziz/experiments/trained_models/td/generate/checkpoints/td_att_seq_2048-24.hdf5'
+model_path = '/home/aziz/experiments/trained_models/td/generate/v2/td_att_seq_dim2048_b32-14.hdf5'
 print("model path:", model_path)
 model = load_model(model_path)
 model.summary()
@@ -102,7 +102,7 @@ for seq_index in tqdm(range(sample_limit)):
             print_target += token + ' '
     # Write output to file
     ###with open("/home/aa043/sea/output/td/generate/testing_output.txt", "a", encoding='utf-8') as f:
-    with open("/home/aziz/experiments/output/td/generate/test/testing_output.txt", "a", encoding='utf-8') as f:
+    with open("/home/aziz/experiments/output/td/generate/v2/test/testing_output_dim2048_b32_e14.txt", "a", encoding='utf-8') as f:
         ###f.write(str(c) + '.a) Input sentence:   ' + test_do.input_texts[seq_index] + "\n")
         f.write(str(c) + '. Target sentence:  ' + print_target + "\n")
         f.write(str(c) + '. Decoded sentence: ' + print_deocded + "\n-\n")
@@ -110,7 +110,7 @@ for seq_index in tqdm(range(sample_limit)):
 
 # Save predicted lists to disk for result evaluation
 ###with open('/home/aa043/sea/output/td/generate/predicted_lists.pkl', 'wb') as f:
-with open('/home/aziz/experiments/output/td/generate/test/predicted_lists.pkl', 'wb') as f:
+with open('/home/aziz/experiments/output/td/generate/v2/test/predicted_lists_dim2048_b32_e14.pkl', 'wb') as f:
     pickle.dump(predicted_lists, f)
 print("Predicted lists saved to disk in binary mode")
 

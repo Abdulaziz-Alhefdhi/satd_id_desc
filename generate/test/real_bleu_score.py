@@ -8,8 +8,8 @@ num_samples = 1000000  # Number of samples to train on.
 max_input_length = 6000  # Number of largest acceptable input length
 max_target_length = 1100  # Number of largest acceptable target length
 
-path_to_test_data = '/home/aziz/experiments/data/td/test/'
-path_to_predicted_lists = '/home/aziz/experiments/output/td/generate/test/'
+path_to_test_data = '/home/aziz/experiments/data/td/v2/test/'
+path_to_predicted_lists = '/home/aziz/experiments/output/td/generate/v2/test/'
 
 # Get test data
 input_texts, target_texts, input_lists, target_lists, input_tokens, target_tokens = \
@@ -33,7 +33,7 @@ for item in test_do.input_lists:
     refs.append(ref_dict[tuple(item)])
 
 # Prepare candidates
-with open(path_to_predicted_lists+'predicted_lists.pkl', 'rb') as f:
+with open(path_to_predicted_lists+'predicted_lists_dim2048_b32_e14.pkl', 'rb') as f:
     predicted_lists = pickle.load(f)
 
 # Calculate and print BLEU score
