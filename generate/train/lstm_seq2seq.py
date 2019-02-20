@@ -1,29 +1,20 @@
-from utils import retrieve_texts, data_shapes, shape_info, DataObject, token_integer_mapping, build_model
+from support_functions import data_shapes, shape_info, DataObject, token_integer_mapping, build_model
 from keras.models import Model
-###from keras import optimizers
 from keras.callbacks import ModelCheckpoint
 import numpy as np
 import datetime
-from keras.models import load_model
+import pickle
 
 
 batch_size = 16      # Batch size for training.
 epochs = 30          # Number of epochs to train for.
-###epochs = 4
-latent_dim = 512     # Latent dimensionality of the encoding space.
-num_samples = 1000000  # Number of samples to train on.
-###num_samples = 20000  # Number of samples to train on.
-data_path = '/home/aziz/experiments/data/td/v2/train/'  # Path to the data txt files on disk.
-###data_path = '/home/aa043/sea/gpu/experiments/data/td/train/'  # Path to the data txt files on disk.
-# Maximum length for inputs and outputs (in terms of characters, not tokens)
-max_input_length = 6000 # Number of largest acceptibale input length
-max_target_length = 1100 # Number of largest acceptibale target length
-###max_input_length  = 1000000
-###max_target_length = 1000000
+# epochs = 4
+latent_dim = 2048     # Latent dimensionality of the encoding space.
 
 # Get data
-input_texts, target_texts, input_lists, target_lists, input_tokens, target_tokens = retrieve_texts(data_path, num_samples, max_input_length, max_target_length)
-do = DataObject(input_texts, target_texts, input_lists, target_lists, input_tokens, target_tokens)
+with open('/home/aziz/experiments/data/td/v2/train/data_object.pkl', 'rb') as f:
+    do = pickle.load(f)
+
 # Data shapes
 num_encoder_tokens, num_decoder_tokens, max_encoder_seq_length, max_decoder_seq_length, n_input_samples = data_shapes(do)
 # Print shape info
@@ -66,7 +57,7 @@ model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
 # Compile & run training
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['acc'])
 # Save model after each epoch
-checkpointer = ModelCheckpoint(filepath= '/home/aziz/experiments/trained_models/td/generate/v2/td_att_seq_dim512_b16-{epoch:02d}.hdf5', verbose=1)
+checkpointer = ModelCheckpoint(filepath= '/home/aziz/experiments/trained_models/td/generate/v2/td_att_seq_dim2048_b16-{epoch:02d}.hdf5', verbose=1)
 ###checkpointer = ModelCheckpoint(filepath= '/home/aziz/experiments/trained_models/td/generate/checkpoints/td_att_seq_2048-26+{epoch:02d}.hdf5', verbose=1)
 summary = model.summary()
 print("Training started at:", datetime.datetime.now())

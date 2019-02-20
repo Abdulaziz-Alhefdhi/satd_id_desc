@@ -1,12 +1,11 @@
-import numpy as np
-from keras.models import Model
 from keras.layers import Input, LSTM, Dense, Embedding, Activation, dot, concatenate, TimeDistributed
 
 
 # Tokenize the data.
 def tokenize_data(data_path, num_samples, max_input_length, max_target_length):
     # Variable declarations
-    input_texts, target_texts, input_tokens, target_tokens = [], [], set(), set()
+    # input_texts, target_texts, input_tokens, target_tokens = [], [], set(), set()
+    input_texts, target_texts = [], []
     # Retrieve dat from files
     with open(data_path + 'inputs.txt', 'r', encoding='utf-8') as f:
         input_lines = f.read().split('\n')
@@ -30,18 +29,18 @@ def tokenize_data(data_path, num_samples, max_input_length, max_target_length):
         input_text = input_text.replace(")", " ) ")
         input_text = input_text.replace("_", " _ ")
         # Tokenize inputs
-        for token in input_text.split():
-            input_tokens.add(token)
+        # for token in input_text.split():
+        #     input_tokens.add(token)
         # Prepare for tokenizing non-alphabetic target data
         for char in target_text:
             if (not char.isalpha()) and (char != " "):
                 target_text = target_text.replace(char, " " + char + " ")
         # Tokenize targets
-        for token in target_text.split():
-            target_tokens.add(token.lower())
+        # for token in target_text.split():
+        #     target_tokens.add(token.lower())
 
     # Return desired data, with tokens being sorted and converted to lists
-    return sorted(list(input_tokens)), sorted(list(target_tokens)), input_texts, target_texts
+    return input_texts, target_texts
 
 
 # To solve tokenization issues, convert sentences into lists of words
@@ -67,7 +66,7 @@ def list_texts(texts):
 
 # Get data
 def retrieve_texts(data_path, num_samples, max_input_length, max_target_length):
-    input_tokens, target_tokens, input_texts, target_texts = tokenize_data(data_path, num_samples, max_input_length, max_target_length)
+    input_texts, target_texts = tokenize_data(data_path, num_samples, max_input_length, max_target_length)
     # Special treatment for input code sequences
     input_lists = []
     for txt in input_texts:
@@ -78,12 +77,12 @@ def retrieve_texts(data_path, num_samples, max_input_length, max_target_length):
     target_lists = list_texts(target_texts)
     # add "<unknown>" token for unknown words during testing, "<sos>" for target start-of-sequence token, and
     # "<eos>" for target end-of-sequence token
-    input_tokens = input_tokens + ["<unknown>"]
-    target_tokens = target_tokens + ["<sos>", "<eos>", "<unknown>"]
+    # input_tokens = input_tokens + ["<unknown>"]
+    # target_tokens = target_tokens + ["<sos>", "<eos>", "<unknown>"]
     for i in range(len(target_lists)):
         target_lists[i] = ["<sos>"] + target_lists[i] + ["<eos>"]
 
-    return input_texts, target_texts, input_lists, target_lists, input_tokens, target_tokens
+    return input_texts, target_texts, input_lists, target_lists
 
 
 
@@ -95,46 +94,6 @@ class DataObject:
         self.target_lists = target_lists
         self.input_tokens = input_tokens
         self.target_tokens = target_tokens
-        # this will track the progress of the batches sequentially through the data set - once the data reaches the
-        # end of the data set it will reset back to zero
-        self.current_idx = 0
-    def generate(self, batch_size, max_encoder_seq_length, max_decoder_seq_length, num_decoder_tokens,
-                 input_token_index, target_token_index):
-        # Define input & output data and initialize them with zeros
-        encoder_input_data = np.zeros((batch_size, max_encoder_seq_length), dtype='int32')
-        decoder_input_data = np.zeros((batch_size, max_decoder_seq_length), dtype='int32')
-        decoder_target_data = np.zeros((batch_size, max_decoder_seq_length, num_decoder_tokens), dtype='float32')
-        # Special initialization procedure for decoder_target_data
-        for sample in decoder_target_data:
-            for token in sample:
-                token[0] = 1.
-        while True:
-            # fill input data & one-hot encode targets
-            # Loop samples
-            for i in range(batch_size):
-                if (self.current_idx + i) >= len(self.input_lists):
-                    print("\nA full iteration through the dataset has been completed. Last target sample # = " + str(
-                        self.current_idx + i))
-                    ###print("Last Target Sequence: " + str(self.target_lists[self.current_idx+i-1]))
-                    self.current_idx = -i
-                if (self.current_idx + i) % 2000 == 0:
-                    if self.current_idx + i == 0:
-                        print("\nBeginning of dataset..")
-                    ###print("\nCurrent target sample # = " + str(self.current_idx + i))
-                    ###print("Current Target Sequence: " + str(self.target_lists[self.current_idx + i]))
-                # Loop input sequences
-                for t, token in enumerate(self.input_lists[self.current_idx + i]):
-                    encoder_input_data[i, t] = input_token_index[token]
-                # Loop target sequences
-                for t, token in enumerate(self.target_lists[self.current_idx + i]):
-                    # decoder_target_data is ahead of decoder_input_data by one timestep
-                    decoder_input_data[i, t] = target_token_index[token]
-                    if t > 0:
-                        # decoder_target_data will be ahead by one timestep and will not include the start character. Initial value altered.
-                        decoder_target_data[i, t - 1, 0] = 0.
-                        decoder_target_data[i, t - 1, target_token_index[token]] = 1.
-            self.current_idx += batch_size
-            yield ([encoder_input_data, decoder_input_data], decoder_target_data)
 
 
 def data_shapes(do):

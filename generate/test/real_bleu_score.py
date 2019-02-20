@@ -1,25 +1,16 @@
-from utils import retrieve_texts, DataObject, data_shapes#, shape_info, token_integer_mapping, decode_sequence
+from support_functions import DataObject
 import pickle
 from nltk.translate.bleu_score import corpus_bleu
 from collections import defaultdict
 
 
-num_samples = 1000000  # Number of samples to train on.
-max_input_length = 6000  # Number of largest acceptable input length
-max_target_length = 1100  # Number of largest acceptable target length
-
-path_to_test_data = '/home/aziz/experiments/data/td/v2/test/'
 path_to_predicted_lists = '/home/aziz/experiments/output/td/generate/v2/test/'
 
-# Get test data
-input_texts, target_texts, input_lists, target_lists, input_tokens, target_tokens = \
-    retrieve_texts(path_to_test_data, num_samples, max_input_length, max_target_length)
-test_do = DataObject(input_texts, target_texts, input_lists, target_lists, input_tokens, target_tokens)
-num_encoder_tokens_test, num_decoder_tokens_test, max_encoder_seq_length_test, \
-max_decoder_seq_length_test, n_input_samples_test = data_shapes(test_do)
+with open('/home/aziz/experiments/data/td/v2/test/data_object.pkl', 'rb') as f:
+    test_do = pickle.load(f)
 
 # Prepare references
-# Cut out <sop> and <eop>
+# Cut out <sos> and <eos>
 references = []
 for a_list in test_do.target_lists:
     references.append(a_list[1:-1])
@@ -33,7 +24,7 @@ for item in test_do.input_lists:
     refs.append(ref_dict[tuple(item)])
 
 # Prepare candidates
-with open(path_to_predicted_lists+'predicted_lists_dim2048_b32_e14.pkl', 'rb') as f:
+with open(path_to_predicted_lists+'predicted_lists_dim2048_b16_e20.pkl', 'rb') as f:
     predicted_lists = pickle.load(f)
 
 # Calculate and print BLEU score

@@ -3,52 +3,62 @@ from keras.layers import LSTM, Dense, Embedding
 import pickle
 
 
-def preprocess(data_path, num_samples, max_input_length):
-    # Variable declarations
-    vocab, seqs, labels = set(), [], []
+def preprocess(data_path, num_samples):
     # Retrieve dat from files
     with open(data_path + 'features.txt', 'r', encoding='utf-8') as f:
         s_lines = f.read().split('\n')
     with open(data_path + 'labels.txt', 'r', encoding='utf-8') as f:
         l_lines = f.read().split('\n')
     # Keep only num_samples
-    s_lines = s_lines[: min(num_samples, len(s_lines) - 1)]
+    seqs = s_lines[: min(num_samples, len(s_lines) - 1)]
     l_lines = l_lines[: min(num_samples, len(l_lines) - 1)]
-
-    # Tokenize
-    for seq, label in zip(s_lines, l_lines):
-        # Throwing out long texts
-        if len(seq) > max_input_length:
-            continue
-        seqs.append(seq)
-        labels.append(label)
-        # Dealing with ast-sequence-specific characters
-        seq = seq.replace("(", " ( ")
-        seq = seq.replace(")", " ) ")
-        seq = seq.replace("_", " _ ")
-        # Tokenize inputs
-        for token in seq.split():
-            vocab.add(token)
-
+    # To int
+    labels = []
+    for label in l_lines:
+        labels.append(int(label))
     # Return desired data, with tokens being sorted and converted to list
-    return sorted(list(vocab)), seqs, labels
+    return seqs, labels
 
 
 # Get data
 def retrieve_texts(data_path, num_samples, max_input_length):
-    vocab, seqs, labels = preprocess(data_path, num_samples, max_input_length)
+    draft_seqs, draft_labels = preprocess(data_path, num_samples)
     # Special treatment for input code sequences
-    features = []
-    for seq in seqs:
+    draft_features = []
+    for seq in draft_seqs:
         seq = seq.replace("(", " ( ")
         seq = seq.replace(")", " ) ")
         seq = seq.replace("_", " _ ")
-        features.append(seq.split())
-    # add "<unknown>" token for unknown words during testing
-    vocab = vocab + ["<unknown>"]
+        draft_features.append(seq.split())
+    # Remove long sequences
+    seqs, features, labels = [], [], []
+    for seq, feature, label in zip(draft_seqs, draft_features, draft_labels):
+        if len(feature) <= max_input_length:
+            seqs.append(seq)
+            features.append(feature)
+            labels.append(label)
 
-    return seqs, features, vocab, labels
+    return seqs, features, labels
 
+
+def fetch_corrisponding(data_points, comb_pairs, seqs, features, labels):
+    ss, fs, ls = [], [], []
+    for pair in data_points:
+        for i, all_pair in enumerate(comb_pairs):
+            if pair == all_pair:
+                ss.append(seqs[i])
+                fs.append(features[i])
+                ls.append(labels[i])
+                break
+    return ss, fs, ls
+
+
+def tokenize_data(features):
+    vocab = set()
+    for input_list in features:
+        for token in input_list:
+            vocab.add(token)
+    return sorted(list(vocab))+["<unknown>"]
 
 
 class DataObject:
@@ -83,6 +93,9 @@ def build_model(latent_dim, num_input_tokens, drop_prob=0.2):
     model = Sequential()
     model.add(Embedding(num_input_tokens+1, latent_dim, mask_zero=True))
     model.add(LSTM(latent_dim, dropout=drop_prob, recurrent_dropout=drop_prob))
+    # model.add(LSTM(latent_dim * 2, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+    # model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+    # model.add(LSTM(latent_dim//2, dropout=drop_prob, recurrent_dropout=drop_prob))
     model.add(Dense(1, activation='sigmoid'))
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 

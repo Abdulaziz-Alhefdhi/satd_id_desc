@@ -1,27 +1,18 @@
-from utils import retrieve_texts, data_shapes, shape_info, DataObject, token_integer_mapping, build_model, write_to_file
-from keras.models import Model
-###from keras import optimizers
+from utils import DataObject, data_shapes, shape_info, token_integer_mapping, build_model
 from keras.callbacks import ModelCheckpoint
 import numpy as np
 import datetime
-from keras.models import load_model
+import pickle
 
 
-batch_size = 64           # Batch size for training.
-epochs = 10                # Number of epochs to train for.
-latent_dim = 128           # Latent dimensionality of the encoding space.
-max_num_samples = 1000000  # Number of samples to train on.
-data_dir = '/home/aziz/experiments/data/td/code2class/v2/train/'  # Path to the data txt files on disk.
-###max_input_length = 1000000
-###epochs = 4
-###max_num_samples = 20000  # Number of samples to train on.
-###data_path = '/home/aa043/sea/gpu/experiments/data/td/train/'  # Path to the data txt files on disk.
-# Maximum length for inputs and outputs (in terms of characters, not tokens)
-max_input_length = 6000  # Number of largest acceptable input length
+batch_size = 64   # Batch size for training.
+epochs = 15       # Number of epochs to train for.
+# epochs = 4
+latent_dim = 512  # Latent dimensionality of the encoding space.
 
 # Get data
-seqs, features, vocab, labels = retrieve_texts(data_dir, max_num_samples, max_input_length)
-train_do = DataObject(seqs, features, vocab, labels)
+with open('/home/aziz/experiments/data/td/code2class/v2/train/data_object.pkl', 'rb') as f:
+    train_do = pickle.load(f)
 # Data shapes
 num_input_tokens, max_input_seq_length, n_input_samples = data_shapes(train_do)
 # Print shape info
@@ -47,8 +38,8 @@ model = build_model(latent_dim, num_input_tokens)
 model.summary()
 print("Training started at:", datetime.datetime.now())
 print("================")
-checkpointer = ModelCheckpoint(filepath= '/home/aziz/experiments/trained_models/td/classify/v2/dim128_b64/td_pred-{epoch:02d}.hdf5', verbose=1)
-model.fit(model_inputs, model_outputs, batch_size=batch_size, epochs=epochs, callbacks=[checkpointer], validation_split=0.1)
+checkpointer = ModelCheckpoint(filepath= '/home/aziz/experiments/trained_models/td/classify/v2/td_pred_512_b64_no_valid-{epoch:02d}.hdf5', verbose=1)
+model.fit(model_inputs, model_outputs, batch_size=batch_size, epochs=epochs, callbacks=[checkpointer])
 ###model.save('/home/aziz/experiments/trained_models/td/classify/v2/td_pred_dim256_b256.h5')
 print("================")
 print("Training completed at:", datetime.datetime.now())

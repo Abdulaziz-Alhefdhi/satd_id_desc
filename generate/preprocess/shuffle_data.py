@@ -21,10 +21,10 @@ for item in shuf_comb_list:
     input_lines.append(item[0])
     target_lines.append(item[1])
 # Separate training and testing data
-input_lines_training  = input_lines[:int(len(input_lines)*0.9)]
-input_lines_testing   = input_lines[int(len(input_lines)*0.9):]
-target_lines_training = target_lines[:int(len(target_lines)*0.9)]
-target_lines_testing  = target_lines[int(len(target_lines)*0.9):]
+# input_lines_training  = input_lines[:int(len(input_lines)*0.9)]
+# input_lines_testing   = input_lines[int(len(input_lines)*0.9):]
+# target_lines_training = target_lines[:int(len(target_lines)*0.9)]
+# target_lines_testing  = target_lines[int(len(target_lines)*0.9):]
 # Write files
 with open('/home/aa043/sea/data/td/ours/v2/generate/inputs.txt', 'w', encoding='utf-8') as f:
     for line in input_lines:
@@ -32,16 +32,16 @@ with open('/home/aa043/sea/data/td/ours/v2/generate/inputs.txt', 'w', encoding='
 with open('/home/aa043/sea/data/td/ours/v2/generate/targets.txt', 'w', encoding='utf-8') as f:
     for line in target_lines:
         f.write(line + '\n')
-with open('/home/aa043/sea/data/td/ours/v2/generate/train/inputs.txt', 'w', encoding='utf-8') as f:
-    for line in input_lines_training:
-        f.write(line + '\n')
-with open('/home/aa043/sea/data/td/ours/v2/generate/test/inputs.txt', 'w', encoding='utf-8') as f:
-    for line in input_lines_testing:
-        f.write(line + '\n')
-with open('/home/aa043/sea/data/td/ours/v2/generate/train/targets.txt', 'w', encoding='utf-8') as f:
-    for line in target_lines_training:
-        f.write(line + '\n')
-with open('/home/aa043/sea/data/td/ours/v2/generate/test/targets.txt', 'w', encoding='utf-8') as f:
-    for line in target_lines_testing:
-        f.write(line + '\n')
+# with open('/home/aa043/sea/data/td/ours/v2/generate/train/inputs.txt', 'w', encoding='utf-8') as f:
+#     for line in input_lines_training:
+#         f.write(line + '\n')
+# with open('/home/aa043/sea/data/td/ours/v2/generate/test/inputs.txt', 'w', encoding='utf-8') as f:
+#     for line in input_lines_testing:
+#         f.write(line + '\n')
+# with open('/home/aa043/sea/data/td/ours/v2/generate/train/targets.txt', 'w', encoding='utf-8') as f:
+#     for line in target_lines_training:
+#         f.write(line + '\n')
+# with open('/home/aa043/sea/data/td/ours/v2/generate/test/targets.txt', 'w', encoding='utf-8') as f:
+#     for line in target_lines_testing:
+#         f.write(line + '\n')
 

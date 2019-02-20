@@ -1,8 +1,3 @@
-from keras.models import Sequential
-from keras.layers import LSTM, Dense, Embedding
-
-
-
 def preprocess(data_path, num_samples):
     # Retrieve dat from files
     with open(data_path + 'features.txt', 'r', encoding='utf-8') as f:
@@ -81,11 +76,3 @@ def shape_info(n_input_samples, num_encoder_tokens, max_encoder_seq_length):
     print('Number of samples:', n_input_samples)
     print('Number of unique input tokens:', num_encoder_tokens)
     print('Max sequence length for inputs:', max_encoder_seq_length)
-
-
-def token_integer_mapping(input_tokens):
-    input_token_index = dict([(token, i+1) for i, token in enumerate(input_tokens)])
-    reverse_input_token_index = dict((i, token) for token, i in input_token_index.items())
-    return input_token_index, reverse_input_token_index
-
-
