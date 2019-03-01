@@ -2,34 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0f2e771-f131-4d27-88ac-04bec3e9632e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../generate/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../generate/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../generate/preprocess/Shuffle_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/../generate/preprocess/shuffle_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../generate/preprocess/clean_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/../generate/preprocess/clean_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../generate/preprocess/produce_parsable.py" beforeDir="false" afterPath="$PROJECT_DIR$/../generate/preprocess/produce_parsable.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ASTToSBT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ASTToSBT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ASTToSBT$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ASTToSBT$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ASTToSBT.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ASTToSBT.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/AllJavadocExtractor$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/AllJavadocExtractor$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/AllJavadocExtractor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/AllJavadocExtractor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$AllVariableDeclarationVisitor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$AllVariableDeclarationVisitor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$ClassVariableFieldVisitor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$ClassVariableFieldVisitor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$ClassVisitor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$ClassVisitor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$MethodCallVisitor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$MethodCallVisitor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$MethodVisitor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$MethodVisitor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$VariableUsageVisitor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$VariableUsageVisitor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/MethodsAndJavaDocs$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MethodsAndJavaDocs$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/MethodsAndJavaDocs.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MethodsAndJavaDocs.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/VoidVisitorComplete$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/VoidVisitorComplete$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/VoidVisitorComplete$MethodNameCollector.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/VoidVisitorComplete$MethodNameCollector.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/VoidVisitorComplete$MethodNamePrinter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/VoidVisitorComplete$MethodNamePrinter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/VoidVisitorComplete.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/VoidVisitorComplete.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/support/DirExplorer$FileHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/support/DirExplorer$FileHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/support/DirExplorer$Filter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/support/DirExplorer$Filter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/support/DirExplorer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/support/DirExplorer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/support/NodeIterator$NodeHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/support/NodeIterator$NodeHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/support/NodeIterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/support/NodeIterator.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -44,8 +17,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/ASTToSBT.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="26" column="76" selection-start-line="26" selection-start-column="76" selection-end-line="26" selection-end-column="76" />
+            <state relative-caret-position="558">
+              <caret line="50" column="34" selection-start-line="50" selection-start-column="34" selection-end-line="50" selection-end-column="34" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#oneLineComment#0;class#ASTToSBT#0" />
@@ -144,7 +117,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -174,7 +147,7 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -332,16 +305,19 @@
       <workItem from="1548122736594" duration="2246000" />
       <workItem from="1548125024078" duration="500000" />
       <workItem from="1548292935408" duration="1094000" />
+      <workItem from="1548905741650" duration="30000" />
+      <workItem from="1550722228548" duration="138000" />
+      <workItem from="1550722913962" duration="981000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="204380000" />
+    <option name="totallyTimeSpent" value="205529000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19867183" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20531267" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -468,8 +444,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ASTToSBT.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="26" column="76" selection-start-line="26" selection-start-column="76" selection-end-line="26" selection-end-column="76" />
+        <state relative-caret-position="558">
+          <caret line="50" column="34" selection-start-line="50" selection-start-column="34" selection-end-line="50" selection-end-column="34" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#oneLineComment#0;class#ASTToSBT#0" />

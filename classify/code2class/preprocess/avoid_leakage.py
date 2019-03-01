@@ -66,6 +66,11 @@ print("================\nTesting data info:-")
 shape_info(n_input_samples_test, num_input_tokens_test, max_input_seq_length_test)
 print("================")
 
+
+import sys
+sys.exit()
+
+
 # Save dataset to disk
 # Training data
 # input sequences
