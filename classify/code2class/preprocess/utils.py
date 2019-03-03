@@ -21,9 +21,6 @@ def retrieve_texts(data_path, num_samples, max_input_length):
     # Special treatment for input code sequences
     draft_features = []
     for seq in draft_seqs:
-        seq = seq.replace("(", " ( ")
-        seq = seq.replace(")", " ) ")
-        seq = seq.replace("_", " _ ")
         draft_features.append(seq.split())
     # Remove long sequences
     seqs, features, labels = [], [], []

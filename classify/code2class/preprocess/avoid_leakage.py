@@ -7,7 +7,7 @@ import pickle
 max_num_samples = 1000000  # Number of samples to train on.
 ###max_num_samples = 20000  # Number of samples to train on.
 # data_dir = '/home/aziz/experiments/data/td/code2class/v2/train/'  # Path to the data txt files on disk.
-data_dir = '/home/aa043/sea/gpu/experiments/data/td/code2class/v2/'  # Path to the data txt files on disk.
+data_dir = '/home/aziz/experiments/data/td/code2class/v2/plain_code/'  # Path to the data txt files on disk.
 ###max_input_length = 1000000
 max_input_length = 1196  # Number of largest acceptable input length
 

@@ -20,9 +20,9 @@ features = pos_codes + neg_codes
 labels = pos_labels + neg_labels
 
 # Write all features and labels to disk
-with open(data_dir+'plain_features.txt', 'w', encoding='utf-8') as f:
+with open(data_dir+'plain_code/features.txt', 'w', encoding='utf-8') as f:
     for line in features:
         f.write(line + '\n')
-with open(data_dir+'plain_labels.txt', 'w', encoding='utf-8') as f:
+with open(data_dir+'plain_code/labels.txt', 'w', encoding='utf-8') as f:
     for line in labels:
         f.write(str(line) + '\n')

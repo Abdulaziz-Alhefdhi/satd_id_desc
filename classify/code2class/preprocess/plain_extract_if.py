@@ -17,9 +17,9 @@ for line in pos_code_lines:
         pos_codes.append(line[1:])
 
 # Save code segments to disk
-with open(data_path+"plain_neg_codes.txt", "w", encoding='utf-8') as f:
+with open(data_path+"plain_code/neg_codes.txt", "w", encoding='utf-8') as f:
     for line in neg_codes:
         f.write(line+"\n")
-with open(data_path+"plain_pos_codes.txt", "w", encoding='utf-8') as f:
+with open(data_path+"plain_code/pos_codes.txt", "w", encoding='utf-8') as f:
     for line in pos_codes:
         f.write(line+"\n")
