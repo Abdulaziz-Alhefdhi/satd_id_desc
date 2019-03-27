@@ -34,7 +34,7 @@ coms_v2 = []
 for comment in coms_v1:
     coms_v2.append(" ".join(re.findall(r'\S+|\n', comment)).replace(' \n ', '\n'))
 
-# Write 3rd version of comments to file (remove commenting characters)
+# Remove commenting characters
 coms_v3 = []
 for comment in coms_v2:
     temp_list = comment.split("\n")  # Every line in a separate item of the list
@@ -47,6 +47,8 @@ for comment in coms_v2:
         stripped = stripped.lstrip("*")
         temp_list2.append(stripped + "\n")  # Append clean line to the new list
     coms_v3.append(" ".join(temp_list2))
+
+# Write 3rd version of comments to file
 with open("/home/aa043/sea/data/td/ours/v2/generate/draft_comments.txt", "w", encoding='utf-8') as f:
     for comment in coms_v3:
         f.write(comment + '+++\n')

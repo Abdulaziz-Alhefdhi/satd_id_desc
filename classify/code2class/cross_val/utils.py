@@ -1,19 +1,6 @@
-# Remove irrelative nodes produces by JavaParser; keep only the if-statement subtree
-def clean_ast_seqs(path):
-    # Read from ast_seqs files
-    with open(path, 'r', encoding='utf-8') as f:
-        ast_seqs = f.read().split("\n")
-    ast_seqs = ast_seqs[:-1]  # Remove last (empty) item
-    # Clean prefixes
-    sub_clean_seqs = []
-    for seq in ast_seqs:
-        sub_clean_seqs.append(seq.split("(BlockStmt ", 1)[1])
-    # Clean suffixes
-    clean_seqs = []
-    for seq in sub_clean_seqs:
-        clean_seqs.append(seq.rsplit(" )BlockStmt", 1)[0])
-
-    return clean_seqs
+from keras.models import Sequential
+from keras.layers import LSTM, Dense, Embedding
+import pickle
 
 
 def preprocess(data_path, num_samples):
@@ -85,12 +72,64 @@ class DataObject:
 def data_shapes(do):
     num_encoder_tokens = len(do.vocab)
     max_encoder_seq_length = max([len(txt) for txt in do.features])
+    min_encoder_seq_length = min([len(txt) for txt in do.features])
     n_input_samples = len(do.features)
 
-    return num_encoder_tokens, max_encoder_seq_length, n_input_samples
+    return num_encoder_tokens, max_encoder_seq_length, min_encoder_seq_length, n_input_samples
 
 
-def shape_info(n_input_samples, num_encoder_tokens, max_encoder_seq_length):
+def shape_info(n_input_samples, num_encoder_tokens, max_encoder_seq_length, min_encoder_seq_length):
     print('Number of samples:', n_input_samples)
     print('Number of unique input tokens:', num_encoder_tokens)
     print('Max sequence length for inputs:', max_encoder_seq_length)
+    print('Min sequence length for inputs:', min_encoder_seq_length)
+
+
+def token_integer_mapping(input_tokens):
+    input_token_index = dict([(token, i+1) for i, token in enumerate(input_tokens)])
+    reverse_input_token_index = dict((i, token) for token, i in input_token_index.items())
+    return input_token_index, reverse_input_token_index
+
+
+def build_model(latent_dim, num_input_tokens, drop_prob=0.2):
+    model = Sequential()
+    model.add(Embedding(num_input_tokens+1, latent_dim, mask_zero=True))
+    model.add(LSTM(latent_dim, dropout=drop_prob, recurrent_dropout=drop_prob))
+    # model.add(LSTM(latent_dim * 2, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+    # model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+    # model.add(LSTM(latent_dim//2, dropout=drop_prob, recurrent_dropout=drop_prob))
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+    return model
+
+
+def write_to_file(data, path):
+    with open(path, 'wb') as f:
+        pickle.dump(data, f)
+
+
+def results(predictions, y_test):
+    tp, tn, fp, fn = 0, 0, 0, 0
+    for pred, lbl in zip(predictions, y_test):
+        if lbl == 1 and pred[0] == 1:
+            tp += 1
+        if lbl == 0 and pred[0] == 0:
+            tn += 1
+        if lbl == 0 and pred[0] == 1:
+            fp += 1
+        if lbl == 1 and pred[0] == 0:
+            fn += 1
+    print("TPs =", tp, "- TNs =", tn, "- FPs =", fp, "- FNs =", fn, "- Total # of testing samples =", tp + tn + fp + fn)
+    p, r, f1 = 0, 0, 0
+    if tp + fp > 0 and tp + fn > 0:
+        p, r = tp / (tp + fp), tp / (tp + fn)
+    elif tp + fp > 0:
+        p = tp / (tp + fp)
+    elif tp + fn > 0:
+        r = tp / (tp + fn)
+    if (p + r) > 0:
+        f1 = 2 * p * r / (p + r)
+    print("Precision =", "%.3f" % p, "- Recall =", "%.3f" % r, "- F1 Score =", "%.3f" % f1)
+
+    return tp, tn, fp, fn, p, r, f1

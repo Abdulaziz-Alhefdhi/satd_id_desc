@@ -7,7 +7,7 @@ import pickle
 max_num_samples = 1000000  # Number of samples to train on.
 ###max_num_samples = 20000  # Number of samples to train on.
 # data_dir = '/home/aziz/experiments/data/td/code2class/v2/train/'  # Path to the data txt files on disk.
-data_dir = '/home/aa043/sea/gpu/experiments/data/td/code2class/v2/'  # Path to the data txt files on disk.
+data_dir = '/home/aziz/experiments/data/td/code2class/v2/'  # Path to the data txt files on disk.
 ###max_input_length = 1000000
 max_input_length = 1196  # Number of largest acceptable input length
 
@@ -65,6 +65,16 @@ shape_info(n_input_samples_train, num_input_tokens_train, max_input_seq_length_t
 print("================\nTesting data info:-")
 shape_info(n_input_samples_test, num_input_tokens_test, max_input_seq_length_test)
 print("================")
+
+# Count test tokens that are not in train tokens
+# count = 0
+# for token in test_do.vocab:
+#     if token not in train_do.vocab:
+#         count += 1
+# print(count)
+
+import sys
+sys.exit()
 
 # Save dataset to disk
 # Training data
