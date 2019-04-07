@@ -23,17 +23,17 @@ public class ASTToSBT {
 
     public static void main(String[] args) {
 
-        String data_dir   = "/home/aa043/sea/data/td/ours/v2/generate";
-        String write_path = "/home/aa043/sea/data/td/ours/v2/generate/draft_ast_seqs.txt";
+        String data_dir   = "/home/aa043/sea/data/td/ours/v2/CT/parser_processing/9";
+        String write_path = data_dir + "/draft_ast_seqs9.txt";
 
         File projectDir = new File(data_dir);
         //File projectDir = new File("C:\\Users\\ahh14\\OneDrive\\Documents\\UOW\\docgen\\testartifactname\\src\\main\\java\\thisone");
         StringBuffer codeSB = new StringBuffer();
-        StringBuffer commentSB = new StringBuffer();
-        Set<String> types = new TreeSet<String>();
-        Set<String> values = new TreeSet<String>();
-        StringBuffer currentFileCode = new StringBuffer();
-        StringBuffer currentFileComments = new StringBuffer();
+//        StringBuffer commentSB = new StringBuffer();
+//        Set<String> types = new TreeSet<String>();
+//        Set<String> values = new TreeSet<String>();
+//        StringBuffer currentFileCode = new StringBuffer();
+//        StringBuffer currentFileComments = new StringBuffer();
         new DirExplorer((level, path, file) -> path.endsWith(".java"), (level, path, file) -> {
             System.out.println("Exploring code...");
 //        new DirExplorer((level, path, file) -> path.endsWith(".txt"), (level, path, file) -> {
@@ -50,8 +50,8 @@ public class ASTToSBT {
                             else {
                                 tokened = tokenize( new JavaParser().parse(ParseStart.INTERFACE_BODY, new StringProvider(node.toString())) );
                                 seq = /*type[type.length-2]+"."*/"("+type[type.length-1]+"_"+tokened+" )"+type[type.length-1]+"_"+tokened+" ";
-                                types.add(type[type.length-1]);
-                                values.add(tokened);
+//                                types.add(type[type.length-1]);
+//                                values.add(tokened);
                             }
                         else {
                             seq = /*type[type.length-2]+"."*/"("+type[type.length-1]+" ";
@@ -59,7 +59,7 @@ public class ASTToSBT {
                                 seq += sbt(child);
                             }
                             seq += ")"+type[type.length-1]+" ";
-                            types.add(type[type.length-1]);
+//                            types.add(type[type.length-1]);
                         }
 
                         return seq;
@@ -74,7 +74,7 @@ public class ASTToSBT {
                             if (node instanceof MethodDeclaration) {
                                 codeSB.append(sbt(node) + "\n");
 //                                commentSB.append(oneLineComment(comment) + "\n");
-                                currentFileCode.append(sbt(node) + "\n");
+//                                currentFileCode.append(sbt(node) + "\n");
                                 System.out.println("A code fragment has been parsed...");
 //                                currentFileComments.append(oneLineComment(comment) + "\n");
                             }
@@ -109,8 +109,8 @@ public class ASTToSBT {
 //                System.out.println("===============================================");
 
 
-                currentFileCode.delete(0, currentFileCode.length());
-                currentFileComments.delete(0, currentFileComments.length());
+//                currentFileCode.delete(0, currentFileCode.length());
+//                currentFileComments.delete(0, currentFileComments.length());
             }
             catch (IOException e) {
                 new RuntimeException(e);
@@ -124,13 +124,13 @@ public class ASTToSBT {
           //  System.out.println("The full JavaDocs file has been written to disk");
 
         // terminal and non-terminal tokens
-        StringBuffer typeBuff = new StringBuffer();
-        StringBuffer valBuff = new StringBuffer();
-        for (String s: types)
-            typeBuff.append(s+"\n");
-        for (String s: values)
-            valBuff.append(s+"\n");
-        //if (writeToDisk("/home/aa043/sea/output/method2javadoc/sequence_code-javadoc/aggregated/all_types.txt", typeBuff.toString()))
+//        StringBuffer typeBuff = new StringBuffer();
+//        StringBuffer valBuff = new StringBuffer();
+//        for (String s: types)
+//            typeBuff.append(s+"\n");
+//        for (String s: values)
+//            valBuff.append(s+"\n");
+//        //if (writeToDisk("/home/aa043/sea/output/method2javadoc/sequence_code-javadoc/aggregated/all_types.txt", typeBuff.toString()))
           //  System.out.println("The full types file has been written to disk");
         //if (writeToDisk("/home/aa043/sea/output/method2javadoc/sequence_code-javadoc/aggregated/all_values.txt", valBuff.toString()))
           //  System.out.println("The full values file has been written to disk");

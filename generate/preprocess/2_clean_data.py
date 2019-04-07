@@ -23,7 +23,7 @@ with open("/home/aa043/sea/data/td/ours/v2/generate/draft_comments.txt", "r", en
 file_comms = file_comms[:-1]  # Remove last (empty) item
 clean_comms = []
 for comm in file_comms:
-    clean_comms.append(" ".join(comm.split()))
+    clean_comms.append(" ".join(comm.split()))  # Make every comment a one-liner
 # Write clean comments to file
 with open('/home/aa043/sea/data/td/ours/v2/generate/comments.txt', 'w', encoding='utf-8') as f:
     for comm in clean_comms:
