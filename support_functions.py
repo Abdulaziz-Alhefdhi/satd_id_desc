@@ -3,7 +3,9 @@ from random import sample
 import sys
 import numpy as np
 import pickle
-
+from keras.models import Sequential
+from keras.layers import LSTM, Dense, Embedding
+import smtplib
 
 
 def extract_data(data_path):
@@ -213,3 +215,113 @@ def write_to_disk(data_path, dataset):
     # Save the dataset object
     with open(data_path + 'dataset.pkl', 'wb') as f:
         pickle.dump(dataset, f)
+
+
+def token_integer_mapping(input_tokens):
+    input_token_index = dict([(token, i+1) for i, token in enumerate(input_tokens)])
+    reverse_input_token_index = dict((i, token) for token, i in input_token_index.items())
+    return input_token_index, reverse_input_token_index
+
+
+def prepare_model_input_data(array, input_token_index, max_encoder_seq_length):
+    model_inputs = np.zeros((len(array), max_encoder_seq_length), dtype='int32')
+    for i, feature in enumerate(array):
+        for t, token in enumerate(feature):
+            model_inputs[i, t] = input_token_index[token]
+
+    return model_inputs
+
+
+def replace_unseen(new_vocab, old_vocab, new_model_inputs):
+    """ Replace unseen-before tokens with: <unknown> """
+    # Find
+    unseen_tokens = set()
+    for token in new_vocab:
+        if token not in old_vocab:
+            unseen_tokens.add(token)
+    # Replace
+    modified_inputs = new_model_inputs
+    for i, x in enumerate(modified_inputs):
+        matches = set(x) & unseen_tokens  # find the unseen-before tokens in an input sample
+        if len(matches) > 0:
+            for j, token in enumerate(x):
+                if token in matches:
+                    modified_inputs[i][j] = "<unknown>"
+
+    return modified_inputs
+
+
+def build_model(latent_dim, num_input_tokens, num_layers, drop_prob=0.2):
+    if num_layers not in [1, 2, 3]:
+        sys.exit("Error: Number of model layers must be 1, 2, or 3")
+    model = Sequential()
+    model.add(Embedding(num_input_tokens+1, latent_dim, mask_zero=True))
+    if num_layers == 1:
+        model.add(LSTM(latent_dim, dropout=drop_prob, recurrent_dropout=drop_prob))
+    elif num_layers == 2:
+        model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+        model.add(LSTM(latent_dim, dropout=drop_prob, recurrent_dropout=drop_prob))
+    else:
+        model.add(LSTM(latent_dim*2, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+        model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+        model.add(LSTM(latent_dim//2, dropout=drop_prob, recurrent_dropout=drop_prob))
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+    return model
+
+
+def results(predictions, y_test):
+    tp, tn, fp, fn = 0, 0, 0, 0
+    for pred, lbl in zip(predictions, y_test):
+        if lbl == 1 and pred[0] == 1:
+            tp += 1
+        if lbl == 0 and pred[0] == 0:
+            tn += 1
+        if lbl == 0 and pred[0] == 1:
+            fp += 1
+        if lbl == 1 and pred[0] == 0:
+            fn += 1
+    print("TPs =", tp, "- TNs =", tn, "- FPs =", fp, "- FNs =", fn, "- Total # of testing samples =", tp + tn + fp + fn)
+    p, r, f1, acc = 0, 0, 0, 0
+    if tp + fp > 0 and tp + fn > 0:
+        p, r = tp / (tp + fp), tp / (tp + fn)
+    elif tp + fp > 0:
+        p = tp / (tp + fp)
+    elif tp + fn > 0:
+        r = tp / (tp + fn)
+    if (p + r) > 0:
+        f1 = 2 * p * r / (p + r)
+    acc = (tp+tn)/(tp+tn+fp+fn)
+    print("Precision =", "%.3f" % p, "- Recall =", "%.3f" % r, "- F1 Score =", "%.3f" % f1, "- Accuracy =", "%.3f" % acc)
+
+    return tp, tn, fp, fn, p, r, f1, acc
+
+
+def send_email(title, content):
+    TO = 'ahh1427@gmail.com'
+    SUBJECT = title
+    TEXT = content
+
+    # Gmail Sign In
+    gmail_sender = 'ahh1427@gmail.com'
+    gmail_passwd = 'abdulazizabdulaziz'
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.login(gmail_sender, gmail_passwd)
+
+    BODY = '\r\n'.join(['To: %s' % TO,
+                        'From: %s' % gmail_sender,
+                        'Subject: %s' % SUBJECT,
+                        '', TEXT])
+
+    try:
+        server.sendmail(gmail_sender, [TO], BODY)
+        print('Email sent')
+    except:
+        print('Error sending email')
+
+    server.quit()
+
