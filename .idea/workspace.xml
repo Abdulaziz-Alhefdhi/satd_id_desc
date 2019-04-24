@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="57e00eac-310b-4e20-a7ee-a45d36b07d8a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/classify/code2class/cv.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/tech_debt.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/tech_debt.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/classify/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/classify/code2class/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/classify/code2class/cross_val/lstm_class.py" beforeDir="false" afterPath="$PROJECT_DIR$/classify/code2class/cross_val/lstm_class.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classify/code2class/fine_tune.py" beforeDir="false" afterPath="$PROJECT_DIR$/classify/code2class/fine_tune.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/support_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/support_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classify/code2class/cv.py" beforeDir="false" afterPath="$PROJECT_DIR$/classify/code2class/cv.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,10 +26,19 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/classify/code2class/fine_tune.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="741">
-              <caret line="90" column="120" lean-forward="true" selection-start-line="90" selection-start-column="16" selection-end-line="90" selection-end-column="120" />
+            <state relative-caret-position="551">
+              <caret line="62" column="32" lean-forward="true" selection-start-line="58" selection-end-line="62" selection-end-column="32" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/support_functions.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="361">
+              <caret line="153" column="12" selection-start-line="153" selection-start-column="4" selection-end-line="153" selection-end-column="12" />
               <folding>
-                <element signature="e#0#43#0" expanded="true" />
+                <element signature="e#0#13#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -42,43 +47,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/classify/code2class/cv.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1919">
-              <caret line="101" column="91" selection-start-line="101" selection-start-column="91" selection-end-line="101" selection-end-column="91" />
+            <state relative-caret-position="1957">
+              <caret line="115" column="75" selection-start-line="115" selection-start-column="75" selection-end-line="115" selection-end-column="75" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/classify/code2class/cross_val/lstm_class.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="711">
-              <caret line="153" column="68" lean-forward="true" selection-start-line="136" selection-end-line="153" selection-end-column="68" />
-              <folding>
-                <element signature="e#0#98#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/preprocess/prepare_framework_data.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="399">
-              <caret line="22" column="73" lean-forward="true" selection-start-line="18" selection-end-line="22" selection-end-column="73" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/support_functions.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1064">
-              <caret line="313" lean-forward="true" selection-start-line="313" selection-end-line="313" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -91,12 +63,13 @@
       <find>joi</find>
       <find>temp</find>
       <find>tmp</find>
-      <find>batch_size</find>
-      <find>latent_dim</find>
       <find>results_dir</find>
       <find>encoder</find>
       <find>train_max_seq_length</find>
       <find>i</find>
+      <find>latent_dim</find>
+      <find>num_layers</find>
+      <find>batch_size</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -134,7 +107,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -156,30 +128,13 @@
             <path>
               <item name="tech_debt" type="b2602c69:ProjectViewProjectNode" />
               <item name="tech_debt" type="462c0819:PsiDirectoryNode" />
-              <item name="classify" type="462c0819:PsiDirectoryNode" />
-              <item name="code2class" type="462c0819:PsiDirectoryNode" />
-              <item name="cross_val" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tech_debt" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tech_debt" type="462c0819:PsiDirectoryNode" />
-              <item name="generate" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tech_debt" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tech_debt" type="462c0819:PsiDirectoryNode" />
-              <item name="generate" type="462c0819:PsiDirectoryNode" />
-              <item name="train" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tech_debt" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tech_debt" type="462c0819:PsiDirectoryNode" />
               <item name="preprocess" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -340,17 +295,18 @@
       <workItem from="1554767901240" duration="57221000" />
       <workItem from="1555999715957" duration="123000" />
       <workItem from="1555999924275" duration="15633000" />
+      <workItem from="1556074520636" duration="13135000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="141846000" />
+    <option name="totallyTimeSpent" value="154981000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27006087" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2733813" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -485,47 +441,44 @@
     <entry file="file://$PROJECT_DIR$/classify/code2class/cross_val/acc.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/preprocess/prepare_framework_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="22" column="73" lean-forward="true" selection-start-line="18" selection-end-line="22" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/classify/code2class/cross_val/lstm_class.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="711">
-          <caret line="153" column="68" lean-forward="true" selection-start-line="136" selection-end-line="153" selection-end-column="68" />
+        <state relative-caret-position="741">
+          <caret line="153" column="68" selection-start-line="136" selection-end-line="153" selection-end-column="68" />
           <folding>
             <element signature="e#0#98#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/classify/code2class/fine_tune.py">
+    <entry file="file://$PROJECT_DIR$/preprocess/prepare_framework_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="741">
-          <caret line="90" column="120" lean-forward="true" selection-start-line="90" selection-start-column="16" selection-end-line="90" selection-end-column="120" />
-          <folding>
-            <element signature="e#0#43#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="399">
+          <caret line="22" column="73" selection-start-line="18" selection-end-line="22" selection-end-column="73" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/support_functions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1064">
-          <caret line="313" lean-forward="true" selection-start-line="313" selection-end-line="313" />
+        <state relative-caret-position="361">
+          <caret line="153" column="12" selection-start-line="153" selection-start-column="4" selection-end-line="153" selection-end-column="12" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/classify/code2class/fine_tune.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="551">
+          <caret line="62" column="32" lean-forward="true" selection-start-line="58" selection-end-line="62" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/classify/code2class/cv.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1919">
-          <caret line="101" column="91" selection-start-line="101" selection-start-column="91" selection-end-line="101" selection-end-column="91" />
+        <state relative-caret-position="1957">
+          <caret line="115" column="75" selection-start-line="115" selection-start-column="75" selection-end-line="115" selection-end-column="75" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
