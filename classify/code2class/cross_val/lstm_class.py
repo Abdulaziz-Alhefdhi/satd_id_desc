@@ -29,7 +29,7 @@ print("================")
 input_token_index, reverse_input_token_index = token_integer_mapping(do.vocab)
 
 
-# 10-fold cross-validation
+# Stratified 10-fold cross-validation
 skf = StratifiedKFold(n_splits=10)  # Number of folds
 X, y = np.array(do.features), np.array(do.labels)  # Convert lists to np arrays
 print("Training started at:", datetime.datetime.now())

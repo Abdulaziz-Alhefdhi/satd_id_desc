@@ -298,7 +298,7 @@ def results(predictions, y_test):
     return tp, tn, fp, fn, p, r, f1, acc
 
 
-def send_email(title, content):
+def send_email(title, content="No content!"):
     TO = 'ahh1427@gmail.com'
     SUBJECT = title
     TEXT = content
