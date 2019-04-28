@@ -4,8 +4,10 @@ import sys
 import numpy as np
 import pickle
 from keras.models import Sequential
-from keras.layers import LSTM, Dense, Embedding
+from keras.layers import LSTM, Dense, Embedding, Input, dot, Activation, concatenate
 import smtplib
+from tqdm import tqdm
+
 
 
 def extract_data(data_path):
@@ -217,19 +219,45 @@ def write_to_disk(data_path, dataset):
         pickle.dump(dataset, f)
 
 
-def token_integer_mapping(input_tokens):
-    input_token_index = dict([(token, i+1) for i, token in enumerate(input_tokens)])
-    reverse_input_token_index = dict((i, token) for token, i in input_token_index.items())
+def token_integer_mapping(input_tokens, target_tokens):
+    input_token_index  = dict([(token, i+1) for i, token in enumerate(input_tokens)])
+    target_token_index = dict([(token, i+1) for i, token in enumerate(target_tokens)])
+    reverse_input_token_index  = dict((i, token) for token, i in input_token_index.items())
+    reverse_target_token_index = dict((i, token) for token, i in target_token_index.items())
+    return input_token_index, target_token_index, reverse_input_token_index, reverse_target_token_index
+    
     return input_token_index, reverse_input_token_index
 
 
-def prepare_model_input_data(array, input_token_index, max_encoder_seq_length):
-    model_inputs = np.zeros((len(array), max_encoder_seq_length), dtype='int32')
-    for i, feature in enumerate(array):
-        for t, token in enumerate(feature):
-            model_inputs[i, t] = input_token_index[token]
-
-    return model_inputs
+def prepare_model_data(input_lists, target_lists, input_token_index, target_token_index,
+                       max_encoder_seq_length, max_decoder_seq_length, test=False):
+    if not test:
+        # Define model's input & output data and initialize them with zeros
+        encoder_input_data = np.zeros((len(input_lists), max_encoder_seq_length), dtype='int32')
+        decoder_input_data = np.zeros((len(target_lists), max_decoder_seq_length), dtype='int32')
+        print(len(target_lists), max_decoder_seq_length, len(target_token_index))
+        decoder_target_data = np.zeros((len(target_lists), max_decoder_seq_length, len(target_token_index)), dtype='float32')
+        # Loop samples
+        for i, (input_list, target_list) in enumerate(zip(input_lists, target_lists)):
+            # Loop input sequences
+            for t, token in enumerate(input_list):
+                encoder_input_data[i, t] = input_token_index[token]
+            # Loop target sequences
+            for t, token in enumerate(target_list):
+                # decoder_target_data is ahead of decoder_input_data by one time step
+                decoder_input_data[i, t] = target_token_index[token]
+                if t > 0:
+                    # decoder_target_data will be ahead by one time step and will not include the start character. Initial value altered.
+                    decoder_target_data[i, t-1, target_token_index[token]] = 1.
+        return encoder_input_data, decoder_input_data, decoder_target_data
+    else:
+        encoder_input_data = np.zeros((len(input_lists), max_encoder_seq_length), dtype='int32')
+        # Loop samples
+        for i, input_list in enumerate(input_lists):
+            # Loop input sequences
+            for t, token in enumerate(input_list):
+                encoder_input_data[i, t] = input_token_index[token]
+        return encoder_input_data
 
 
 def replace_unseen(new_vocab, old_vocab, new_model_inputs):
@@ -251,7 +279,7 @@ def replace_unseen(new_vocab, old_vocab, new_model_inputs):
     return modified_inputs
 
 
-def build_model(latent_dim, num_input_tokens, num_layers, drop_prob=0.2):
+def build_classifier(latent_dim, num_input_tokens, num_layers, drop_prob=0.2):
     if num_layers not in [1, 2, 3]:
         sys.exit("Error: Number of model layers must be 1, 2, or 3")
     model = Sequential()
@@ -269,6 +297,39 @@ def build_model(latent_dim, num_input_tokens, num_layers, drop_prob=0.2):
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
     return model
+
+
+def build_generator(latent_dim, num_encoder_tokens, num_decoder_tokens, num_layers):
+    if num_layers not in [1, 2, 3]:
+        sys.exit("Error: Number of model layers must be 1, 2, or 3")
+    encoder_inputs = Input(shape=(None,))
+    decoder_inputs = Input(shape=(None,))
+    en_x = Embedding(num_encoder_tokens + 1, latent_dim, mask_zero=True)(encoder_inputs)
+    de_x = Embedding(num_decoder_tokens + 1, latent_dim, mask_zero=True)(decoder_inputs)
+    if num_layers == 1:
+        encoder_outputs, state_h, state_c = LSTM(latent_dim, return_sequences=True, return_state=True)(en_x)
+        decoder_outputs = LSTM(latent_dim, return_sequences=True)(de_x, initial_state=[state_h, state_c])
+    elif num_layers == 2:
+        en_x = LSTM(latent_dim, return_sequences=True)(en_x)
+        encoder_outputs, state_h, state_c = LSTM(latent_dim, return_sequences=True, return_state=True)(en_x)
+        de_x = LSTM(latent_dim, return_sequences=True)(de_x, initial_state=[state_h, state_c])
+        decoder_outputs = LSTM(latent_dim, return_sequences=True)(de_x)
+    else:
+        en_x = LSTM(latent_dim*2, return_sequences=True)(en_x)
+        en_x = LSTM(latent_dim, return_sequences=True)(en_x)
+        encoder_outputs, state_h, state_c = LSTM(latent_dim//2, return_sequences=True, return_state=True)(en_x)
+        de_x = LSTM(latent_dim*2, return_sequences=True)(de_x, initial_state=[state_h, state_c])
+        de_x = LSTM(latent_dim, return_sequences=True)(de_x)
+        decoder_outputs = LSTM(latent_dim//2, return_sequences=True)(de_x)
+    # Attention Mechanism
+    attention = dot([decoder_outputs, encoder_outputs], axes=[2, 2])
+    attention = Activation('softmax', name='attention')(attention)
+    context = dot([attention, encoder_outputs], axes=[2, 1])
+    decoder_combined_context = concatenate([context, decoder_outputs])
+    attention_context_output = Dense(latent_dim, activation="tanh")(decoder_combined_context)
+    model_output = Dense(num_decoder_tokens, activation="softmax")(attention_context_output)
+
+    return encoder_inputs, decoder_inputs, model_output
 
 
 def results(predictions, y_test):
@@ -325,3 +386,20 @@ def send_email(title, content="No content!"):
 
     server.quit()
 
+
+def translate(n_samples):
+    predicted_lists = []
+    for seq_index in tqdm(range(n_samples)):
+        # Take one sequence (part of the testing set) for trying out decoding.
+        input_seq = encoder_input_data[seq_index:seq_index + 1]
+        decoded_sentence = decode_sequence(input_seq, model, max_decoder_seq_length_test, target_token_index,
+                                           reverse_target_token_index)
+        predicted_lists.append(decoded_sentence)
+        print_deocded = ''
+        for token in decoded_sentence:
+            print_deocded += token + ' '
+        print_target = ''
+        for i, token in enumerate(test_do.target_lists[seq_index]):
+            if 0 < i and i < len(test_do.target_lists[seq_index]) - 1:  # Don't print "<sos>" and "<eos>"
+                print_target += token + ' '
+    return predicted_lists

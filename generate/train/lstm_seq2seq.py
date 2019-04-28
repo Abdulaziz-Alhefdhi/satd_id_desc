@@ -9,7 +9,7 @@ import pickle
 batch_size = 16      # Batch size for training.
 epochs = 30          # Number of epochs to train for.
 # epochs = 4
-latent_dim = 2048     # Latent dimensionality of the encoding space.
+latent_dim = 1024     # Latent dimensionality of the encoding space.
 
 # Get data
 with open('/home/aziz/experiments/data/td/v2/train/data_object.pkl', 'rb') as f:

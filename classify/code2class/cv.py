@@ -16,7 +16,8 @@ epochs = 20       # Number of epochs to train for
 num_layers = 1    # Number of model layers (2, 1, 2, 2)
 latent_dim = 64   # Latent dimensionality of the encoding space (8, 32, 32, 16)
 
-exp_sets = [(64, 64, 1), (8, 16, 2), (32, 256, 1), (32, 256, 2), (16, 64, 2)]  # (emb, b, l)
+# exp_sets = [(64, 64, 1), (8, 16, 2), (32, 256, 1), (32, 256, 2), (16, 64, 2)]  # (emb, b, l)
+exp_sets = [(8, 16, 2)]  # (emb, b, l)
 
 data_dir    = '/home/aa043/sea/gpu/experiments/data/td/CT/'
 # results_dir = '/home/aziz/experiments/output/td/classify/code2class/v2/cv/dim64_b64/'
@@ -47,21 +48,21 @@ for setting in exp_sets:
     print("================\nBatch size:", b)
     print("Number of model layers:", nl)
     print("Embedding dimensionality:", dim)
-    print("================")
     name_info = "emb"+str(dim)+"_b"+str(b)+"_"+str(nl)+"l"  # Model name to be saved
     # Make train-models directory
     if not os.path.exists(trained_models_dir+name_info):
         os.makedirs(trained_models_dir+name_info+"/")
 
     start_time = datetime.datetime.now().replace(microsecond=0)
-    print("Training started at:", start_time)
     print("================")
+    print("Training started at:", start_time)
 
     # Stratified 10-fold cross-validation
     skf = StratifiedKFold(n_splits=10)  # Number of folds
     fold = 1
     precisions, recalls, f1_scores, accs = [], [], [], []
     for train_index, test_index in skf.split(cv_set.input_lists, cv_set.labels):
+        print("================")
         print("Fold "+str(fold)+":")
         # Split
         X_train, X_test = cv_set.input_lists[train_index], cv_set.input_lists[test_index]
@@ -120,6 +121,7 @@ for setting in exp_sets:
             f_rs.append(r)
             f_f1s.append(f1)
             f_accs.append(acc)
+        print("================")
         print("Best scores of fold", fold, ":")
         print("Precision:", "%.3f" % max(f_ps), ". Recall:", "%.3f" % max(f_rs), ". F1 Score:", "%.3f" % max(f_f1s), ". Accuracy:", "%.3f" % max(f_accs))
         precisions.append(f_ps)
@@ -131,8 +133,8 @@ for setting in exp_sets:
 
     print("================")
     end_time = datetime.datetime.now().replace(microsecond=0)
-    print("Training took (h:m:s)", end_time-start_time)
     print("Training completed at:", end_time)
+    print("Training took (h:m:s)", end_time - start_time)
     send_email(name_info+" TRAINING DONE!")
 
     # Show average scores
@@ -153,4 +155,5 @@ for setting in exp_sets:
     for fold in accs:
         best_accs.append(max(fold))
     print("Average Accuracy:", "%.3f" % (sum(best_accs)/len(best_accs)))
+    print("================")
 
