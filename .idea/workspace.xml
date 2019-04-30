@@ -5,6 +5,10 @@
       <change afterPath="$PROJECT_DIR$/classify/code2class/mean_max_pooling.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/classify/code2class/svm_w_bow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< HEAD
+=======
+      <change beforePath="$PROJECT_DIR$/generate/fine_tune.py" beforeDir="false" afterPath="$PROJECT_DIR$/generate/fine_tune.py" afterDir="false" />
+>>>>>>> 122e1d19204806b71793748135dc1ec5923b506b
       <change beforePath="$PROJECT_DIR$/support_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/support_functions.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,19 +28,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+<<<<<<< HEAD
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/classify/code2class/svm_w_bow.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="228">
               <caret line="40" column="59" selection-start-line="40" selection-start-column="59" selection-end-line="40" selection-end-column="59" />
+=======
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/generate/fine_tune.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="540">
+              <caret line="131" column="70" selection-start-line="131" selection-start-column="70" selection-end-line="131" selection-end-column="70" />
+>>>>>>> 122e1d19204806b71793748135dc1ec5923b506b
               <folding>
-                <element signature="e#0#43#0" expanded="true" />
+                <element signature="e#1#44#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+<<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/classify/code2class/mean_max_pooling.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1842">
@@ -50,6 +63,12 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="531">
               <caret line="410" lean-forward="true" selection-start-line="410" selection-end-line="410" />
+=======
+        <entry file="file://$PROJECT_DIR$/support_functions.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1729">
+              <caret line="439" column="4" selection-start-line="439" selection-start-column="4" selection-end-line="439" selection-end-column="4" />
+>>>>>>> 122e1d19204806b71793748135dc1ec5923b506b
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -64,14 +83,25 @@
       <find>joi</find>
       <find>temp</find>
       <find>tmp</find>
-      <find>results_dir</find>
       <find>encoder</find>
       <find>train_max_seq_length</find>
       <find>i</find>
       <find>latent_dim</find>
       <find>num_layers</find>
       <find>batch_size</find>
+<<<<<<< HEAD
       <find>predict</find>
+=======
+      <find>results_dir</find>
+      <find>trained_models_dir</find>
+      <find>train_do</find>
+      <find>val_input_data</find>
+      <find>encoder_input_data</find>
+      <find>decoder_input_data</find>
+      <find>decoder_target_data</find>
+      <find>input_lists</find>
+      <find>comment_lists</find>
+>>>>>>> 122e1d19204806b71793748135dc1ec5923b506b
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -95,10 +125,14 @@
         <option value="$PROJECT_DIR$/classify/code2class/cv.py" />
         <option value="$PROJECT_DIR$/classify/code2class/fine_tune.py" />
         <option value="$PROJECT_DIR$/generate/train/lstm_seq2seq.py" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/generate/fine_tune.py" />
         <option value="$PROJECT_DIR$/classify/code2class/svm_w_bow.py" />
         <option value="$PROJECT_DIR$/classify/code2class/mean_max_pooling.py" />
+=======
+>>>>>>> 122e1d19204806b71793748135dc1ec5923b506b
         <option value="$PROJECT_DIR$/support_functions.py" />
+        <option value="$PROJECT_DIR$/generate/fine_tune.py" />
       </list>
     </option>
   </component>
@@ -123,6 +157,7 @@
             <path>
               <item name="tech_debt" type="b2602c69:ProjectViewProjectNode" />
               <item name="tech_debt" type="462c0819:PsiDirectoryNode" />
+<<<<<<< HEAD
               <item name="classify" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -130,6 +165,9 @@
               <item name="tech_debt" type="462c0819:PsiDirectoryNode" />
               <item name="classify" type="462c0819:PsiDirectoryNode" />
               <item name="code2class" type="462c0819:PsiDirectoryNode" />
+=======
+              <item name="generate" type="462c0819:PsiDirectoryNode" />
+>>>>>>> 122e1d19204806b71793748135dc1ec5923b506b
             </path>
           </expand>
           <select />
@@ -296,13 +334,22 @@
       <workItem from="1554767901240" duration="57221000" />
       <workItem from="1555999715957" duration="123000" />
       <workItem from="1555999924275" duration="15633000" />
+<<<<<<< HEAD
       <workItem from="1556074520636" duration="28394000" />
       <workItem from="1556585488121" duration="7991000" />
+=======
+      <workItem from="1556074520636" duration="27902000" />
+      <workItem from="1556417656258" duration="32179000" />
+>>>>>>> 122e1d19204806b71793748135dc1ec5923b506b
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="178231000" />
+=======
+    <option name="totallyTimeSpent" value="201927000" />
+>>>>>>> 122e1d19204806b71793748135dc1ec5923b506b
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
@@ -432,7 +479,18 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/generate/test/support_functions.py">
+=======
+    <entry file="file://$PROJECT_DIR$/generate/train/support_functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="123" column="53" lean-forward="true" selection-start-line="123" selection-start-column="26" selection-end-line="123" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classify/code2class/cv.py">
+>>>>>>> 122e1d19204806b71793748135dc1ec5923b506b
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="760">
           <caret line="172" lean-forward="true" selection-start-line="172" selection-end-line="172" />
@@ -442,6 +500,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/generate/train/lstm_seq2seq.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="608">
@@ -456,32 +515,51 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
           <caret line="7" column="32" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
+=======
+    <entry file="file://$PROJECT_DIR$/generate/test/support_functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="752">
+          <caret line="171" column="27" lean-forward="true" selection-start-line="156" selection-end-line="171" selection-end-column="27" />
+>>>>>>> 122e1d19204806b71793748135dc1ec5923b506b
           <folding>
             <element signature="e#0#43#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/generate/test/lstm_seq2seq.py">
+    <entry file="file://$PROJECT_DIR$/generate/test/real_bleu_score.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="76" column="33" selection-start-line="76" selection-start-column="33" selection-end-line="76" selection-end-column="33" />
+        <state>
+          <caret column="3" lean-forward="true" selection-start-column="3" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generate/test/bleu_score.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="23" column="29" lean-forward="true" selection-start-line="22" selection-end-line="23" selection-end-column="29" />
           <folding>
-            <element signature="e#0#35#0" expanded="true" />
+            <element signature="e#0#40#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/classify/code2class/cv.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="361">
           <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
+=======
+        <state relative-caret-position="570">
+          <caret line="57" column="84" lean-forward="true" selection-start-line="57" selection-end-line="57" selection-end-column="84" />
+>>>>>>> 122e1d19204806b71793748135dc1ec5923b506b
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/classify/code2class/fine_tune.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -493,8 +571,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="228">
           <caret line="40" column="59" selection-start-line="40" selection-start-column="59" selection-end-line="40" selection-end-column="59" />
+=======
+    <entry file="file://$PROJECT_DIR$/generate/test/lstm_seq2seq.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="73" column="1" selection-start-line="73" selection-start-column="1" selection-end-line="73" selection-end-column="1" />
+>>>>>>> 122e1d19204806b71793748135dc1ec5923b506b
           <folding>
-            <element signature="e#0#43#0" expanded="true" />
+            <element signature="e#0#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -508,10 +592,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/support_functions.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="531">
           <caret line="410" lean-forward="true" selection-start-line="410" selection-end-line="410" />
+=======
+        <state relative-caret-position="1729">
+          <caret line="439" column="4" selection-start-line="439" selection-start-column="4" selection-end-line="439" selection-end-column="4" />
+>>>>>>> 122e1d19204806b71793748135dc1ec5923b506b
           <folding>
             <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generate/fine_tune.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="131" column="70" selection-start-line="131" selection-start-column="70" selection-end-line="131" selection-end-column="70" />
+          <folding>
+            <element signature="e#1#44#0" expanded="true" />
           </folding>
         </state>
       </provider>

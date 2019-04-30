@@ -7,6 +7,7 @@ from keras.models import Sequential
 from keras.layers import LSTM, Dense, Embedding, Input, dot, Activation, concatenate
 import smtplib
 from tqdm import tqdm
+from nltk.translate.bleu_score import corpus_bleu
 
 
 
@@ -230,34 +231,25 @@ def token_integer_mapping(input_tokens, target_tokens):
 
 
 def prepare_model_data(input_lists, target_lists, input_token_index, target_token_index,
-                       max_encoder_seq_length, max_decoder_seq_length, test=False):
-    if not test:
-        # Define model's input & output data and initialize them with zeros
-        encoder_input_data = np.zeros((len(input_lists), max_encoder_seq_length), dtype='int32')
-        decoder_input_data = np.zeros((len(target_lists), max_decoder_seq_length), dtype='int32')
-        print(len(target_lists), max_decoder_seq_length, len(target_token_index))
-        decoder_target_data = np.zeros((len(target_lists), max_decoder_seq_length, len(target_token_index)), dtype='float32')
-        # Loop samples
-        for i, (input_list, target_list) in enumerate(zip(input_lists, target_lists)):
-            # Loop input sequences
-            for t, token in enumerate(input_list):
-                encoder_input_data[i, t] = input_token_index[token]
-            # Loop target sequences
-            for t, token in enumerate(target_list):
-                # decoder_target_data is ahead of decoder_input_data by one time step
-                decoder_input_data[i, t] = target_token_index[token]
-                if t > 0:
-                    # decoder_target_data will be ahead by one time step and will not include the start character. Initial value altered.
-                    decoder_target_data[i, t-1, target_token_index[token]] = 1.
-        return encoder_input_data, decoder_input_data, decoder_target_data
-    else:
-        encoder_input_data = np.zeros((len(input_lists), max_encoder_seq_length), dtype='int32')
-        # Loop samples
-        for i, input_list in enumerate(input_lists):
-            # Loop input sequences
-            for t, token in enumerate(input_list):
-                encoder_input_data[i, t] = input_token_index[token]
-        return encoder_input_data
+                       max_encoder_seq_length, max_decoder_seq_length):
+    # Define model's input & output data and initialize them with zeros
+    encoder_input_data = np.zeros((len(input_lists), max_encoder_seq_length), dtype='int32')
+    decoder_input_data = np.zeros((len(target_lists), max_decoder_seq_length), dtype='int32')
+    decoder_target_data = np.zeros((len(target_lists), max_decoder_seq_length, len(target_token_index)+1), dtype='float32')
+    # Loop samples
+    for i, (input_list, target_list) in enumerate(zip(input_lists, target_lists)):
+        # Loop input sequences
+        for t, token in enumerate(input_list):
+            encoder_input_data[i, t] = input_token_index[token]
+        # Loop target sequences
+        for t, token in enumerate(target_list):
+            # decoder_target_data is ahead of decoder_input_data by one time step
+            decoder_input_data[i, t] = target_token_index[token]
+            if t > 0:
+                # decoder_target_data will be ahead by one time step and will not include the start character. Initial value altered.
+                decoder_target_data[i, t-1, target_token_index[token]] = 1.
+
+    return encoder_input_data, decoder_input_data, decoder_target_data
 
 
 def replace_unseen(new_vocab, old_vocab, new_model_inputs):
@@ -267,16 +259,23 @@ def replace_unseen(new_vocab, old_vocab, new_model_inputs):
     for token in new_vocab:
         if token not in old_vocab:
             unseen_tokens.add(token)
-    # Replace
-    modified_inputs = new_model_inputs
-    for i, x in enumerate(modified_inputs):
+    # Replace (with a workaround to solve a weird referencing issue)
+    modified_model_inputs = []
+    for i, x in enumerate(new_model_inputs):
         matches = set(x) & unseen_tokens  # find the unseen-before tokens in an input sample
         if len(matches) > 0:
+            a_seq = []
             for j, token in enumerate(x):
                 if token in matches:
-                    modified_inputs[i][j] = "<unknown>"
+                    # modified_model_inputs[i][j] = "<unknown>"
+                    a_seq.append("<unknown>")
+                else:
+                    a_seq.append(token)
+            modified_model_inputs.append(a_seq)
+        else:
+            modified_model_inputs.append(x)
 
-    return modified_inputs
+    return np.array(modified_model_inputs)
 
 
 def build_classifier(latent_dim, num_input_tokens, num_layers, drop_prob=0.2):
@@ -304,8 +303,8 @@ def build_generator(latent_dim, num_encoder_tokens, num_decoder_tokens, num_laye
         sys.exit("Error: Number of model layers must be 1, 2, or 3")
     encoder_inputs = Input(shape=(None,))
     decoder_inputs = Input(shape=(None,))
-    en_x = Embedding(num_encoder_tokens + 1, latent_dim, mask_zero=True)(encoder_inputs)
-    de_x = Embedding(num_decoder_tokens + 1, latent_dim, mask_zero=True)(decoder_inputs)
+    en_x = Embedding(num_encoder_tokens + 2, latent_dim, mask_zero=True)(encoder_inputs)
+    de_x = Embedding(num_decoder_tokens + 2, latent_dim, mask_zero=True)(decoder_inputs)
     if num_layers == 1:
         encoder_outputs, state_h, state_c = LSTM(latent_dim, return_sequences=True, return_state=True)(en_x)
         decoder_outputs = LSTM(latent_dim, return_sequences=True)(de_x, initial_state=[state_h, state_c])
@@ -327,7 +326,7 @@ def build_generator(latent_dim, num_encoder_tokens, num_decoder_tokens, num_laye
     context = dot([attention, encoder_outputs], axes=[2, 1])
     decoder_combined_context = concatenate([context, decoder_outputs])
     attention_context_output = Dense(latent_dim, activation="tanh")(decoder_combined_context)
-    model_output = Dense(num_decoder_tokens, activation="softmax")(attention_context_output)
+    model_output = Dense(num_decoder_tokens + 1, activation="softmax")(attention_context_output)
 
     return encoder_inputs, decoder_inputs, model_output
 
@@ -387,22 +386,62 @@ def send_email(title, content="No content!"):
     server.quit()
 
 
-def translate(n_samples):
+def decode_sequence(input_seq, model, max_decoder_seq_length, target_token_index, reverse_target_token_index):
+    target_seq = np.zeros(shape=(len(input_seq), max_decoder_seq_length))
+    target_seq[:, 0] = target_token_index["<sos>"]  # Populate the first character of target sequence with the start character.
+    # Loop from the second to the last character in the sequence
+    for i in range(1, max_decoder_seq_length):
+        prediction = model.predict([input_seq, target_seq]).argmax(axis=2)
+        if reverse_target_token_index[prediction[:, i][0]] == "<eos>":
+            break
+        ###print(reverse_target_token_index[prediction[:, i][0]])
+        target_seq[:, i] = prediction[:, i]
+    # Decode predicted numbers to words
+    decoded_sentence = []
+    for idx in target_seq[:, 1:][0]:
+        if idx == 0:
+            break
+        decoded_sentence.append(reverse_target_token_index[idx])
+    return decoded_sentence
+
+
+def translate_corpus(model, encoder_input_data, comment_lists, max_decoder_seq_length_test, target_token_index, reverse_target_token_index, model_name):
     predicted_lists = []
-    for seq_index in tqdm(range(n_samples)):
+    c = 1
+    for seq_index in tqdm(range(len(encoder_input_data))):
         # Take one sequence (part of the testing set) for trying out decoding.
         input_seq = encoder_input_data[seq_index:seq_index + 1]
-        decoded_sentence = decode_sequence(input_seq, model, max_decoder_seq_length_test, target_token_index,
-                                           reverse_target_token_index)
+        decoded_sentence = decode_sequence(
+            input_seq, model, max_decoder_seq_length_test, target_token_index, reverse_target_token_index)
         predicted_lists.append(decoded_sentence)
         print_deocded = ''
         for token in decoded_sentence:
             print_deocded += token + ' '
         print_target = ''
-        for i, token in enumerate(test_do.target_lists[seq_index]):
-            if 0 < i and i < len(test_do.target_lists[seq_index]) - 1:  # Don't print "<sos>" and "<eos>"
+        for i, token in enumerate(comment_lists[seq_index]):
+            if 0 < i and i < len(comment_lists[seq_index]) - 1:  # Don't print "<sos>" and "<eos>"
                 print_target += token + ' '
+        with open("/home/aziz/experiments/output/td/generate/CT/tune/" + model_name + ".txt", "a", encoding='utf-8') as f:
+            f.write(str(c) + '. Target sentence:  ' + print_target + "\n")
+            f.write(str(c) + '. Decoded sentence: ' + print_deocded + "\n-\n")
+        c += 1
     return predicted_lists
+
+
+def calculate_bleu(target_lists, predicted_lists):
+    # Cut out <sos> and <eos>
+    references = []
+    for a_list in target_lists:
+        references.append([a_list[1:-1]])
+
+    bleu1 = corpus_bleu(references, predicted_lists, weights=(1., 0., 0., 0.))
+    bleu2 = corpus_bleu(references, predicted_lists, weights=(0., 1., 0., 0.))
+    bleu3 = corpus_bleu(references, predicted_lists, weights=(0., 0., 1., 0.))
+    bleu4 = corpus_bleu(references, predicted_lists, weights=(0., 0., 0., 1.))
+    bleu  = corpus_bleu(references, predicted_lists)
+    print("Bleu-1 Score: %.3f" % bleu1, " Bleu-2 Score: %.3f" % bleu2, " Bleu-3 Score: %.3f" % bleu3, " Bleu-4 Score: %.3f" % bleu4, " Bleu Score: %.3f" % bleu)
+
+    return bleu1, bleu2, bleu3, bleu4, bleu
 
 
 def dummy_fun(doc):
