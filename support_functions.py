@@ -421,7 +421,7 @@ def translate_corpus(model, encoder_input_data, comment_lists, max_decoder_seq_l
         for i, token in enumerate(comment_lists[seq_index]):
             if 0 < i and i < len(comment_lists[seq_index]) - 1:  # Don't print "<sos>" and "<eos>"
                 print_target += token + ' '
-        with open("/home/aziz/experiments/output/td/generate/CT/tune/"+model_name+".txt", "a", encoding='utf-8') as f:
+        with open("/home/aziz/experiments/output/td/generate/CT/tune/" + model_name + ".txt", "a", encoding='utf-8') as f:
             f.write(str(c) + '. Target sentence:  ' + print_target + "\n")
             f.write(str(c) + '. Decoded sentence: ' + print_deocded + "\n-\n")
         c += 1
@@ -442,4 +442,8 @@ def calculate_bleu(target_lists, predicted_lists):
     print("Bleu-1 Score: %.3f" % bleu1, " Bleu-2 Score: %.3f" % bleu2, " Bleu-3 Score: %.3f" % bleu3, " Bleu-4 Score: %.3f" % bleu4, " Bleu Score: %.3f" % bleu)
 
     return bleu1, bleu2, bleu3, bleu4, bleu
+
+
+def dummy_fun(doc):
+    return doc
 
