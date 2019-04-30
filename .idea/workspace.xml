@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="57e00eac-310b-4e20-a7ee-a45d36b07d8a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/classify/code2class/mean_max_pooling.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/classify/code2class/svm_w_bow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classify/code2class/cv.py" beforeDir="false" afterPath="$PROJECT_DIR$/classify/code2class/cv.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classify/code2class/fine_tune.py" beforeDir="false" afterPath="$PROJECT_DIR$/classify/code2class/fine_tune.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generate/train/lstm_seq2seq.py" beforeDir="false" afterPath="$PROJECT_DIR$/generate/train/lstm_seq2seq.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/support_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/support_functions.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -18,6 +17,7 @@
     <SUITE FILE_PATH="coverage/tech_debt$test.coverage" NAME="test Coverage Results" MODIFIED="1554633082261" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/preprocess" />
     <SUITE FILE_PATH="coverage/tech_debt$prepare_framework_data.coverage" NAME="prepare_framework_data Coverage Results" MODIFIED="1554633994777" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/preprocess" />
     <SUITE FILE_PATH="coverage/tech_debt$test__1_.coverage" NAME="test (1) Coverage Results" MODIFIED="1555151510428" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/classify/code2class" />
+    <SUITE FILE_PATH="coverage/tech_debt$svm_w_bow.coverage" NAME="svm_w_bow Coverage Results" MODIFIED="1556599360017" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/classify/code2class" />
     <SUITE FILE_PATH="coverage/tech_debt$process_parsed.coverage" NAME="process_parsed Coverage Results" MODIFIED="1554264142516" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/tech_debt$prepare_parsable.coverage" NAME="prepare_parsable Coverage Results" MODIFIED="1554202545989" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/tech_debt$fine_tune.coverage" NAME="fine_tune Coverage Results" MODIFIED="1554771944455" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/classify/code2class" />
@@ -25,22 +25,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/generate/train/lstm_seq2seq.py">
+        <entry file="file://$PROJECT_DIR$/classify/code2class/svm_w_bow.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="608">
-              <caret line="66" column="57" selection-start-line="65" selection-end-line="66" selection-end-column="57" />
-              <folding>
-                <element signature="e#0#101#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/generate/fine_tune.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="7" column="32" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
+            <state relative-caret-position="228">
+              <caret line="40" column="59" selection-start-line="40" selection-start-column="59" selection-end-line="40" selection-end-column="59" />
               <folding>
                 <element signature="e#0#43#0" expanded="true" />
               </folding>
@@ -49,25 +37,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/generate/test/lstm_seq2seq.py">
+        <entry file="file://$PROJECT_DIR$/classify/code2class/mean_max_pooling.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="279">
-              <caret line="76" column="33" selection-start-line="76" selection-start-column="33" selection-end-line="76" selection-end-column="33" />
-              <folding>
-                <element signature="e#0#35#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/classify/code2class/cv.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
-              <folding>
-                <element signature="e#0#39#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="1842">
+              <caret line="115" selection-start-line="115" selection-end-line="115" />
             </state>
           </provider>
         </entry>
@@ -75,8 +48,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/support_functions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="627">
-              <caret line="237" column="80" selection-start-line="237" selection-start-column="80" selection-end-line="237" selection-end-column="80" />
+            <state relative-caret-position="531">
+              <caret line="410" lean-forward="true" selection-start-line="410" selection-end-line="410" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -98,6 +71,7 @@
       <find>latent_dim</find>
       <find>num_layers</find>
       <find>batch_size</find>
+      <find>predict</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -122,6 +96,8 @@
         <option value="$PROJECT_DIR$/classify/code2class/fine_tune.py" />
         <option value="$PROJECT_DIR$/generate/train/lstm_seq2seq.py" />
         <option value="$PROJECT_DIR$/generate/fine_tune.py" />
+        <option value="$PROJECT_DIR$/classify/code2class/svm_w_bow.py" />
+        <option value="$PROJECT_DIR$/classify/code2class/mean_max_pooling.py" />
         <option value="$PROJECT_DIR$/support_functions.py" />
       </list>
     </option>
@@ -155,22 +131,6 @@
               <item name="classify" type="462c0819:PsiDirectoryNode" />
               <item name="code2class" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="tech_debt" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tech_debt" type="462c0819:PsiDirectoryNode" />
-              <item name="generate" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tech_debt" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tech_debt" type="462c0819:PsiDirectoryNode" />
-              <item name="generate" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tech_debt" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tech_debt" type="462c0819:PsiDirectoryNode" />
-              <item name="preprocess" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -197,7 +157,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.test (1)">
+  <component name="RunManager" selected="Python.svm_w_bow">
     <configuration name="fine_tune" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="tech_debt" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -242,7 +202,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="process_parsed" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="svm_w_bow" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="tech_debt" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -250,12 +210,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/classify/code2class" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/process_parsed.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/classify/code2class/svm_w_bow.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -310,11 +270,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.svm_w_bow" />
         <item itemvalue="Python.test (1)" />
         <item itemvalue="Python.fine_tune" />
         <item itemvalue="Python.prepare_framework_data" />
         <item itemvalue="Python.test" />
-        <item itemvalue="Python.process_parsed" />
       </list>
     </recent_temporary>
   </component>
@@ -336,23 +296,24 @@
       <workItem from="1554767901240" duration="57221000" />
       <workItem from="1555999715957" duration="123000" />
       <workItem from="1555999924275" duration="15633000" />
-      <workItem from="1556074520636" duration="27902000" />
+      <workItem from="1556074520636" duration="28394000" />
+      <workItem from="1556585488121" duration="7991000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="169748000" />
+    <option name="totallyTimeSpent" value="178231000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2733813" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27670172" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32937366" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32937366" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -464,23 +425,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/classify/code2class/fine_tune.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="6" column="10" lean-forward="true" selection-start-line="6" selection-start-column="10" selection-end-line="6" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/classify/code2class/cv.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/generate/train/support_functions.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="513">
@@ -494,16 +438,6 @@
           <caret line="172" lean-forward="true" selection-start-line="172" selection-end-line="172" />
           <folding>
             <element signature="e#0#84#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/generate/test/lstm_seq2seq.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="76" column="33" selection-start-line="76" selection-start-column="33" selection-end-line="76" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -528,10 +462,54 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/generate/test/lstm_seq2seq.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="279">
+          <caret line="76" column="33" selection-start-line="76" selection-start-column="33" selection-end-line="76" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classify/code2class/cv.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classify/code2class/fine_tune.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="21" column="33" lean-forward="true" selection-end-line="115" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classify/code2class/svm_w_bow.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="40" column="59" selection-start-line="40" selection-start-column="59" selection-end-line="40" selection-end-column="59" />
+          <folding>
+            <element signature="e#0#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classify/code2class/mean_max_pooling.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1842">
+          <caret line="115" selection-start-line="115" selection-end-line="115" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/support_functions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="627">
-          <caret line="237" column="80" selection-start-line="237" selection-start-column="80" selection-end-line="237" selection-end-column="80" />
+        <state relative-caret-position="531">
+          <caret line="410" lean-forward="true" selection-start-line="410" selection-end-line="410" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>

@@ -403,3 +403,8 @@ def translate(n_samples):
             if 0 < i and i < len(test_do.target_lists[seq_index]) - 1:  # Don't print "<sos>" and "<eos>"
                 print_target += token + ' '
     return predicted_lists
+
+
+def dummy_fun(doc):
+    return doc
+
