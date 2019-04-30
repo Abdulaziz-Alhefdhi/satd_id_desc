@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="57e00eac-310b-4e20-a7ee-a45d36b07d8a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generate/fine_tune.py" beforeDir="false" afterPath="$PROJECT_DIR$/generate/fine_tune.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/support_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/support_functions.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,8 +23,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/generate/fine_tune.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="131" column="70" selection-start-line="131" selection-start-column="70" selection-end-line="131" selection-end-column="70" />
+            <state>
               <folding>
                 <element signature="e#1#44#0" expanded="true" />
               </folding>
@@ -285,12 +282,12 @@
       <workItem from="1555999715957" duration="123000" />
       <workItem from="1555999924275" duration="15633000" />
       <workItem from="1556074520636" duration="27902000" />
-      <workItem from="1556417656258" duration="32179000" />
+      <workItem from="1556417656258" duration="32943000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="201927000" />
+    <option name="totallyTimeSpent" value="202691000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
@@ -496,8 +493,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/generate/fine_tune.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="131" column="70" selection-start-line="131" selection-start-column="70" selection-end-line="131" selection-end-column="70" />
+        <state>
           <folding>
             <element signature="e#1#44#0" expanded="true" />
           </folding>
