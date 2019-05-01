@@ -12,11 +12,11 @@ from support_functions import DataObject, data_shapes, shape_info, token_integer
 
 
 
-batch_size = [16]   # Batch size for training.
+batch_size = [64]   # Batch size for training.
 epochs = 30       # Number of epochs to train for.
 num_layers = [1]    # Number of model layers
-latent_dim = [1024]   # Latent dimensionality of the encoding space.
-test_es = [25]
+latent_dim = [512]   # Latent dimensionality of the encoding space.
+test_es = [28, 21, 16, 5]
 
 # Final experimental settings
 exp_sets = [(64, 256, 1), (32, 256, 2), (32, 256, 3), (8, 16, 2), (8, 16, 3), (16, 64, 2), (16, 64, 3)]
@@ -58,7 +58,7 @@ val_target_data = replace_unseen(val_set.comment_vocab, train_set.comment_vocab,
 encoder_input_val, decoder_input_val, decoder_target_val = prepare_model_data(
     val_input_data, val_target_data, input_token_index, target_token_index, val_max_encoder_seq_length, val_max_decoder_seq_length)
 
-test = True  # Train or test?
+test = False  # Train or test?
 if not test:
     # Training nested loops
     for dim in latent_dim:
@@ -126,8 +126,9 @@ else:
                                                        target_token_index, reverse_target_token_index, model_name)
                     bleu1, bleu2, bleu3, bleu4, bleu = calculate_bleu(val_set.comment_lists, predicted_lists)
 
-                    to_email = "Bleu-1 Score: %.3f" % bleu1, "\nBleu-2 Score: %.3f" % bleu2, "\nBleu-3 Score: %.3f" % bleu3,\
-                               "\nBleu-4 Score: %.3f" % bleu4, "\nBleu Score: %.3f" % bleu
+                    to_email = "Bleu-1 Score: %.3f" % bleu1 + "\nBleu-2 Score: %.3f" % bleu2 + \
+                               "\nBleu-3 Score: %.3f" % bleu3 + "\nBleu-4 Score: %.3f" % bleu4 + \
+                               "\nBleu Score: %.3f" % bleu
 
                     send_email(model_name + " TESTING DONE!", to_email)
 
