@@ -1,25 +1,25 @@
-from keras.callbacks import ModelCheckpoint
+# from keras.callbacks import ModelCheckpoint
 from keras.backend import clear_session
 import numpy as np
 import datetime
 import pickle
-import os
+# import os
 import sys
-sys.path.append('/home/aa043/experiments/problems/tech_debt/')
+sys.path.append('/home/aa043/sea/problems/tech_debt/')
 from support_functions import DataObject, data_shapes, shape_info, token_integer_mapping, \
-    prepare_model_input_data, replace_unseen, build_model, results, send_email
+    prepare_model_data, replace_unseen, build_classifier_w_pooling, results, send_email
 
 
-batch_size = [256, 128, 64, 32, 16]   # Batch size for training.
+batch_size = [64]   # Batch size for training.
 epochs = 20       # Number of epochs to train for.
 num_layers = [1]    # Number of model layers
-latent_dim = [256]   # Latent dimensionality of the encoding space.
+latent_dim = [64]   # Latent dimensionality of the encoding space.
 
 # Final experimental settings
 exp_sets = [(64, 256, 1), (32, 256, 2), (32, 256, 3), (8, 16, 2), (8, 16, 3), (16, 64, 2), (16, 64, 3)]
 
-data_dir    = '/home/aziz/experiments/data/td/CT/'
-results_dir = '/home/aziz/experiments/output/td/classify/code2class/v2/cv/dim64_b64/'
+data_dir    = '/home/aa043/sea/gpu/experiments/data/td/CT/'
+# results_dir = '/home/aziz/experiments/output/td/classify/code2class/v2/cv/dim64_b64/'
 # trained_models_dir = "/home/aziz/experiments/trained_models/td/classify/CT/fine_tune/"
 
 # Get data
@@ -42,15 +42,20 @@ shape_info(val_n_input_samples, val_num_encoder_tokens, val_num_decoder_tokens,
            val_max_encoder_seq_length, val_max_decoder_seq_length)
 
 # Convert tokens to integers since the DL model accepts only integers
-input_token_index, reverse_input_token_index = token_integer_mapping(train_set.input_vocab)
+input_token_index, target_token_index, _, _ = \
+    token_integer_mapping(train_set.input_vocab, train_set.comment_vocab)
 
 # Prepare model training data
-train_model_inputs = prepare_model_input_data(train_set.input_lists, input_token_index, train_max_encoder_seq_length)
+train_model_inputs, _, _ = prepare_model_data(
+    train_set.input_lists, train_set.comment_lists, input_token_index,
+    target_token_index, train_max_encoder_seq_length, train_max_decoder_seq_length)
 train_model_outputs = np.array(train_set.labels, dtype='int32')
 
 # Prepare model validation data
-val_input_lists = replace_unseen(val_set.input_vocab, train_set.input_vocab, val_set.input_lists)
-val_model_inputs = prepare_model_input_data(val_input_lists, input_token_index, val_max_encoder_seq_length)
+val_input_data = replace_unseen(val_set.input_vocab, train_set.input_vocab, val_set.input_lists)
+_ = replace_unseen(val_set.comment_vocab, train_set.comment_vocab, val_set.comment_lists)
+val_model_inputs, _, _ = prepare_model_data(
+    val_input_data, _, input_token_index, target_token_index, val_max_encoder_seq_length, val_max_decoder_seq_length)
 
 # Training nested loops
 for dim in latent_dim:
@@ -67,7 +72,7 @@ for dim in latent_dim:
             print("================")
 
             # Build, train, and validate the model
-            model = build_model(dim, len(train_set.input_vocab), nl)
+            model = build_classifier_w_pooling(dim, len(train_set.input_vocab), nl)
             model.summary()
 
             start_time = datetime.datetime.now().replace(microsecond=0)

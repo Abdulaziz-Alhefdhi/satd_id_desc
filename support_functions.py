@@ -4,7 +4,7 @@ import sys
 import numpy as np
 import pickle
 from keras.models import Sequential
-from keras.layers import LSTM, Dense, Embedding, Input, dot, Activation, concatenate
+from keras.layers import LSTM, Dense, Embedding, Input, dot, Activation, concatenate, GlobalAveragePooling1D, GlobalMaxPooling1D
 import smtplib
 from tqdm import tqdm
 from nltk.translate.bleu_score import corpus_bleu
@@ -235,7 +235,8 @@ def prepare_model_data(input_lists, target_lists, input_token_index, target_toke
     # Define model's input & output data and initialize them with zeros
     encoder_input_data = np.zeros((len(input_lists), max_encoder_seq_length), dtype='int32')
     decoder_input_data = np.zeros((len(target_lists), max_decoder_seq_length), dtype='int32')
-    decoder_target_data = np.zeros((len(target_lists), max_decoder_seq_length, len(target_token_index)+1), dtype='float32')
+    # decoder_target_data = np.zeros((len(target_lists), max_decoder_seq_length, len(target_token_index)+1), dtype='float32')
+    decoder_target_data = np.zeros((len(target_lists), max_decoder_seq_length), dtype='int32')
     # Loop samples
     for i, (input_list, target_list) in enumerate(zip(input_lists, target_lists)):
         # Loop input sequences
@@ -245,9 +246,9 @@ def prepare_model_data(input_lists, target_lists, input_token_index, target_toke
         for t, token in enumerate(target_list):
             # decoder_target_data is ahead of decoder_input_data by one time step
             decoder_input_data[i, t] = target_token_index[token]
-            if t > 0:
+            # if t > 0:
                 # decoder_target_data will be ahead by one time step and will not include the start character. Initial value altered.
-                decoder_target_data[i, t-1, target_token_index[token]] = 1.
+                # decoder_target_data[i, t-1, target_token_index[token]] = 1.
 
     return encoder_input_data, decoder_input_data, decoder_target_data
 
@@ -298,6 +299,28 @@ def build_classifier(latent_dim, num_input_tokens, num_layers, drop_prob=0.2):
     return model
 
 
+def build_classifier_w_pooling(latent_dim, num_input_tokens, num_layers, drop_prob=0.2):
+    if num_layers not in [1, 2, 3]:
+        sys.exit("Error: Number of model layers must be 1, 2, or 3")
+    model = Sequential()
+    model.add(Embedding(num_input_tokens+1, latent_dim))
+    if num_layers == 1:
+        model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+    elif num_layers == 2:
+        model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+        model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+    else:
+        model.add(LSTM(latent_dim*2, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+        model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+        model.add(LSTM(latent_dim//2, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+    # model.add(GlobalMaxPooling1D())
+    model.add(GlobalAveragePooling1D())
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+    return model
+
+
 def build_generator(latent_dim, num_encoder_tokens, num_decoder_tokens, num_layers):
     if num_layers not in [1, 2, 3]:
         sys.exit("Error: Number of model layers must be 1, 2, or 3")
@@ -341,6 +364,33 @@ def results(predictions, y_test):
         if lbl == 0 and pred[0] == 1:
             fp += 1
         if lbl == 1 and pred[0] == 0:
+            fn += 1
+    print("TPs =", tp, "- TNs =", tn, "- FPs =", fp, "- FNs =", fn, "- Total # of testing samples =", tp + tn + fp + fn)
+    p, r, f1, acc = 0, 0, 0, 0
+    if tp + fp > 0 and tp + fn > 0:
+        p, r = tp / (tp + fp), tp / (tp + fn)
+    elif tp + fp > 0:
+        p = tp / (tp + fp)
+    elif tp + fn > 0:
+        r = tp / (tp + fn)
+    if (p + r) > 0:
+        f1 = 2 * p * r / (p + r)
+    acc = (tp+tn)/(tp+tn+fp+fn)
+    print("Precision =", "%.3f" % p, "- Recall =", "%.3f" % r, "- F1 Score =", "%.3f" % f1, "- Accuracy =", "%.3f" % acc)
+
+    return tp, tn, fp, fn, p, r, f1, acc
+
+
+def results_baseline(predictions, y_test):
+    tp, tn, fp, fn = 0, 0, 0, 0
+    for pred, lbl in zip(predictions, y_test):
+        if lbl == 1 and pred == 1:
+            tp += 1
+        if lbl == 0 and pred == 0:
+            tn += 1
+        if lbl == 0 and pred == 1:
+            fp += 1
+        if lbl == 1 and pred == 0:
             fn += 1
     print("TPs =", tp, "- TNs =", tn, "- FPs =", fp, "- FNs =", fn, "- Total # of testing samples =", tp + tn + fp + fn)
     p, r, f1, acc = 0, 0, 0, 0

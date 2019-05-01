@@ -6,7 +6,7 @@ import sys
 import os
 sys.path.append('/home/aa043/sea/problems/tech_debt/')
 from support_functions import DataObject, data_shapes, shape_info, token_integer_mapping, \
-    prepare_model_input_data, replace_unseen, build_model, results, send_email, tokenize
+    prepare_model_data, replace_unseen, build_classifier_w_pooling, results, send_email, tokenize
 from sklearn.model_selection import StratifiedKFold
 from keras.callbacks import ModelCheckpoint
 
@@ -17,11 +17,11 @@ num_layers = 1    # Number of model layers (2, 1, 2, 2)
 latent_dim = 64   # Latent dimensionality of the encoding space (8, 32, 32, 16)
 
 # exp_sets = [(64, 64, 1), (8, 16, 2), (32, 256, 1), (32, 256, 2), (16, 64, 2)]  # (emb, b, l)
-exp_sets = [(8, 16, 2)]  # (emb, b, l)
+exp_sets = [(32, 256, 1), (32, 256, 2), (16, 64, 2), (8, 16, 2)]  # (emb, b, l)
 
 data_dir    = '/home/aa043/sea/gpu/experiments/data/td/CT/'
 # results_dir = '/home/aziz/experiments/output/td/classify/code2class/v2/cv/dim64_b64/'
-trained_models_dir = "/home/aa043/sea/gpu/experiments/trained_models/td/classify/CT/cv/"
+# trained_models_dir = "/home/aa043/sea/gpu/experiments/trained_models/td/classify/CT/cv/"
 
 # Get data
 with open(data_dir+'dataset.pkl', 'rb') as f:  # train_set
@@ -50,8 +50,8 @@ for setting in exp_sets:
     print("Embedding dimensionality:", dim)
     name_info = "emb"+str(dim)+"_b"+str(b)+"_"+str(nl)+"l"  # Model name to be saved
     # Make train-models directory
-    if not os.path.exists(trained_models_dir+name_info):
-        os.makedirs(trained_models_dir+name_info+"/")
+    # if not os.path.exists(trained_models_dir+name_info):
+    #     os.makedirs(trained_models_dir+name_info+"/")
 
     start_time = datetime.datetime.now().replace(microsecond=0)
     print("================")
@@ -76,7 +76,9 @@ for setting in exp_sets:
         test_vocab = tokenize(X_test)
 
         # Convert tokens to integers since the DL model accepts only integers
-        input_token_index, reverse_input_token_index = token_integer_mapping(train_vocab)
+        # input_token_index, reverse_input_token_index = token_integer_mapping(train_vocab)
+        input_token_index, _, _, _ = \
+            token_integer_mapping(train_vocab, tune_set.comment_vocab)
 
         # Prepare training model input data
         train_max_seq_length = max([len(txt) for txt in X_train])
@@ -105,7 +107,7 @@ for setting in exp_sets:
                 test_model_inputs[i, t] = input_token_index[token]
 
         # Build, train, and test the model
-        model = build_model(dim, len(train_vocab), nl)
+        model = build_classifier_w_pooling(dim, len(train_vocab), nl)
         model.summary()
         # Let the model iterate through the entire training data 'epochs' times, testing its performance on the
         # testing data each time
