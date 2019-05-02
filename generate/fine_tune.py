@@ -12,11 +12,11 @@ from support_functions import DataObject, data_shapes, shape_info, token_integer
 
 
 
-batch_size = [64]   # Batch size for training.
+batch_size = [32]   # Batch size for training.
 epochs = 30       # Number of epochs to train for.
 num_layers = [1]    # Number of model layers
 latent_dim = [512]   # Latent dimensionality of the encoding space.
-test_es = [28, 21, 16, 5]
+test_es = [28, 15, 6]
 
 # Final experimental settings
 exp_sets = [(64, 256, 1), (32, 256, 2), (32, 256, 3), (8, 16, 2), (8, 16, 3), (16, 64, 2), (16, 64, 3)]
@@ -50,15 +50,15 @@ input_token_index, target_token_index, reverse_input_token_index, reverse_target
 
 # Prepare model training data
 encoder_input_train, decoder_input_train, decoder_target_train = prepare_model_data(
-    train_set.input_lists, train_set.comment_lists, input_token_index, target_token_index, train_max_encoder_seq_length, train_max_decoder_seq_length)
+    train_set.input_lists, train_set.comment_lists, input_token_index, target_token_index, train_max_encoder_seq_length, train_max_decoder_seq_length, True)
 
 # Prepare model validation data
 val_input_data = replace_unseen(val_set.input_vocab, train_set.input_vocab, val_set.input_lists)
 val_target_data = replace_unseen(val_set.comment_vocab, train_set.comment_vocab, val_set.comment_lists)
 encoder_input_val, decoder_input_val, decoder_target_val = prepare_model_data(
-    val_input_data, val_target_data, input_token_index, target_token_index, val_max_encoder_seq_length, val_max_decoder_seq_length)
+    val_input_data, val_target_data, input_token_index, target_token_index, val_max_encoder_seq_length, val_max_decoder_seq_length, True)
 
-test = False  # Train or test?
+test = True  # Train or test?
 if not test:
     # Training nested loops
     for dim in latent_dim:

@@ -235,8 +235,8 @@ def prepare_model_data(input_lists, target_lists, input_token_index, target_toke
     # Define model's input & output data and initialize them with zeros
     encoder_input_data = np.zeros((len(input_lists), max_encoder_seq_length), dtype='int32')
     decoder_input_data = np.zeros((len(target_lists), max_decoder_seq_length), dtype='int32')
-    # decoder_target_data = np.zeros((len(target_lists), max_decoder_seq_length, len(target_token_index)+1), dtype='float32')
-    decoder_target_data = np.zeros((len(target_lists), max_decoder_seq_length), dtype='int32')
+    decoder_target_data = np.zeros((len(target_lists), max_decoder_seq_length, len(target_token_index)+1), dtype='float32')
+    # decoder_target_data = np.zeros((len(target_lists), max_decoder_seq_length), dtype='int32')
     # Loop samples
     for i, (input_list, target_list) in enumerate(zip(input_lists, target_lists)):
         # Loop input sequences
@@ -246,9 +246,9 @@ def prepare_model_data(input_lists, target_lists, input_token_index, target_toke
         for t, token in enumerate(target_list):
             # decoder_target_data is ahead of decoder_input_data by one time step
             decoder_input_data[i, t] = target_token_index[token]
-            # if t > 0:
+            if t > 0:
                 # decoder_target_data will be ahead by one time step and will not include the start character. Initial value altered.
-                # decoder_target_data[i, t-1, target_token_index[token]] = 1.
+                decoder_target_data[i, t-1, target_token_index[token]] = 1.
 
     return encoder_input_data, decoder_input_data, decoder_target_data
 
