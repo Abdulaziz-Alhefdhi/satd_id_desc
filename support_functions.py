@@ -316,8 +316,8 @@ def build_classifier_w_pooling(latent_dim, num_input_tokens, num_layers, drop_pr
         model.add(LSTM(latent_dim*2, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
         model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
         model.add(LSTM(latent_dim//2, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
-    # model.add(GlobalMaxPooling1D())
-    model.add(GlobalAveragePooling1D())
+    model.add(GlobalMaxPooling1D())
+    # model.add(GlobalAveragePooling1D())
     model.add(Dense(1, activation='sigmoid'))
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 

@@ -17,7 +17,7 @@ num_layers = 1    # Number of model layers (2, 1, 2, 2)
 latent_dim = 64   # Latent dimensionality of the encoding space (8, 32, 32, 16)
 
 # exp_sets = [(64, 64, 1), (8, 16, 2), (32, 256, 1), (32, 256, 2), (16, 64, 2)]  # (emb, b, l)
-exp_sets = [(32, 256, 1), (32, 256, 2), (16, 64, 2), (8, 16, 2)]  # (emb, b, l)
+exp_sets = [(32, 256, 1), (32, 256, 2), (64, 64, 1), (16, 64, 2), (8, 16, 2)]  # (emb, b, l)
 
 data_dir    = '/home/aa043/sea/gpu/experiments/data/td/CT/'
 # results_dir = '/home/aziz/experiments/output/td/classify/code2class/v2/cv/dim64_b64/'
@@ -137,7 +137,7 @@ for setting in exp_sets:
     end_time = datetime.datetime.now().replace(microsecond=0)
     print("Training completed at:", end_time)
     print("Training took (h:m:s)", end_time - start_time)
-    send_email(name_info+" TRAINING DONE!")
+    send_email(name_info+" S10F-CV DONE!")
 
     # Show average scores
     print("================")
