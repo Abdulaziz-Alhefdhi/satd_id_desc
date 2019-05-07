@@ -340,12 +340,12 @@ def build_generator(latent_dim, num_encoder_tokens, num_decoder_tokens, num_laye
         de_x = LSTM(latent_dim, return_sequences=True)(de_x, initial_state=[state_h, state_c])
         decoder_outputs = LSTM(latent_dim, return_sequences=True)(de_x)
     else:
-        en_x = LSTM(latent_dim*2, return_sequences=True)(en_x)
         en_x = LSTM(latent_dim, return_sequences=True)(en_x)
-        encoder_outputs, state_h, state_c = LSTM(latent_dim//2, return_sequences=True, return_state=True)(en_x)
-        de_x = LSTM(latent_dim*2, return_sequences=True)(de_x, initial_state=[state_h, state_c])
+        en_x = LSTM(latent_dim, return_sequences=True)(en_x)
+        encoder_outputs, state_h, state_c = LSTM(latent_dim, return_sequences=True, return_state=True)(en_x)
+        de_x = LSTM(latent_dim, return_sequences=True)(de_x, initial_state=[state_h, state_c])
         de_x = LSTM(latent_dim, return_sequences=True)(de_x)
-        decoder_outputs = LSTM(latent_dim//2, return_sequences=True)(de_x)
+        decoder_outputs = LSTM(latent_dim, return_sequences=True)(de_x)
     # Attention Mechanism
     attention = dot([decoder_outputs, encoder_outputs], axes=[2, 2])
     attention = Activation('softmax', name='attention')(attention)
@@ -500,3 +500,23 @@ def calculate_bleu(target_lists, predicted_lists):
 def dummy_fun(doc):
     return doc
 
+
+def positive_only(dataset):
+    input_lists, labels, comment_lists, code_lines = [], [], [], []
+    for in_list, lbl, comment, code in zip(dataset.input_lists, dataset.labels, dataset.comment_lists, dataset.code_lines):
+        if lbl == 1:
+            input_lists.append(in_list)
+            labels.append(lbl)
+            comment_lists.append(comment)
+            code_lines.append(code)
+
+    input_array   = np.array(input_lists)
+    label_array   = np.array(labels)
+    comment_array = np.array(comment_lists)
+    code_array    = np.array(code_lines)
+    input_vocab = tokenize(input_array)
+    comment_vocab = tokenize(comment_array)
+
+    positive_set = DataObject(input_array, label_array, comment_array, code_array, input_vocab, comment_vocab)
+
+    return positive_set

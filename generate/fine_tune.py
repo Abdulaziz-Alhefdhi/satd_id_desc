@@ -7,8 +7,8 @@ import pickle
 import os
 import sys
 sys.path.append('/home/aziz/experiments/problems/tech_debt/')
-from support_functions import DataObject, data_shapes, shape_info, token_integer_mapping, \
-    prepare_model_data, replace_unseen, build_generator, results, send_email, translate_corpus, calculate_bleu
+from support_functions import DataObject, data_shapes, shape_info, token_integer_mapping, prepare_model_data, \
+    replace_unseen, build_generator, results, send_email, translate_corpus, calculate_bleu, positive_only
 
 
 
@@ -27,9 +27,13 @@ trained_models_dir = "/home/aziz/experiments/trained_models/td/generate/CT/tune/
 
 # Get data
 with open(data_dir+'dataset.pkl', 'rb') as f:  # train_set
-    train_set = pickle.load(f)
+    pos_neg_train_set = pickle.load(f)
 with open(data_dir+'tune_val/dataset.pkl', 'rb') as f:  # val_set
-    val_set = pickle.load(f)
+    pos_neg_val_set = pickle.load(f)
+
+# Train only on TD data
+train_set = positive_only(pos_neg_train_set)
+val_set = positive_only(pos_neg_val_set)
 
 # Data shapes
 train_num_encoder_tokens, train_num_decoder_tokens, train_max_encoder_seq_length, \
@@ -58,79 +62,79 @@ val_target_data = replace_unseen(val_set.comment_vocab, train_set.comment_vocab,
 encoder_input_val, decoder_input_val, decoder_target_val = prepare_model_data(
     val_input_data, val_target_data, input_token_index, target_token_index, val_max_encoder_seq_length, val_max_decoder_seq_length, True)
 
-test = False  # Train or test?
-if not test:
+# test = True  # Train or test?
+# if not test:
     # Training nested loops
-    for dim in latent_dim:
-        for nl in num_layers:
-            for b in batch_size:
-    # for setting in exp_sets:
-    #     dim = setting[0]
-    #     b = setting[1]
-    #     nl = setting[2]
-        # Print hyper-parameter info
+for dim in latent_dim:
+    for nl in num_layers:
+        for b in batch_size:
+# for setting in exp_sets:
+#     dim = setting[0]
+#     b = setting[1]
+#     nl = setting[2]
+    # Print hyper-parameter info
+            print("================\nBatch size:", b)
+            print("Number of model layers:", nl)
+            print("Embedding dimensionality:", dim)
+            print("================")
+
+            # Build, train, and validate the model
+            encoder_inputs, decoder_inputs, decoder_outputs = build_generator(dim, train_num_encoder_tokens, train_num_decoder_tokens, nl)
+            model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
+            model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
+            model.summary()
+
+            start_time = datetime.datetime.now().replace(microsecond=0)
+            print("================")
+            print("Training started at:", start_time)
+            print("================")
+
+            # Make trained-models directory
+            name_info = "emb"+str(dim)+"_b"+str(b)+"_"+str(nl)+"l"
+            if not os.path.exists(trained_models_dir+name_info):
+                os.makedirs(trained_models_dir+name_info+"/")
+
+            # Train the model by going through the data 'epochs' times
+            model_name = "td_gen_ft_" + name_info
+            checkpoint = ModelCheckpoint(filepath=trained_models_dir+name_info+"/"+model_name+"_e{epoch:02d}.hdf5", verbose=1)
+            model.fit([encoder_input_train, decoder_input_train], decoder_target_train, batch_size=b, callbacks=[checkpoint],
+                      validation_data=([encoder_input_val, decoder_input_val], decoder_target_val), epochs=epochs)
+
+            end_time = datetime.datetime.now().replace(microsecond=0)
+            print("================")
+            print("Training completed at:", end_time)
+            print("Training took (h:m:s)", end_time-start_time)
+            print("================")
+            send_email(name_info+" TRAINING DONE!")
+            clear_session()
+
+# else:
+for dim in latent_dim:
+    for nl in num_layers:
+        for b in batch_size:
+            for e in test_es:
                 print("================\nBatch size:", b)
                 print("Number of model layers:", nl)
                 print("Embedding dimensionality:", dim)
+                print("Epoch:", e)
                 print("================")
+                folder_name = "emb"+str(dim)+"_b"+str(b)+"_"+str(nl)+"l"
+                model_name = "td_gen_ft_"+folder_name+"_e"+"%02d" % e+".hdf5"
+                model_path = trained_models_dir + folder_name + "/" + model_name
 
-                # Build, train, and validate the model
-                encoder_inputs, decoder_inputs, decoder_outputs = build_generator(dim, train_num_encoder_tokens, train_num_decoder_tokens, nl)
-                model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
-                model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
+                # Load model from disk
+                model = load_model(model_path)
                 model.summary()
 
-                start_time = datetime.datetime.now().replace(microsecond=0)
-                print("================")
-                print("Training started at:", start_time)
-                print("================")
+                predicted_lists = translate_corpus(model, encoder_input_val, val_set.comment_lists, val_max_decoder_seq_length,
+                                                   target_token_index, reverse_target_token_index, model_name)
+                bleu1, bleu2, bleu3, bleu4, bleu = calculate_bleu(val_set.comment_lists, predicted_lists)
 
-                # Make trained-models directory
-                name_info = "emb"+str(dim)+"_b"+str(b)+"_"+str(nl)+"l"
-                if not os.path.exists(trained_models_dir+name_info):
-                    os.makedirs(trained_models_dir+name_info+"/")
+                to_email = "Bleu-1 Score: %.3f" % bleu1 + "\nBleu-2 Score: %.3f" % bleu2 + \
+                           "\nBleu-3 Score: %.3f" % bleu3 + "\nBleu-4 Score: %.3f" % bleu4 + \
+                           "\nBleu Score: %.3f" % bleu
 
-                # Train the model by going through the data 'epochs' times
-                model_name = "td_gen_ft_" + name_info
-                checkpoint = ModelCheckpoint(filepath=trained_models_dir+name_info+"/"+model_name+"_e{epoch:02d}.hdf5", verbose=1)
-                model.fit([encoder_input_train, decoder_input_train], decoder_target_train, batch_size=b, callbacks=[checkpoint],
-                          validation_data=([encoder_input_val, decoder_input_val], decoder_target_val), epochs=epochs)
-
-                end_time = datetime.datetime.now().replace(microsecond=0)
-                print("================")
-                print("Training completed at:", end_time)
-                print("Training took (h:m:s)", end_time-start_time)
-                print("================")
-                send_email(name_info+" TRAINING DONE!")
-                clear_session()
-
-else:
-    for dim in latent_dim:
-        for nl in num_layers:
-            for b in batch_size:
-                for e in test_es:
-                    print("================\nBatch size:", b)
-                    print("Number of model layers:", nl)
-                    print("Embedding dimensionality:", dim)
-                    print("Epoch:", e)
-                    print("================")
-                    folder_name = "emb"+str(dim)+"_b"+str(b)+"_"+str(nl)+"l"
-                    model_name = "td_gen_ft_"+folder_name+"_e"+"%02d" % e+".hdf5"
-                    model_path = trained_models_dir + folder_name + "/" + model_name
-
-                    # Load model from disk
-                    model = load_model(model_path)
-                    model.summary()
-
-                    predicted_lists = translate_corpus(model, encoder_input_val, val_set.comment_lists, val_max_decoder_seq_length,
-                                                       target_token_index, reverse_target_token_index, model_name)
-                    bleu1, bleu2, bleu3, bleu4, bleu = calculate_bleu(val_set.comment_lists, predicted_lists)
-
-                    to_email = "Bleu-1 Score: %.3f" % bleu1 + "\nBleu-2 Score: %.3f" % bleu2 + \
-                               "\nBleu-3 Score: %.3f" % bleu3 + "\nBleu-4 Score: %.3f" % bleu4 + \
-                               "\nBleu Score: %.3f" % bleu
-
-                    send_email(model_name + " TESTING DONE!", to_email)
+                send_email(model_name + " TESTING DONE!", to_email)
 
     # epoch_scores[i] = (bleu1, bleu2, bleu3, bleu4, bleu)
     #
