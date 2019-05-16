@@ -458,7 +458,7 @@ def decode_sequence(input_seq, model, max_decoder_seq_length, target_token_index
     return decoded_sentence
 
 
-def translate_corpus(model, encoder_input_data, comment_lists, max_decoder_seq_length_test, target_token_index, reverse_target_token_index, model_name):
+def translate_corpus(model, encoder_input_data, comment_lists, max_decoder_seq_length_test, target_token_index, reverse_target_token_index, results_dir, model_name):
     predicted_lists = []
     c = 1
     for seq_index in tqdm(range(len(encoder_input_data))):
@@ -474,7 +474,7 @@ def translate_corpus(model, encoder_input_data, comment_lists, max_decoder_seq_l
         for i, token in enumerate(comment_lists[seq_index]):
             if 0 < i and i < len(comment_lists[seq_index]) - 1:  # Don't print "<sos>" and "<eos>"
                 print_target += token + ' '
-        with open("/home/aziz/experiments/output/td/generate/CT/tune/" + model_name + ".txt", "a", encoding='utf-8') as f:
+        with open(results_dir + model_name + ".txt", "a", encoding='utf-8') as f:
             f.write(str(c) + '. Target sentence:  ' + print_target + "\n")
             f.write(str(c) + '. Decoded sentence: ' + print_deocded + "\n-\n")
         c += 1

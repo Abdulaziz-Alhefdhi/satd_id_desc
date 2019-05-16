@@ -14,8 +14,8 @@ from support_functions import DataObject, data_shapes, shape_info, token_integer
 
 batch_size = [32]   # Batch size for training.
 epochs = 30       # Number of epochs to train for.
-num_layers = [1]    # Number of model layers
-latent_dim = [2048]   # Latent dimensionality of the encoding space.
+num_layers = [2]    # Number of model layers
+latent_dim = [1024]   # Latent dimensionality of the encoding space.
 test_es = [28]
 
 # Final experimental settings
@@ -78,7 +78,7 @@ for dim in latent_dim:
             print("Embedding dimensionality:", dim)
             print("================")
 
-            # Build, train, and validate the model
+            # Build the model
             encoder_inputs, decoder_inputs, decoder_outputs = build_generator(dim, train_num_encoder_tokens, train_num_decoder_tokens, nl)
             model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
             model.compile(optimizer='rmsprop', loss='categorical_crossentropy')

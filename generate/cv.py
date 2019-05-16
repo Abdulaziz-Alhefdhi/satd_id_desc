@@ -5,21 +5,21 @@ import numpy as np
 import datetime
 import pickle
 import os
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import KFold
 import sys
 sys.path.append('/home/aziz/experiments/problems/tech_debt/')
 from support_functions import DataObject, data_shapes, shape_info, token_integer_mapping, prepare_model_data, \
-    replace_unseen, build_generator, results, send_email, translate_corpus, calculate_bleu, positive_only
+    replace_unseen, build_generator, results, send_email, translate_corpus, calculate_bleu, positive_only, tokenize
 
 
 
-batch_size = 32    # Batch size for training.
-epochs = 28        # Number of epochs to train for.
-num_layers = 3     # Number of model layers
+batch_size = 64    # Batch size for training.
+epochs = 40        # Number of epochs to train for.
+num_layers = 1     # Number of model layers
 latent_dim = 1024  # Latent dimensionality of the encoding space.
 
 data_dir = '/home/aziz/experiments/data/td/CT/'
-# results_dir = '/home/aa043/sea/gpu/experiments/output/td/generate/tune/'
+results_dir = '/home/aziz/experiments/output/td/generate/CT/cv/'
 trained_models_dir = "/home/aziz/experiments/trained_models/td/generate/CT/cv/"
 
 # Get data
@@ -38,125 +38,96 @@ print("Number of model layers:", num_layers)
 print("Embedding dimensionality:", latent_dim)
 
 name_info = "emb" + str(latent_dim) + "_b" + str(batch_size) + "_" + str(num_layers) + "l"  # Model name to be saved
-# Make train-models directory
-if not os.path.exists(trained_models_dir+name_info):
-    for i in range(1, 11):
-        os.makedirs(trained_models_dir+name_info+"/fold"+str(i))
+# Make train-models directories
+# if not os.path.exists(trained_models_dir+name_info):
+    # for i in range(1, 11):
+    #     os.makedirs(trained_models_dir+name_info+"/fold"+str(i))
+if not os.path.exists(trained_models_dir):
+    os.makedirs(trained_models_dir)
 
 start_time = datetime.datetime.now().replace(microsecond=0)
 print("================")
 print("Training started at:", start_time)
 
-skf = StratifiedKFold(n_splits=10)  # Number of folds
+kf = KFold(n_splits=10)  # Number of folds
 fold = 1
 b1s, b2s, b3s, b4s, bs = [], [], [], [], []
-for train_index, test_index in skf.split(cv_set.input_lists, cv_set.labels):
+for train_index, test_index in kf.split(cv_set.input_lists):
     print("================")
     print("Fold " + str(fold) + ":")
+    # Split
+    x_train, x_test = cv_set.input_lists[train_index], cv_set.input_lists[test_index]
+    y_train, y_test = cv_set.comment_lists[train_index], cv_set.comment_lists[test_index]
+    # Add the tuning set to the training set
+    x_train = np.concatenate((x_train, tune_set.input_lists))
+    y_train = np.concatenate((y_train, tune_set.comment_lists))
+    # Tokenization
+    train_input_vocab = tokenize(x_train)
+    train_output_vocab = tokenize(y_train)
+    test_input_vocab = tokenize(x_test)
+    test_output_vocab = tokenize(y_test)
+    # Convert tokens to integers since the DL model accepts only integers
+    input_token_index, target_token_index, reverse_input_token_index, reverse_target_token_index = \
+        token_integer_mapping(train_input_vocab, train_output_vocab)
+    # Prepare model training data
+    train_max_encoder_seq_length = max([len(txt) for txt in x_train])
+    train_max_decoder_seq_length = max([len(txt) for txt in y_train])
+    encoder_input_train, decoder_input_train, decoder_target_train = prepare_model_data(
+        x_train, y_train, input_token_index, target_token_index,
+        train_max_encoder_seq_length, train_max_decoder_seq_length, True)
+    # Prepare model validation data
+    val_input_data = replace_unseen(test_input_vocab, train_input_vocab, x_test)
+    val_target_data = replace_unseen(test_output_vocab, train_output_vocab, y_test)
+    val_max_encoder_seq_length = max([len(txt) for txt in x_test])
+    val_max_decoder_seq_length = max([len(txt) for txt in y_test])
+    encoder_input_val, decoder_input_val, decoder_target_val = prepare_model_data(
+        val_input_data, val_target_data, input_token_index, target_token_index, val_max_encoder_seq_length,
+        val_max_decoder_seq_length, True)
+    # Build the model
+    encoder_inputs, decoder_inputs, decoder_outputs = build_generator(latent_dim, len(train_input_vocab),
+                                                                      len(train_output_vocab), num_layers)
+    model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
+    model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
+    model.summary()
 
-# Data shapes
-train_num_encoder_tokens, train_num_decoder_tokens, train_max_encoder_seq_length, \
-train_max_decoder_seq_length, train_n_input_samples = data_shapes(train_set)
-val_num_encoder_tokens, val_num_decoder_tokens, val_max_encoder_seq_length, \
-val_max_decoder_seq_length, val_n_input_samples = data_shapes(val_set)
+    # Train
+    start_time = datetime.datetime.now().replace(microsecond=0)
+    print("================")
+    print("Training of fold "+str(fold)+" started at:", start_time)
+    print("================")
+    model_name = "td_gen_cv_" + name_info + "_f" + str(fold)
+    model.fit([encoder_input_train, decoder_input_train], decoder_target_train, batch_size=batch_size,
+              validation_data=([encoder_input_val, decoder_input_val], decoder_target_val), epochs=epochs)
+    model.save(trained_models_dir + model_name + '.h5')
+    end_time = datetime.datetime.now().replace(microsecond=0)
+    print("================")
+    print("Training of fold "+str(fold)+" completed at:", end_time)
+    print("Training of fold "+str(fold)+" took (h:m:s)", end_time - start_time)
+    print("================")
+    send_email(model_name + " TRAINING DONE!")
 
-# Convert tokens to integers since the DL model accepts only integers
-input_token_index, target_token_index, reverse_input_token_index, reverse_target_token_index = \
-    token_integer_mapping(train_set.input_vocab, train_set.comment_vocab)
+    # Validate
+    print("================")
+    predicted_lists = translate_corpus(model, encoder_input_val, y_test, val_max_decoder_seq_length,
+                                       target_token_index, reverse_target_token_index, results_dir, model_name)
+    bleu1, bleu2, bleu3, bleu4, bleu = calculate_bleu(y_test, predicted_lists)
+    b1s.append(bleu1)
+    b2s.append(bleu2)
+    b3s.append(bleu3)
+    b4s.append(bleu4)
+    bs.append(bleu)
+    to_email = "Bleu-1 Score: %.3f" % bleu1 + "\nBleu-2 Score: %.3f" % bleu2 + "\nBleu-3 Score: %.3f" % bleu3 + \
+               "\nBleu-4 Score: %.3f" % bleu4 + "\nBleu Score: %.3f" % bleu
+    send_email(model_name + " TESTING DONE!", to_email)
 
-# Prepare model training data
-encoder_input_train, decoder_input_train, decoder_target_train = prepare_model_data(
-    train_set.input_lists, train_set.comment_lists, input_token_index, target_token_index, train_max_encoder_seq_length, train_max_decoder_seq_length, True)
+    clear_session()
+    fold += 1
 
-# Prepare model validation data
-val_input_data = replace_unseen(val_set.input_vocab, train_set.input_vocab, val_set.input_lists)
-val_target_data = replace_unseen(val_set.comment_vocab, train_set.comment_vocab, val_set.comment_lists)
-encoder_input_val, decoder_input_val, decoder_target_val = prepare_model_data(
-    val_input_data, val_target_data, input_token_index, target_token_index, val_max_encoder_seq_length, val_max_decoder_seq_length, True)
+# Show average scores
+print("================")
+print("Average BLEU-1 Score:", "%.3f" % (sum(b1s)/len(b1s)))
+print("Average BLEU-2 Score:", "%.3f" % (sum(b2s)/len(b2s)))
+print("Average BLEU-3 Score:", "%.3f" % (sum(b3s)/len(b3s)))
+print("Average BLEU-4 Score:", "%.3f" % (sum(b4s)/len(b4s)))
+print("Average BLEU Score:  ", "%.3f" % (sum(bs)/len(bs)))
 
-test = True  # Train or test?
-if not test:
-    # Training nested loops
-    for dim in latent_dim:
-        for nl in num_layers:
-            for b in batch_size:
-    # for setting in exp_sets:
-    #     dim = setting[0]
-    #     b = setting[1]
-    #     nl = setting[2]
-        # Print hyper-parameter info
-                print("================\nBatch size:", b)
-                print("Number of model layers:", nl)
-                print("Embedding dimensionality:", dim)
-                print("================")
-
-                # Build, train, and validate the model
-                encoder_inputs, decoder_inputs, decoder_outputs = build_generator(dim, train_num_encoder_tokens, train_num_decoder_tokens, nl)
-                model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
-                model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
-                model.summary()
-
-                start_time = datetime.datetime.now().replace(microsecond=0)
-                print("================")
-                print("Training started at:", start_time)
-                print("================")
-
-                # Make trained-models directory
-                name_info = "emb"+str(dim)+"_b"+str(b)+"_"+str(nl)+"l"
-                if not os.path.exists(trained_models_dir+name_info):
-                    os.makedirs(trained_models_dir+name_info+"/")
-
-                # Train the model by going through the data 'epochs' times
-                model_name = "td_gen_ft_" + name_info
-                checkpoint = ModelCheckpoint(filepath=trained_models_dir+name_info+"/"+model_name+"_e{epoch:02d}.hdf5", verbose=1)
-                model.fit([encoder_input_train, decoder_input_train], decoder_target_train, batch_size=b, callbacks=[checkpoint],
-                          validation_data=([encoder_input_val, decoder_input_val], decoder_target_val), epochs=epochs)
-
-                end_time = datetime.datetime.now().replace(microsecond=0)
-                print("================")
-                print("Training completed at:", end_time)
-                print("Training took (h:m:s)", end_time-start_time)
-                print("================")
-                send_email(name_info+" TRAINING DONE!")
-                clear_session()
-
-else:
-    for dim in latent_dim:
-        for nl in num_layers:
-            for b in batch_size:
-                for e in test_es:
-                    print("================\nBatch size:", b)
-                    print("Number of model layers:", nl)
-                    print("Embedding dimensionality:", dim)
-                    print("Epoch:", e)
-                    print("================")
-                    folder_name = "emb"+str(dim)+"_b"+str(b)+"_"+str(nl)+"l"
-                    model_name = "td_gen_ft_"+folder_name+"_e"+"%02d" % e+".hdf5"
-                    model_path = trained_models_dir + folder_name + "/" + model_name
-
-                    # Load model from disk
-                    model = load_model(model_path)
-                    model.summary()
-
-                    predicted_lists = translate_corpus(model, encoder_input_val, val_set.comment_lists, val_max_decoder_seq_length,
-                                                       target_token_index, reverse_target_token_index, model_name)
-                    bleu1, bleu2, bleu3, bleu4, bleu = calculate_bleu(val_set.comment_lists, predicted_lists)
-
-                    to_email = "Bleu-1 Score: %.3f" % bleu1 + "\nBleu-2 Score: %.3f" % bleu2 + \
-                               "\nBleu-3 Score: %.3f" % bleu3 + "\nBleu-4 Score: %.3f" % bleu4 + \
-                               "\nBleu Score: %.3f" % bleu
-
-                    send_email(model_name + " TESTING DONE!", to_email)
-
-    # epoch_scores[i] = (bleu1, bleu2, bleu3, bleu4, bleu)
-    #
-    # # Best 3 performing epochs
-    # print("Highest 3 Bleu scores:-")
-    # to_email = "Highest 3 Bleu scores:-\n"
-    # max_3_bleus = sorted(list(epoch_scores.values()), reverse=True)[:3]
-    # for score in max_3_bleus:
-    #     for key, value in epoch_scores.items():
-    #         if value[4] == score:
-    #             to_print = "Epoch '"+str(key)+"' has the following scores:-\nBleu-1: %.3f"%value[0]+" Bleu-2: %.3f"%value[1]+" Bleu-3: %.3f"%value[2]+" Bleu-4: %.3f"%value[3]+" Bleu Score: %.3f"%value[4]
-    #             print(to_print)
-    #             to_email += to_print+'\n'
