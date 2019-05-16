@@ -2,14 +2,31 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0f2e771-f131-4d27-88ac-04bec3e9632e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../generate/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../generate/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../generate/preprocess/clean_data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../generate/preprocess/prepare_model_data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../generate/preprocess/produce_parsable.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../generate/preprocess/shuffle_data.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../classify/code2class/baselines.py" beforeDir="false" afterPath="$PROJECT_DIR$/../classify/code2class/baselines.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ASTToSBT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ASTToSBT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ASTToSBT.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ASTToSBT.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ASTToSBT$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ASTToSBT.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/AllJavadocExtractor$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/AllJavadocExtractor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$AllVariableDeclarationVisitor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$ClassVariableFieldVisitor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$ClassVisitor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$MethodCallVisitor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$MethodVisitor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$VariableUsageVisitor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/MethodsAndJavaDocs$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/MethodsAndJavaDocs.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/VoidVisitorComplete$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/VoidVisitorComplete$MethodNameCollector.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/VoidVisitorComplete$MethodNamePrinter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/VoidVisitorComplete.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/support/DirExplorer$FileHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/support/DirExplorer$Filter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/support/DirExplorer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/support/NodeIterator$NodeHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/support/NodeIterator.class" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -19,13 +36,17 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="testRunner" value="GRADLE" />
+    <option name="delegatedBuild" value="true" />
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/ASTToSBT.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="25" column="63" selection-start-line="25" selection-start-column="63" selection-end-line="25" selection-end-column="63" />
+            <state relative-caret-position="2160">
+              <caret line="120" column="21" selection-start-line="120" selection-start-column="21" selection-end-line="120" selection-end-column="21" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#oneLineComment#0;class#ASTToSBT#0" />
@@ -73,6 +94,7 @@
       <find>for</find>
       <find>oneLineComment</find>
       <find>println4</find>
+      <find>writeToDisk</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -152,8 +174,8 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -161,6 +183,7 @@
     <property name="Repository.Attach.Annotations" value="false" />
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1554263636925" />
@@ -245,6 +268,7 @@
       </method>
     </configuration>
     <configuration default="true" type="TestNG">
+      <option name="TEST_OBJECT" value="CLASS" />
       <option name="VM_PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <properties />
@@ -316,16 +340,23 @@
       <workItem from="1553944871005" duration="2603000" />
       <workItem from="1553947889214" duration="15626000" />
       <workItem from="1554199597755" duration="11793000" />
+      <workItem from="1557372082715" duration="23000" />
+      <workItem from="1557971308444" duration="436000" />
+      <workItem from="1557971878538" duration="622000" />
+      <workItem from="1557973961680" duration="220000" />
+      <workItem from="1557974209225" duration="151000" />
+      <workItem from="1557975480215" duration="470000" />
+      <workItem from="1557976072498" duration="823000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="234508000" />
+    <option name="totallyTimeSpent" value="237253000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2097399" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2268954" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -409,18 +440,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../nmt/testDG/production_model/data/testing_samples/SOCS1.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/MethodsAndJavaDocs.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1350">
-          <caret line="89" column="77" selection-start-line="89" selection-start-column="77" selection-end-line="89" selection-end-column="77" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#oneLineComment#0;class#MethodsAndJavaDocs#0" />
-            <element signature="method#writeToDisk#0;class#MethodsAndJavaDocs#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/support/DirExplorer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="378">
@@ -450,10 +469,22 @@
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/MethodsAndJavaDocs.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="27" column="44" selection-start-line="27" selection-start-column="44" selection-end-line="27" selection-end-column="44" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#oneLineComment#0;class#MethodsAndJavaDocs#0" />
+            <element signature="method#writeToDisk#0;class#MethodsAndJavaDocs#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ASTToSBT.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="25" column="63" selection-start-line="25" selection-start-column="63" selection-end-line="25" selection-end-column="63" />
+        <state relative-caret-position="2160">
+          <caret line="120" column="21" selection-start-line="120" selection-start-column="21" selection-end-line="120" selection-end-column="21" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#oneLineComment#0;class#ASTToSBT#0" />
@@ -518,6 +549,7 @@
             <option name="proportions">
               <list>
                 <option value="0.2" />
+                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>

@@ -51,10 +51,10 @@ for train_index, test_index in skf.split(cv_set.input_lists, cv_set.labels):
     # Feature extraction
     bow = CountVectorizer(analyzer='word', tokenizer=dummy_fun, preprocessor=dummy_fun, token_pattern=None)
     X_train = bow.fit_transform(X_train)
-    tfidf = TfidfTransformer()
-    X_train = tfidf.fit_transform(X_train)
+    # tfidf = TfidfTransformer()
+    # X_train = tfidf.fit_transform(X_train)
     X_test = bow.transform(X_test)
-    X_test = tfidf.transform(X_test)
+    # X_test = tfidf.transform(X_test)
 
     # Model training
     # clf = MultinomialNB().fit(X_train, y_train)
