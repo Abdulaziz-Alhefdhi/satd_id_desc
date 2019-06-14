@@ -16,7 +16,7 @@ num_layers = [1]    # Number of model layers
 latent_dim = [64]   # Latent dimensionality of the encoding space.
 
 # Final experimental settings
-exp_sets = [(46, 46, 1)]
+exp_sets = [(32, 256, 1)]
 
 data_dir    = '/home/aa043/sea/gpu/experiments/data/td/CT/'
 # results_dir = '/home/aziz/experiments/output/td/classify/code2class/v2/cv/dim64_b64/'
@@ -94,6 +94,9 @@ for setting in exp_sets:
         # model.fit(train_model_inputs, train_model_outputs, batch_size=b, callbacks=[checkpoint])  # Train
         model.fit(train_model_inputs, train_model_outputs, batch_size=b)  # Train
         predictions = model.predict_classes(val_model_inputs, verbose=1, batch_size=len(val_set.labels))  # Test
+        # predictions = model.predict(val_model_inputs, verbose=1, batch_size=len(val_set.labels))  # Test
+        # predictions[predictions > 0.5] = 1
+        # predictions[predictions <= 0.5] = 0
         tp, tn, fp, fn, p, r, f1, acc = results(predictions, val_set.labels)  # Calculate scores
         print("================")
         epoch_scores[i] = (p, r, f1, acc)
