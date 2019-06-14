@@ -4,9 +4,10 @@ import datetime
 import pickle
 import sys
 import os
-sys.path.append('/home/aa043/sea/problems/tech_debt/')
+# sys.path.append('/home/aa043/sea/problems/tech_debt/')
+sys.path.append('/home/aziz/experiments/problems/tech_debt/')
 from support_functions import DataObject, data_shapes, shape_info, token_integer_mapping, \
-    prepare_model_data, replace_unseen, build_classifier_w_pooling, results, send_email, tokenize
+    prepare_model_data, replace_unseen, build_classifier, results, send_email, tokenize
 from sklearn.model_selection import StratifiedKFold
 from keras.callbacks import ModelCheckpoint
 
@@ -17,9 +18,11 @@ num_layers = 1    # Number of model layers (2, 1, 2, 2)
 latent_dim = 64   # Latent dimensionality of the encoding space (8, 32, 32, 16)
 
 # exp_sets = [(64, 64, 1), (8, 16, 2), (32, 256, 1), (32, 256, 2), (16, 64, 2)]  # (emb, b, l)
-exp_sets = [(32, 256, 1), (32, 256, 2), (64, 64, 1), (16, 64, 2), (8, 16, 2)]  # (emb, b, l)
+# exp_sets = [(32, 256, 1), (32, 256, 2), (64, 64, 1), (16, 64, 2), (8, 16, 2)]  # (emb, b, l)
+exp_sets = [(1024, 64, 1)]  # (emb, b, l)
 
-data_dir    = '/home/aa043/sea/gpu/experiments/data/td/CT/'
+# data_dir    = '/home/aa043/sea/gpu/experiments/data/td/CT/'
+data_dir    = '/home/aziz/experiments/data/td/CT/'
 # results_dir = '/home/aziz/experiments/output/td/classify/code2class/v2/cv/dim64_b64/'
 # trained_models_dir = "/home/aa043/sea/gpu/experiments/trained_models/td/classify/CT/cv/"
 
@@ -107,7 +110,7 @@ for setting in exp_sets:
                 test_model_inputs[i, t] = input_token_index[token]
 
         # Build, train, and test the model
-        model = build_classifier_w_pooling(dim, len(train_vocab), nl)
+        model = build_classifier(dim, len(train_vocab), nl)
         model.summary()
         # Let the model iterate through the entire training data 'epochs' times, testing its performance on the
         # testing data each time
@@ -124,12 +127,15 @@ for setting in exp_sets:
             f_f1s.append(f1)
             f_accs.append(acc)
         print("================")
-        print("Best scores of fold", fold, ":")
-        print("Precision:", "%.3f" % max(f_ps), ". Recall:", "%.3f" % max(f_rs), ". F1 Score:", "%.3f" % max(f_f1s), ". Accuracy:", "%.3f" % max(f_accs))
+        print("Best scores of fold", fold, "with regards to F1 score:")
+        idx_best_f1 = max((x,i) for i,x in enumerate(f_f1s))[1]
+        print("Precision:", "%.3f" % f_ps[idx_best_f1], ". Recall:", "%.3f" % f_rs[idx_best_f1], ". F1 Score:", "%.3f" % f_f1s[idx_best_f1], ". Accuracy:", "%.3f" % f_accs[idx_best_f1])
+
         precisions.append(f_ps)
         recalls.append(f_rs)
         f1_scores.append(f_f1s)
         accs.append(f_accs)
+
         fold += 1
         clear_session()
 
@@ -137,25 +143,32 @@ for setting in exp_sets:
     end_time = datetime.datetime.now().replace(microsecond=0)
     print("Training completed at:", end_time)
     print("Training took (h:m:s)", end_time - start_time)
-    send_email(name_info+" S10F-CV DONE!")
 
     # Show average scores
     print("================")
-    best_ps = []
-    for fold in precisions:
-        best_ps.append(max(fold))
-    print("Average Precision:", "%.3f" % (sum(best_ps)/len(best_ps)))
-    best_rs = []
-    for fold in recalls:
-        best_rs.append(max(fold))
-    print("Average Recall:", "%.3f" % (sum(best_rs)/len(best_rs)))
-    best_f1s = []
+    print("(CORRECT)")
+    idx_best_f1s = []
     for fold in f1_scores:
-        best_f1s.append(max(fold))
-    print("Average F1-score:", "%.3f" % (sum(best_f1s)/len(best_f1s)))
+        idx_best_f1s.append(max((x, i) for i, x in enumerate(fold))[1])
+
+    best_ps = []
+    for i, fold in enumerate(precisions):
+        best_ps.append(fold[idx_best_f1s[i]])
+    best_rs = []
+    for i, fold in enumerate(recalls):
+        best_rs.append(fold[idx_best_f1s[i]])
+    best_f1s = []
+    for i, fold in enumerate(f1_scores):
+        best_f1s.append(fold[idx_best_f1s[i]])
     best_accs = []
-    for fold in accs:
-        best_accs.append(max(fold))
-    print("Average Accuracy:", "%.3f" % (sum(best_accs)/len(best_accs)))
+    for i, fold in enumerate(accs):
+        best_accs.append(fold[idx_best_f1s[i]])
+
+    print("Average Precision:", "%.3f" % (sum(best_ps) / len(best_ps)))
+    print("Average Recall:   ", "%.3f" % (sum(best_rs) / len(best_rs)))
+    print("Average F1-score: ", "%.3f" % (sum(best_f1s)/len(best_f1s)))
+    print("Average Accuracy: ", "%.3f" % (sum(best_accs)/len(best_accs)))
     print("================")
+
+    send_email(name_info + " S10F-CV DONE!")
 
