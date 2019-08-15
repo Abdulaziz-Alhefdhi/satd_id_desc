@@ -1,0 +1,6 @@
+srcml codes.java -o codes.xml
+./run.sh pmd -d ~/sea/random/srcml/test/ -f csv -R rulesets/java/quickstart.xml -r ~/sea/random/srcml/report.csv
+java -jar checkstyle-8.23-all.jar -c /sun_checks.xml Test.java -f xml
+
+./run.sh pmd -d ~/sea/data/td/ours/v2/CT/framework_ready/pmd_cv/ -f csv -R rulesets/java/quickstart.xml -r ~/sea/data/td/ours/v2/CT/framework_ready/pmd_report.csv
+./run.sh pmd -d ~/sea/data/td/ours/v2/CT/framework_ready/pmd_tune/ -f csv -R rulesets/java/quickstart.xml -r ~/sea/data/td/ours/v2/CT/framework_ready/tune_val/pmd_report.csv

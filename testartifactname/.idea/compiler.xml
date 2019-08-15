@@ -10,6 +10,6 @@
         <module name="testartifactname" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="same language level" />
+    <bytecodeTargetLevel target="8" />
   </component>
 </project>

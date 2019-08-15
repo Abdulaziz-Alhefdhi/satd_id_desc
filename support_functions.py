@@ -8,6 +8,9 @@ from keras.layers import LSTM, Dense, Embedding, Input, dot, Activation, concate
 import smtplib
 from tqdm import tqdm
 from nltk.translate.bleu_score import corpus_bleu
+from lxml import etree as ET
+from collections import Counter, defaultdict
+import pandas as pd
 
 
 
@@ -225,9 +228,8 @@ def token_integer_mapping(input_tokens, target_tokens):
     target_token_index = dict([(token, i+1) for i, token in enumerate(target_tokens)])
     reverse_input_token_index  = dict((i, token) for token, i in input_token_index.items())
     reverse_target_token_index = dict((i, token) for token, i in target_token_index.items())
+
     return input_token_index, target_token_index, reverse_input_token_index, reverse_target_token_index
-    
-    return input_token_index, reverse_input_token_index
 
 
 def prepare_model_data(input_lists, target_lists, input_token_index, target_token_index,
@@ -528,3 +530,103 @@ def positive_only(dataset):
     positive_set = DataObject(input_array, label_array, comment_array, code_array, input_vocab, comment_vocab)
 
     return positive_set
+
+
+def extract_code_metrics(path, parser):
+    # Retrieve xml files from disk (preparing for M features)
+    with open(path, 'r', encoding='utf-8') as f:
+        inputs = f.read().split("\n")
+    inputs = inputs[:-1]
+    # Parse every input code into its own AST (in an XML format)
+    forest = [ET.fromstring(x, parser) for x in inputs]
+    # Clean defective inputs (replace 'None' inputs with a single 'if' element with no children)
+    forest = [ET.Element("if") if x is None else x for x in forest]
+    # Feature extraction (M)
+    tree_tags = []
+    for tree in forest:
+        temp_tags = [x.tag for x in tree.iter()]
+        tree_tags.append(temp_tags)
+    m_counts = [Counter(x) for x in tree_tags]
+    m_counts = [dict(x) for x in m_counts]
+
+    return forest, m_counts
+
+
+def feature_set_counts(feature_counts):
+    # print(dataset_name, "feature counts:-")
+    features = []
+    for fc in feature_counts:
+        for f, count in fc.items():
+            for i in range(count):
+                features.append(f)
+    # print(Counter(features))
+    # print(dataset_name, "- # unique features:", len(Counter(features)))
+    return dict(Counter(features))
+
+
+def calc_cyclo(forest):
+    cyclo_tags = ["if", "case", "catch", "throw", "do", "while", "for", "break", "continue"]
+    cyclos = []
+    for tree in forest:
+        c = 0
+        for leaf in tree.iter():
+            if leaf.tag in cyclo_tags or leaf.tag == "operator" and leaf.text == '&&' or leaf.tag == "operator" and leaf.text == '||':
+                c += 1
+        cyclos.append(c)
+
+    return cyclos
+
+
+def extract_pmd_metrics(path, data_length):
+    # Read from csv file
+    pmd_report = pd.read_csv(path, index_col="Problem")
+
+    # Edit line numbers & let the dict values be the # of occurrences of a key pair
+    corr_lin_no = {}
+    for key, value in pmd_report.groupby(['Line', 'Rule']).groups.items():
+        if 2 < key[0] < data_length + 3:
+            corr_lin_no[(key[0] - 2, key[1])] = len(value.values)
+
+    # Let the key be the line and the value be a list of rules whose length = # occurrences
+    line_lists = defaultdict(list)
+    for key, value in corr_lin_no.items():
+        for i in range(value):
+            line_lists[key[0]].append(key[1])
+
+    # Make the list of Counter objects
+    ps = []
+    for i in range(data_length):
+        if i + 1 not in list(line_lists.keys()):
+            ps.append(list())
+        else:
+            ps.append(line_lists[i + 1])
+    p_counts = [Counter(x) for x in ps]
+
+    return p_counts
+
+
+def retrieve_r(path):
+    with open(path, 'r', encoding='utf-8') as f:
+        rs = f.read().split("\n")
+    rs = rs[:-1]
+    rs = [float(x) for x in rs]
+
+    return rs
+
+
+def create_bm_dataset(m_counts, p_counts, cyclos, reads, l_path, f_path):
+    with open(l_path, 'r', encoding='utf-8') as f:
+        labels = f.read().split("\n")
+    labels = labels[:-1]
+    labels = [int(x) for x in labels]
+
+    fs1 = pd.DataFrame(m_counts)
+    fs2 = pd.DataFrame(p_counts)
+    fs3 = pd.DataFrame({'cyclo': cyclos})
+    fs4 = pd.DataFrame({'read': reads})
+    lbls = pd.DataFrame({'label': labels})
+
+    dataset = pd.concat([fs1, fs2, fs3, fs4, lbls], axis=1)
+    dataset.fillna(0, inplace=True)
+
+    dataset.to_csv(f_path, index=False)

@@ -2,34 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0f2e771-f131-4d27-88ac-04bec3e9632e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../classify/code2class/baselines.py" beforeDir="false" afterPath="$PROJECT_DIR$/../classify/code2class/baselines.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../preprocess/bm_feat_extract.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/readability.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ReadScore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../support_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/../support_functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ASTToSBT$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ASTToSBT.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/AllJavadocExtractor$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/AllJavadocExtractor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$AllVariableDeclarationVisitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$ClassVariableFieldVisitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$ClassVisitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$MethodCallVisitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$MethodVisitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls$VariableUsageVisitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/JavaParserMethodCalls.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/MethodsAndJavaDocs$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/MethodsAndJavaDocs.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/VoidVisitorComplete$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/VoidVisitorComplete$MethodNameCollector.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/VoidVisitorComplete$MethodNamePrinter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/VoidVisitorComplete.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/support/DirExplorer$FileHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/support/DirExplorer$Filter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/support/DirExplorer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/support/NodeIterator$NodeHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/support/NodeIterator.class" beforeDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/out/" />
-    <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,25 +16,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DefaultGradleProjectSettings">
-    <option name="testRunner" value="GRADLE" />
-    <option name="delegatedBuild" value="true" />
-  </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/ASTToSBT.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2160">
-              <caret line="120" column="21" selection-start-line="120" selection-start-column="21" selection-end-line="120" selection-end-column="21" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="method#oneLineComment#0;class#ASTToSBT#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <option name="isMigrated" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -100,32 +61,6 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/src/main/java/VoidVisitorStarter.java" />
-        <option value="$PROJECT_DIR$/src/main/java/newDoc.java" />
-        <option value="$PROJECT_DIR$/src/main/java/support/DirExplorer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/support/NodeIterator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/VoidVisitorComplete.java" />
-        <option value="$PROJECT_DIR$/src/main/java/JavaParserMethodCalls.java" />
-        <option value="$PROJECT_DIR$/src/main/java/MethodsAndJavaDoc.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AllJavadocExtractor.java" />
-        <option value="$PROJECT_DIR$/../nmt/testDG/production_model/data/testing_samples/SOCS1.java" />
-        <option value="$PROJECT_DIR$/src/main/java/MethodsAndJavaDocs.java" />
-        <option value="$PROJECT_DIR$/src/main/java/JS2.java" />
-        <option value="$PROJECT_DIR$/src/main/java/JS4.java" />
-        <option value="$PROJECT_DIR$/src/main/java/JS5.java" />
-        <option value="$PROJECT_DIR$/src/main/java/JS6.java" />
-        <option value="$PROJECT_DIR$/src/main/java/JS7.java" />
-        <option value="$PROJECT_DIR$/src/main/java/JS8.java" />
-        <option value="$PROJECT_DIR$/src/main/java/JS9.java" />
-        <option value="$PROJECT_DIR$/src/main/java/JS1.java" />
-        <option value="$PROJECT_DIR$/src/main/java/JS3.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ASTToSBT.java" />
-      </list>
-    </option>
-  </component>
   <component name="MavenImportPreferences">
     <option name="importingSettings">
       <MavenImportingSettings>
@@ -139,45 +74,8 @@
     <option name="width" value="1396" />
     <option name="height" value="984" />
   </component>
+  <component name="ProjectId" id="1Ol7uphSsSjK0o5JcpdyhVWVYef" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="testartifactname" type="b2602c69:ProjectViewProjectNode" />
-              <item name="testartifactname" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="testartifactname" type="b2602c69:ProjectViewProjectNode" />
-              <item name="testartifactname" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="testartifactname" type="b2602c69:ProjectViewProjectNode" />
-              <item name="testartifactname" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="testartifactname" type="b2602c69:ProjectViewProjectNode" />
-              <item name="testartifactname" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
-    </panes>
-  </component>
   <component name="PropertiesComponent">
     <property name="Downloaded.Files.Path.Enabled" value="false" />
     <property name="Repository.Attach.Annotations" value="false" />
@@ -187,12 +85,19 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1554263636925" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/readability.jar!/" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
   </component>
   <component name="RecentsManager">
@@ -212,7 +117,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.ASTToSBT">
+  <component name="RunManager" selected="Application.ReadScore">
     <configuration name="ASTToSBT" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="9.0" />
       <option name="MAIN_CLASS_NAME" value="ASTToSBT" />
@@ -229,16 +134,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="JavaParserMethodCalls" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="JavaParserMethodCalls" />
+    <configuration name="MethodsAndJavaDocs" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="MethodsAndJavaDocs" />
       <module name="testartifactname" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MethodsAndJavaDocs" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="MethodsAndJavaDocs" />
+    <configuration name="ReadScore" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ReadScore" />
       <module name="testartifactname" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <method v="2">
@@ -278,19 +183,19 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.JavaParserMethodCalls" />
       <item itemvalue="Application.VoidVisitorComplete" />
       <item itemvalue="Application.AllJavadocExtractor" />
       <item itemvalue="Application.MethodsAndJavaDocs" />
       <item itemvalue="Application.ASTToSBT" />
+      <item itemvalue="Application.ReadScore" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ReadScore" />
+        <item itemvalue="Application.VoidVisitorComplete" />
         <item itemvalue="Application.ASTToSBT" />
         <item itemvalue="Application.MethodsAndJavaDocs" />
         <item itemvalue="Application.AllJavadocExtractor" />
-        <item itemvalue="Application.VoidVisitorComplete" />
-        <item itemvalue="Application.JavaParserMethodCalls" />
       </list>
     </recent_temporary>
   </component>
@@ -347,49 +252,31 @@
       <workItem from="1557974209225" duration="151000" />
       <workItem from="1557975480215" duration="470000" />
       <workItem from="1557976072498" duration="823000" />
+      <workItem from="1564052083704" duration="155000" />
+      <workItem from="1564106360176" duration="411000" />
+      <workItem from="1564451549749" duration="10729000" />
+      <workItem from="1564540440602" duration="17000" />
+      <workItem from="1564540488211" duration="30000" />
+      <workItem from="1564540559181" duration="202000" />
+      <workItem from="1564612780922" duration="6545000" />
     </task>
     <servers />
   </component>
-  <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="237253000" />
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
-    <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2268954" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Image Layers" order="2" />
-      <window_info id="Designer" order="3" />
-      <window_info id="UI Designer" order="4" />
-      <window_info id="Capture Tool" order="5" />
-      <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.28293738" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.8546638" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.32937366" />
-      <window_info anchor="bottom" id="Docker" order="12" show_stripe_button="false" />
-      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="right" id="Theme Preview" order="5" />
-      <window_info anchor="right" id="Database" order="6" />
-      <window_info anchor="right" id="Palette&#9;" order="7" />
-      <window_info anchor="right" id="Maven Projects" order="8" />
-      <window_info anchor="right" id="Maven" order="9" />
-    </layout>
-  </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -397,188 +284,9 @@
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/MethodsAndJavaDocs.java</url>
           <line>81</line>
-          <properties />
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/XSSFWorkbook.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/newDoc.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/support/NodeIterator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="4" column="19" lean-forward="true" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/MethodsAndJavaDoc.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/VoidVisitorComplete.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="33" column="50" selection-start-line="33" selection-start-column="50" selection-end-line="33" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/JavaParserMethodCalls.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2952">
-          <caret line="357" column="143" selection-start-line="357" selection-start-column="137" selection-end-line="357" selection-end-column="143" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#functionA#0;class#JavaParserMethodCalls#0" />
-            <element signature="method#processFile#0;class#JavaParserMethodCalls#0" />
-            <element signature="class#ClassVisitor#0;class#JavaParserMethodCalls#0" />
-            <element signature="class#VariableUsageVisitor#0;class#JavaParserMethodCalls#0" />
-            <element signature="class#MethodCallVisitor#0;class#JavaParserMethodCalls#0" />
-            <element signature="class#ClassVariableFieldVisitor#0;class#JavaParserMethodCalls#0" />
-            <element signature="class#AllVariableDeclarationVisitor#0;class#JavaParserMethodCalls#0" />
-            <element signature="method#checkFunctionCalls#0;class#JavaParserMethodCalls#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../nmt/testDG/production_model/data/testing_samples/SOCS1.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/support/DirExplorer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="21" column="18" selection-start-line="21" selection-start-column="18" selection-end-line="21" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AllJavadocExtractor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="49" column="31" selection-start-line="49" selection-start-column="31" selection-end-line="49" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/JS2.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/JS1.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/JS3.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/JS4.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/JS5.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/JS6.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/JS7.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/JS8.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/JS9.java" />
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/MethodsAndJavaDocs.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="27" column="44" selection-start-line="27" selection-start-column="44" selection-end-line="27" selection-end-column="44" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#oneLineComment#0;class#MethodsAndJavaDocs#0" />
-            <element signature="method#writeToDisk#0;class#MethodsAndJavaDocs#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ASTToSBT.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2160">
-          <caret line="120" column="21" selection-start-line="120" selection-start-column="21" selection-end-line="120" selection-end-column="21" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#oneLineComment#0;class#ASTToSBT#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-  </component>
-  <component name="masterDetails">
-    <states>
-      <state key="ArtifactsStructureConfigurable.UI">
-        <settings>
-          <artifact-editor />
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="FacetStructureConfigurable.UI">
-        <settings>
-          <last-edited>No facets are configured</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="GlobalLibrariesConfigurable.UI">
-        <settings>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="JdkListConfigurable.UI">
-        <settings>
-          <last-edited>9.0</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ModuleStructureConfigurable.UI">
-        <settings>
-          <last-edited>testartifactname</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-                <option value="0.6" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ProjectJDKs.UI">
-        <settings>
-          <last-edited>9.0</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ProjectLibrariesConfigurable.UI">
-        <settings>
-          <last-edited>com.github.javaparser:java-symbol-solver-core:0.5.2</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-    </states>
   </component>
 </project>
