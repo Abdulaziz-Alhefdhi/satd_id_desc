@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0f2e771-f131-4d27-88ac-04bec3e9632e" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/../preprocess/bm_feat_extract.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/readability.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ReadScore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../support_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/../support_functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../classify/code2class/fine_tune.py" beforeDir="false" afterPath="$PROJECT_DIR$/../classify/code2class/fine_tune.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -259,6 +255,8 @@
       <workItem from="1564540488211" duration="30000" />
       <workItem from="1564540559181" duration="202000" />
       <workItem from="1564612780922" duration="6545000" />
+      <workItem from="1567556944398" duration="16000" />
+      <workItem from="1567556978838" duration="21000" />
     </task>
     <servers />
   </component>
