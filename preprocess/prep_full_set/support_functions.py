@@ -134,12 +134,14 @@ def retrieve_data(data_path, num_samples, max_input_length, max_comment_length):
         if len(item[0]) <= max_pos_seq and len(item[2]) <= max_pos_com:
             clean_neg_data.append(item)
     neg_data = sample(clean_neg_data, k=len(clean_neg_data))  # Shuffle
-    neg_data = neg_data[:len(pos_data)]  # Cut
+    # neg_data = neg_data[:len(pos_data)]  # Cut
 
     # Use num_samples or less, deducting form positive and negative data equally
     pos_data = sample(pos_data, k=len(pos_data))  # Shuffle positive data
-    pos_data = pos_data[: min(num_samples//2, len(pos_data))]
-    neg_data = neg_data[: min(num_samples//2, len(neg_data))]
+    # pos_data = pos_data[: min(num_samples//2, len(pos_data))]
+    # neg_data = neg_data[: min(num_samples//2, len(neg_data))]
+    pos_data = pos_data[:num_samples]
+    neg_data = neg_data[:num_samples]
 
     print("Creating final version of dataset...")
     input_lists, labels, comment_lists, code_lines = [], [], [], []
@@ -166,13 +168,13 @@ def tokenize(array):
 
 
 class DataObject:
-    def __init__(self, input_lists, labels, comment_lists, code_lines, input_vocab=None, comment_vocab=None):
+    def __init__(self, input_lists, labels, comment_lists, code_lines, input_vocab, comment_vocab):
         self.input_lists   = input_lists
         self.labels        = labels
         self.comment_lists = comment_lists
         self.code_lines    = code_lines
-        # self.input_vocab   = input_vocab
-        # self.comment_vocab = comment_vocab
+        self.input_vocab   = input_vocab
+        self.comment_vocab = comment_vocab
 
 
 def data_shapes(dataset):
@@ -220,7 +222,7 @@ def write_to_disk(data_path, dataset):
             f.write(line + '\n')
     # Save the dataset object
     with open(data_path + 'dataset.pkl', 'wb') as f:
-        pickle.dump(dataset, f)
+        pickle.dump(dataset, f, protocol=4)
 
 
 def token_integer_mapping(input_tokens, target_tokens):
