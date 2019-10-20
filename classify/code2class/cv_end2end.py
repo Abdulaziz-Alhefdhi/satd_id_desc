@@ -84,7 +84,7 @@ print("Batch size:", batch_size)
 print("Number of model layers:", n_layers)
 print("Latent dimensionality:", latent)
 
-print('Encoding tokens to integers and convert to numpy arrays...')
+print('Encode tokens to integers and convert to numpy arrays...')
 cv_ints = encode_integers(cv_set.input_lists, tokens_to_ints)
 tune_ints = encode_integers(tune_set.input_lists, tokens_to_ints)
 cv_labels = np.array(cv_set.labels)

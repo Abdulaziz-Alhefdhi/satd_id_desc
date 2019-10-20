@@ -42,15 +42,15 @@ def prepare_data_object(combined):
 
 
 def token_integer_mapping(data_seqs):
-    flat_seq = [seq for subseq in data_seqs for seq in subseq]
-    word_c = Counter(flat_seq)
-    # sorting the words from most to least frequent in text occurrence
-    sorted_vocab = sorted(word_c, key=word_c.get, reverse=True)
-    int_to_vocab = {j+1: word for j, word in enumerate(sorted_vocab)}
-    int_to_vocab[0] = '<UNKN/PAD>'
-    vocab_to_int = {word: j for j, word in int_to_vocab.items()}
+	flat_seq = [seq for subseq in data_seqs for seq in subseq]
+	word_c = Counter(flat_seq)
+	# sorting the words from most to least frequent in text occurrence
+	sorted_vocab = sorted(word_c, key=word_c.get, reverse=True)
+	int_to_vocab = {j+1: word for j, word in enumerate(sorted_vocab)}
+	int_to_vocab[0] = '<UNKN/PAD>'
+	vocab_to_int = {word: j for j, word in int_to_vocab.items()}
 
-    return vocab_to_int, int_to_vocab
+	return vocab_to_int, int_to_vocab
 
 
 def write_data_to_disk(cv, tune, pre_tr, ast_tokens_ints, ast_ints_tokens,
