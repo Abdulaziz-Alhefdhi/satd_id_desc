@@ -5,6 +5,8 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, Embedding
 import sys
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.linear_model import SGDClassifier
 
 
 def process_comments(comment_list, max_seq_len):
@@ -171,12 +173,30 @@ def model_ready_data(project_list, project_name, tokens_to_ints):
     return x_train, y_train, x_test, y_test
 
 
+def train_classifier(project_list, project_name, tokens_to_ints):
+    train_comments, train_labels = [], []
+    for project in project_list:
+        for comment, label in zip(project.comm_lists, project.lbls):
+            if project.pname == project_name:
+                train_comments.append(comment)
+                train_labels.append(label)
+    x_train = np.array(encode_integers(train_comments, tokens_to_ints))
+    y_train = np.array(train_labels)
+
+    bow = CountVectorizer(analyzer='word', tokenizer=dummy_fun, preprocessor=dummy_fun, token_pattern=None)
+    x_train = bow.fit_transform(x_train)
+    clf = SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=5, tol=None).fit(x_train,
+                                                                                                           y_train)
+
+    return clf
+
+
 def build_model(latent_dim, v_size, num_layers):
     # print('dropout + recurrent_dropout')
     if num_layers not in [1, 2, 3]:
         sys.exit("Error: Number of model layers must be 1, 2, or 3")
     new_model = Sequential()
-    new_model.add(Embedding(v_size, latent_dim))
+    new_model.add(Embedding(v_size, latent_dim, mask_zero=True))
     if num_layers == 1:
         new_model.add(LSTM(latent_dim))
         # new_model.add(LSTM(latent_dim, dropout=0.2, recurrent_dropout=0.2))
@@ -197,16 +217,17 @@ def build_model(latent_dim, v_size, num_layers):
     return new_model
 
 
-def results(predictions, y_test):
+def results(predictions, y_test, ml=False):
     tp, tn, fp, fn = 0, 0, 0, 0
     for pred, lbl in zip(predictions, y_test):
-        if lbl == 1 and pred[0] == 1:
+        final_pred = pred if ml else pred[0]
+        if lbl == 1 and final_pred == 1:
             tp += 1
-        if lbl == 0 and pred[0] == 0:
+        if lbl == 0 and final_pred == 0:
             tn += 1
-        if lbl == 0 and pred[0] == 1:
+        if lbl == 0 and final_pred == 1:
             fp += 1
-        if lbl == 1 and pred[0] == 0:
+        if lbl == 1 and final_pred == 0:
             fn += 1
     print("TPs =", tp, "- TNs =", tn, "- FPs =", fp, "- FNs =", fn, "- Total # of testing samples =", tp + tn + fp + fn)
     p, r, f1, acc = 0, 0, 0, 0
@@ -222,3 +243,7 @@ def results(predictions, y_test):
     print("Precision =", "%.3f" % p, "- Recall =", "%.3f" % r, "- F1 Score =", "%.3f" % f1, "- Accuracy =", "%.3f" % acc)
 
     return tp, tn, fp, fn, p, r, f1, acc
+
+
+def dummy_fun(doc):
+    return doc
