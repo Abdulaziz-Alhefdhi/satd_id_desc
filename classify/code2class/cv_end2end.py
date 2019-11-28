@@ -9,30 +9,43 @@ import datetime
 from sklearn.model_selection import StratifiedKFold
 import numpy as np
 from keras.models import Sequential
-from keras.layers import Dense, LSTM, Embedding
+from keras.layers import Dense, LSTM, Embedding, GlobalAveragePooling1D, GlobalMaxPooling1D
 from keras.backend import clear_session
 from cv_utils import retrieve_dataset, encode_integers
 
 
-def build_model(latent_dim, v_size, num_layers):
-    print('dropout + recurrent_dropout')
+def build_model(latent_dim, v_size, num_layers, pooling=None, drop_prob=0.2):
     if num_layers not in [1, 2, 3]:
         sys.exit("Error: Number of model layers must be 1, 2, or 3")
     new_model = Sequential()
     new_model.add(Embedding(v_size, latent_dim))
     if num_layers == 1:
-        new_model.add(LSTM(latent_dim, dropout=0.2, recurrent_dropout=0.2))
+        if pooling is None:
+            new_model.add(LSTM(latent_dim, dropout=drop_prob, recurrent_dropout=drop_prob))
+        else:
+            new_model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
     elif num_layers == 2:
-        new_model.add(LSTM(latent_dim, return_sequences=True))
-        new_model.add(LSTM(latent_dim))
+        new_model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+        if pooling is None:
+            new_model.add(LSTM(latent_dim, dropout=drop_prob, recurrent_dropout=drop_prob))
+        else:
+            new_model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
     else:
-        new_model.add(LSTM(latent_dim*2, return_sequences=True))
-        new_model.add(LSTM(latent_dim, return_sequences=True))
-        new_model.add(LSTM(latent_dim//2))
+        new_model.add(LSTM(latent_dim*2, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+        new_model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+        if pooling is None:
+            new_model.add(LSTM(latent_dim//2, dropout=drop_prob, recurrent_dropout=drop_prob))
+        else:
+            new_model.add(LSTM(latent_dim//2, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
     # old_model = load_model('/home/aa043/sea/gpu/experiments/trained_models/td/pretrain/dp50311_v27359_ep15_1lay_lat32_b2048.h5')
     # new_model = Sequential()
     # new_model.add(old_model.layers[0])
     # new_model.add(old_model.layers[1])
+    if pooling is not None:
+        if pooling == 'max':
+            new_model.add(GlobalMaxPooling1D())
+        else:
+            new_model.add(GlobalAveragePooling1D())
     new_model.add(Dense(1, activation='sigmoid'))
     new_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
@@ -69,10 +82,11 @@ def results(predictions, y_test):
 data_dir = '/home/aa043/sea/gpu/experiments/data/td/CT/data_objects/'
 # cp_dir = '/home/aziz/experiments/trained_models/td/pretrain/'
 # max_seq_length = 1000000  # To reduce the huge size of the dataset
-n_layers = 1              # Number of RNN layers
+n_layers = 2              # Number of RNN layers
 latent = 32               # Dimensionality for embedding and model layers
 batch_size = 256         # How many data points to train in every batch
 epochs = 20
+pool = 'mean'
 
 print("================\nRetrieving dataset...")
 cv_set, tune_set, tokens_to_ints, ints_to_tokens = retrieve_dataset(data_dir)
@@ -83,6 +97,8 @@ print('================')
 print("Batch size:", batch_size)
 print("Number of model layers:", n_layers)
 print("Latent dimensionality:", latent)
+print('Pooling:', 'none' if pool is None else pool)
+print('================')
 
 print('Encode tokens to integers and convert to numpy arrays...')
 cv_ints = encode_integers(cv_set.input_lists, tokens_to_ints)
@@ -120,7 +136,7 @@ for train_index, test_index in skf.split(cv_ints, cv_labels):
         test_model_inputs[i, :len(seq)] = seq
 
     # Build, train, and test the model
-    model = build_model(latent, vocab_size, n_layers)
+    model = build_model(latent, vocab_size, n_layers, pool)
     model.summary()
     # test at the end of each epoch
     f_ps, f_rs, f_f1s, f_accs = [], [], [], []
