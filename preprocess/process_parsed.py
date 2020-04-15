@@ -1,7 +1,11 @@
 import os
 
 
-data_path = "/home/aa043/sea/data/td/ours/v2/CT/"
+"""
+This file will clean ASTs to have just the the conditional statements' sub-trees
+"""
+
+data_path = "/home/aa043/sea/data/td/v3/"
 
 # Collect file paths in preparation to read from them
 file_paths = []
@@ -34,4 +38,3 @@ with open(data_path+'ast_seqs.txt', 'w', encoding='utf-8') as f:
     for seq in clean_seqs:
         f.write(seq + '\n')
 print(len(clean_seqs), "AST sequences have been written to disk.")
-

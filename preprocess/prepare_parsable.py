@@ -1,6 +1,6 @@
 import json
 import re
-
+import sys
 
 
 def extract_codes_and_comments(data):
@@ -60,22 +60,20 @@ def extract_codes_and_comments(data):
     return clean_codes, clean_coms, coms_multiline
 
 
-
 def write_to_file(path, file_name, a_list):
     with open(path + file_name, "w", encoding='utf-8') as file:
         for item in a_list:
             file.write(str(item) + '\n')
 
 
-
-data_path = "/home/aa043/sea/data/td/ours/v2/CT/"
+data_path = "/home/aa043/sea/data/td/v3/"
 
 # Retrieve data from disk
 print("Extracting data...")
-with open('/home/aa043/sea/data/td/ours/v2/pos.json', 'r') as f:
+with open(data_path+'pos.json', 'r') as f:
     tds = json.load(f)
 print(len(tds)//2, "TD observations extracted")
-with open('/home/aa043/sea/data/td/ours/v2/neg.json', 'r') as f:
+with open(data_path+'neg.json', 'r') as f:
     non_tds = json.load(f)
 print(len(non_tds)//2, "non-TD observations extracted")
 
@@ -84,7 +82,6 @@ print("Processing TD data...")
 pos_clean_codes, pos_clean_coms, pos_coms_multiline = extract_codes_and_comments(tds)
 print("Processing non-TD data...")
 neg_clean_codes, neg_clean_coms, neg_coms_multiline = extract_codes_and_comments(non_tds)
-# neg_clean_codes, neg_clean_coms, neg_coms_multiline = extract_codes_and_comments(non_tds)
 
 print("Creating labels...")
 pos_lbls = []
@@ -99,6 +96,8 @@ all_clean_codes = pos_clean_codes + neg_clean_codes
 all_clean_coms = pos_clean_coms + neg_clean_coms
 all_coms_multiline = pos_coms_multiline + neg_coms_multiline
 all_lbls = pos_lbls + neg_lbls
+
+sys.exit()
 
 # Prepare for writing multiline comments to disk
 to_write_multi = []
