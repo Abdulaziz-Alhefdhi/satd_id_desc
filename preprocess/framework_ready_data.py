@@ -102,7 +102,11 @@ tune_set = prepare_data_object(tune_comb)
 pre_tr_set = prepare_data_object(pre_tr_comb)
 print('Creating vocab-integer mapping for ASTs and comments...')
 ast_tokens_to_ints, ast_ints_to_tokens = token_integer_mapping(cv_set.input_lists + tune_set.input_lists)
+print("AST vocabulary size:", len(ast_ints_to_tokens))
 comment_words_to_ints, comment_ints_to_words = token_integer_mapping(cv_set.comment_lists + tune_set.comment_lists)
+print("Comment vocabulary size:", len(comment_ints_to_words))
+
+sys.exit()
 
 print('Saving data objects to disk...')
 if write_data_to_disk(cv_set, tune_set, pre_tr_set, ast_tokens_to_ints, ast_ints_to_tokens,

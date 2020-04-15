@@ -1,5 +1,4 @@
 import string
-from random import sample
 import sys
 import numpy as np
 import pickle
@@ -11,7 +10,6 @@ from nltk.translate.bleu_score import corpus_bleu
 from lxml import etree as ET
 from collections import Counter, defaultdict
 import pandas as pd
-
 
 
 def extract_data(data_path):
@@ -69,18 +67,18 @@ def extract_data(data_path):
 # Get data
 def retrieve_data(data_path, num_samples, max_input_length, max_comment_length):
     if num_samples % 2 != 0:
-        sys.exit("Error: num_samples must be an even number")
+        sys.exit("Error: num_samples must be an even number")  # Because we want balanced data (right?)
 
     dataset = extract_data(data_path)
 
     # AST sequences
-    print("Treating code sequences...")
+    print("Processing AST sequences...")
     draft_input_lists = []
     for item in dataset:
         input_list = item[0].replace("(", " ( ")
         input_list = input_list.replace(")", " ) ")
         input_list = input_list.replace("_", " _ ")
-        draft_input_lists.append(input_list.split())
+        draft_input_lists.append(input_list.split())  # Tokenise AST seqs
 
     # Labels to int
     draft_labels = []
@@ -91,14 +89,14 @@ def retrieve_data(data_path, num_samples, max_input_length, max_comment_length):
             draft_labels.append(0)
 
     # Comments
-    print("Deleting non-English characters from comments...")
+    print("Keeping only English characters and removing anything else from comments...")
     draft_comment_lists = []
     for item in dataset:
         txt = item[2]
         for char in txt:
             if char not in string.ascii_letters:
                 txt = txt.replace(char, " ")
-        draft_comment_lists.append(txt.lower().split())
+        draft_comment_lists.append(txt.lower().split())  # Lowercase & tokenise
     # Add start and end symbols to target lists
     for i in range(len(draft_comment_lists)):
         draft_comment_lists[i] = ["<sos>"] + draft_comment_lists[i] + ["<eos>"]
@@ -108,61 +106,85 @@ def retrieve_data(data_path, num_samples, max_input_length, max_comment_length):
     for item in dataset:
         draft_code_lines.append(item[3])
 
-    # Remove too-long codes and comments
+    print("Removing too-long codes and comments...")
     input_lists, labels, comment_lists, code_lines = [], [], [], []
     for il, lbl, cl, co in zip(draft_input_lists, draft_labels, draft_comment_lists, draft_code_lines):
-        if len(il) <= max_input_length and len(cl) <= max_comment_length:
+        if len(il) <= max_input_length and len(cl) <= max_comment_length+2:  # The '+2' is because of <sos> & <eos>
             input_lists.append(il)
             labels.append(lbl)
             comment_lists.append(cl)
             code_lines.append(co)
 
-    # Separate positive from negative
-    pos_data, neg_data = [], []
-    for il, lbl, cl, co in zip(input_lists, labels, comment_lists, code_lines):
-        if lbl == 1:
-            pos_data.append((il, lbl, cl, co))
-        else:
-            neg_data.append((il, lbl, cl, co))
+    # Separate positive and negative
+    # pos_data, neg_data = [], []
+    # for il, lbl, cl, co in zip(input_lists, labels, comment_lists, code_lines):
+    #     if lbl == 1:
+    #         pos_data.append((il, lbl, cl, co))
+    #     else:
+    #         neg_data.append((il, lbl, cl, co))
 
-    # Clean, shuffle, and cut negative data
-    # Lengths as in positive data
-    max_pos_seq = max([len(x[0]) for x in pos_data])
-    max_pos_com = max([len(x[2]) for x in pos_data])
-    clean_neg_data = []
-    for item in neg_data:
-        if len(item[0]) <= max_pos_seq and len(item[2]) <= max_pos_com:
-            clean_neg_data.append(item)
-    neg_data = sample(clean_neg_data, k=len(clean_neg_data))  # Shuffle
-    neg_data = neg_data[:len(pos_data)]  # Cut
+    # Shuffle positive and negative data separately
+    # pos_data = sample(pos_data, k=len(pos_data))
+    # neg_data = sample(neg_data, k=len(neg_data))
+
+    # Removal priority for negative observations that are longer than positive observations
+    # max_pos_seq = max([len(x[0]) for x in pos_data])
+    # max_pos_com = max([len(x[2]) for x in pos_data])
+    # clean_neg_data = []
+    # for item in neg_data:
+    #     if len(item[0]) <= max_pos_seq and len(item[2]) <= max_pos_com:
+    #         clean_neg_data.append(item)
+
+    # neg_data = neg_data[:len(pos_data)]  # Cut
 
     # Use num_samples or less, deducting form positive and negative data equally
-    pos_data = sample(pos_data, k=len(pos_data))  # Shuffle positive data
-    pos_data = pos_data[: min(num_samples//2, len(pos_data))]
-    neg_data = neg_data[: min(num_samples//2, len(neg_data))]
+    # pos_data = pos_data[: min(num_samples//2, len(pos_data))]
+    # neg_data = neg_data[: min(num_samples//2, len(neg_data))]
 
-    print("Creating final version of dataset...")
-    input_lists, labels, comment_lists, code_lines = [], [], [], []
-    for item in pos_data:
-        input_lists.append(item[0])
-        labels.append(item[1])
-        comment_lists.append(item[2])
-        code_lines.append(item[3])
-    for item in neg_data:
-        input_lists.append(item[0])
-        labels.append(item[1])
-        comment_lists.append(item[2])
-        code_lines.append(item[3])
+    # print("Creating final version of dataset...")
+    # input_lists, labels, comment_lists, code_lines = [], [], [], []
+    # for item in pos_data:
+    #     input_lists.append(item[0])
+    #     labels.append(item[1])
+    #     comment_lists.append(item[2])
+    #     code_lines.append(item[3])
+    # for item in neg_data:
+    #     input_lists.append(item[0])
+    #     labels.append(item[1])
+    #     comment_lists.append(item[2])
+    #     code_lines.append(item[3])
 
-    return np.array(input_lists), np.array(labels), np.array(comment_lists), np.array(code_lines)
+    return input_lists, labels, comment_lists, code_lines
 
 
-def tokenize(array):
-    vocab = set()
-    for seq in array:
-        for token in seq:
-            vocab.add(token)
-    return sorted(list(vocab)) + ["<unknown>"]
+def combine_data(input_lists, labels, comment_lists, code_lines):
+	combined = []
+	ast_seqs = [tuple(y) for y in input_lists]
+	comments = [tuple(y) for y in comment_lists]
+	for seq, label, comment, code in zip(ast_seqs, labels, comments, code_lines):
+		combined.append((seq, label, comment, code))
+
+	return combined
+
+
+# def tokenize(array):
+#     vocab = set()
+#     for seq in array:
+#         for token in seq:
+#             vocab.add(token)
+#     return sorted(list(vocab)) + ["<unknown>"]
+
+
+def token_integer_mapping(data_seqs):
+	flat_seq = [seq for subseq in data_seqs for seq in subseq]
+	word_c = Counter(flat_seq)
+	# sorting the words from most to least frequent in text occurrence
+	sorted_vocab = sorted(word_c, key=word_c.get, reverse=True)
+	int_to_vocab = {j+1: word for j, word in enumerate(sorted_vocab)}
+	int_to_vocab[0] = '<UNKN/PAD>'
+	vocab_to_int = {word: j for j, word in int_to_vocab.items()}
+
+	return vocab_to_int, int_to_vocab
 
 
 class DataObject:
@@ -223,13 +245,13 @@ def write_to_disk(data_path, dataset):
         pickle.dump(dataset, f)
 
 
-def token_integer_mapping(input_tokens, target_tokens):
-    input_token_index  = dict([(token, i+1) for i, token in enumerate(input_tokens)])
-    target_token_index = dict([(token, i+1) for i, token in enumerate(target_tokens)])
-    reverse_input_token_index  = dict((i, token) for token, i in input_token_index.items())
-    reverse_target_token_index = dict((i, token) for token, i in target_token_index.items())
-
-    return input_token_index, target_token_index, reverse_input_token_index, reverse_target_token_index
+# def token_integer_mapping(input_tokens, target_tokens):
+#     input_token_index  = dict([(token, i+1) for i, token in enumerate(input_tokens)])
+#     target_token_index = dict([(token, i+1) for i, token in enumerate(target_tokens)])
+#     reverse_input_token_index  = dict((i, token) for token, i in input_token_index.items())
+#     reverse_target_token_index = dict((i, token) for token, i in target_token_index.items())
+#
+#     return input_token_index, target_token_index, reverse_input_token_index, reverse_target_token_index
 
 
 def prepare_model_data(input_lists, target_lists, input_token_index, target_token_index,
