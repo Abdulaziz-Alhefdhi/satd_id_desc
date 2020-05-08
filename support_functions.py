@@ -426,9 +426,9 @@ def send_email(title, content="No content!"):
     SUBJECT = title
     TEXT = content
 
-    # Gmail Sign In
-    gmail_sender = 'ahh1427@gmail.com'
-    gmail_passwd = 'abdulazizabdulaziz'
+    # Email Sign In
+    gmail_sender = 'username@email.com'
+    gmail_passwd = 'password'
 
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
