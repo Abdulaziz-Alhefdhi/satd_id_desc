@@ -5,7 +5,7 @@ import random
 from scipy import spatial
 import sys
 from keras.models import Sequential
-from keras.layers import Dense, LSTM, Embedding
+from keras.layers import Dense, LSTM, Embedding, GlobalAveragePooling1D, GlobalMaxPooling1D
 import datetime
 from tqdm import tqdm
 from keras.utils import to_categorical
@@ -85,14 +85,15 @@ def build_model(latent_dim, v_size, num_layers):
     model = Sequential()
     model.add(Embedding(v_size, latent_dim))
     if num_layers == 1:
-        model.add(LSTM(latent_dim))
+        model.add(LSTM(latent_dim, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))
     elif num_layers == 2:
-        model.add(LSTM(latent_dim, return_sequences=True))
-        model.add(LSTM(latent_dim))
+        model.add(LSTM(latent_dim, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))
+        model.add(LSTM(latent_dim, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))
     else:
-        model.add(LSTM(latent_dim*2, return_sequences=True))
-        model.add(LSTM(latent_dim, return_sequences=True))
-        model.add(LSTM(latent_dim//2))
+        model.add(LSTM(latent_dim*2, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))
+        model.add(LSTM(latent_dim, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))
+        model.add(LSTM(latent_dim//2, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))
+    model.add(GlobalAveragePooling1D())
     model.add(Dense(v_size, activation='softmax'))
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
@@ -128,11 +129,11 @@ def train_model(rnn_m, inputs, outputs, int_token_map, model_dir, output_dir, hp
     for e in range(1+le, n_ep+1+le):
         print("Epoch " + str(e) + ":-")
         history = rnn_m.fit(inputs, outputs, verbose=1, batch_size=b_size)
-        with open(output_dir + model_name + '_losses.txt', 'a', encoding='utf-8') as f:
-            f.write(str(history.history['loss'][0]) + '\n')
+        # with open(output_dir + model_name + '_losses.txt', 'a', encoding='utf-8') as f:
+        #     f.write(str(history.history['loss'][0]) + '\n')
         # Save checkpoint, and
         # Print 16 random words and the 5 most similar words to each of them
-        if e % 50 == 0:
+        if e % 1000 == 0:
             rnn_m.save(model_dir + model_name + '_ep' + str(e) + '.h5')
             embeddings = rnn_m.layers[0].get_weights()[0]
             valid_examples, valid_similarities = cosine_similarity(embeddings)

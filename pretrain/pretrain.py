@@ -7,14 +7,16 @@ import pickle
 from keras.models import load_model
 
 
-data_dir = '/home/aziz/experiments/data/td/CT/data_objects/'
-cp_dir = '/home/aziz/experiments/output/td/pretrain/'
+# data_dir = '/home/aziz/experiments/data/td/CT/data_objects/'
+data_dir = '/media/aziz/Data/Aziz/data/td/CT/data_objects/'
+# cp_dir = '/home/aziz/experiments/output/td/pretrain/'
+cp_dir = '/media/aziz/Data/Aziz/trained_models/td/pretrain/'
 output_dir = ''
 max_seq_length = 1000000  # To reduce the huge size of the dataset
-n_layers = 1              # Number of RNN layers
+n_layers = 2              # Number of RNN layers
 latent = 32               # Dimensionality for embedding and model layers
 batch_size = 2048         # How many data points to train in every batch
-epochs = 10000
+epochs = 30000
 
 print("================")
 with open(data_dir+'ast_tokens_to_ints.pkl', 'rb') as f:
@@ -30,9 +32,9 @@ n_samples = len(X)
 print("# data points:", n_samples)
 print("================")
 
-# model = build_model(latent, vocab_size, n_layers)
-last_epoch = 20000
-model = load_model(cp_dir+'dp50311_v27359_1lay_lat32_b2048_ep'+str(last_epoch)+'.h5')
+model = build_model(latent, vocab_size, n_layers)
+last_epoch = 0
+# model = load_model(cp_dir+'dp50311_v27359_1lay_lat32_b2048_ep'+str(last_epoch)+'.h5')
 
 model.summary()
 
