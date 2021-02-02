@@ -1,0 +1,6 @@
+projectKey=non-satd-sonar
+serverUrl=http://localhost:9000
+serverVersion=8.6.0.39681
+dashboardUrl=http://localhost:9000/dashboard?id=non-satd-sonar
+ceTaskId=AXc4y6toc3wq4G1zrR_a
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AXc4y6toc3wq4G1zrR_a
