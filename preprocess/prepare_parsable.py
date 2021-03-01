@@ -1,6 +1,7 @@
 import json
 import re
-
+import os
+import sys
 
 
 def extract_codes_and_comments(data):
@@ -68,14 +69,17 @@ def write_to_file(path, file_name, a_list):
 
 
 
-data_path = "/home/aa043/sea/data/td/ours/v2/CT/"
+data_dir = "/home/aziz/experiments/gpu_data_packup/data/satd/"
+parsable_dir = data_dir + "comgen_bm/parsable/"
+
+# data_dir = "/home/aziz/dsl/gpu/experiments/gpu_data_packup/data/satd/"
 
 # Retrieve data from disk
 print("Extracting data...")
-with open('/home/aa043/sea/data/td/ours/v2/pos.json', 'r') as f:
+with open(data_dir+'pos.json', 'r') as f:
     tds = json.load(f)
 print(len(tds)//2, "TD observations extracted")
-with open('/home/aa043/sea/data/td/ours/v2/neg.json', 'r') as f:
+with open(data_dir+'neg.json', 'r') as f:
     non_tds = json.load(f)
 print(len(non_tds)//2, "non-TD observations extracted")
 
@@ -85,6 +89,7 @@ pos_clean_codes, pos_clean_coms, pos_coms_multiline = extract_codes_and_comments
 print("Processing non-TD data...")
 neg_clean_codes, neg_clean_coms, neg_coms_multiline = extract_codes_and_comments(non_tds)
 # neg_clean_codes, neg_clean_coms, neg_coms_multiline = extract_codes_and_comments(non_tds)
+
 
 print("Creating labels...")
 pos_lbls = []
@@ -100,6 +105,7 @@ all_clean_coms = pos_clean_coms + neg_clean_coms
 all_coms_multiline = pos_coms_multiline + neg_coms_multiline
 all_lbls = pos_lbls + neg_lbls
 
+
 # Prepare for writing multiline comments to disk
 to_write_multi = []
 for comment in all_coms_multiline:
@@ -109,22 +115,24 @@ sliced_codes = [all_clean_codes[i:i+100000] for i in range(0, len(all_clean_code
 
 # Writing to disk
 print("Writing the codes file...")
-write_to_file(data_path, "codes.txt", all_clean_codes)
+write_to_file(parsable_dir, "codes.txt", all_clean_codes)
 print("Writing the comments file...")
-write_to_file(data_path, "comments.txt", all_clean_coms)
+write_to_file(parsable_dir, "comments.txt", all_clean_coms)
 print("Writing the multiline comments file...")
-write_to_file(data_path, "comments_multiline.txt", to_write_multi)
+write_to_file(parsable_dir, "comments_multiline.txt", to_write_multi)
 print("Writing the labels file...")
-write_to_file(data_path, "labels.txt", all_lbls)
+write_to_file(parsable_dir, "labels.txt", all_lbls)
 print("Writing the code file for JavaParser...")
 method_count = 1
 for i, slice in enumerate(sliced_codes, 1):
-    with open(data_path+"parser_processing/"+str(i)+"/Codes"+str(i)+".java", "w", encoding='utf-8') as f:  # write codes file
+    file_path = parsable_dir+"parser_processing/"+str(i)+"/Codes"+str(i)+".java"
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    with open(file_path, "w", encoding='utf-8') as f:  # write codes file
         f.write("/**\n * Dummy JavaDoc\n */\npublic class Codes"+str(i)+" {\n\n")
         for code in slice:
             f.write("/**\n * Dummy JavaDoc\n */\npublic void coverMethod" + str(method_count) + "() {\n\t" + str(code) + "\n}\n\n")
             method_count += 1
         f.write("}\n")
     print(".java file", i, "has been written to disk")
-print(str(method_count - 1) + " conditional statements have been written to file.")
+print(str(method_count - 1) + " conditional statements have been written to disk.")
 

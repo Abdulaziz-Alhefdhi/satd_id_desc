@@ -171,13 +171,15 @@ class DataObject:
         self.labels        = labels
         self.comment_lists = comment_lists
         self.code_lines    = code_lines
-        # self.input_vocab   = input_vocab
-        # self.comment_vocab = comment_vocab
+        self.input_vocab   = input_vocab
+        self.comment_vocab = comment_vocab
 
 
 def data_shapes(dataset):
-    num_encoder_tokens = len(dataset.input_vocab)
-    num_decoder_tokens = len(dataset.comment_vocab)
+    # num_encoder_tokens = len(dataset.input_vocab)
+    # num_decoder_tokens = len(dataset.comment_vocab)
+    num_encoder_tokens = len(tokenize(dataset.input_lists))
+    num_decoder_tokens = len(tokenize(dataset.comment_lists))
     max_encoder_seq_length = max([len(txt) for txt in dataset.input_lists])
     max_decoder_seq_length = max([len(txt) for txt in dataset.comment_lists])
     n_input_samples = len(dataset.input_lists)

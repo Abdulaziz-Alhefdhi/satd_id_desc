@@ -18,9 +18,9 @@ epochs = 40        # Number of epochs to train for.
 num_layers = 1     # Number of model layers
 latent_dim = 1024  # Latent dimensionality of the encoding space.
 
-data_dir = '/home/aziz/experiments/data/td/CT/'
-results_dir = '/home/aziz/experiments/output/td/generate/CT/cv/'
-trained_models_dir = "/home/aziz/experiments/trained_models/td/generate/CT/cv/"
+data_dir = '/home/aziz/experiments/gpu_data_packup/data/satd/comgen_bm/framework_ready/'
+results_dir = '/home/aziz/experiments/gpu_data_packup/output/satd/comgen_bm/'
+trained_models_dir = '/home/aziz/experiments/gpu_data_packup/trained_models/satd/comgen_bm/'
 
 # Get data
 with open(data_dir+'dataset.pkl', 'rb') as f:  # train_set
@@ -32,18 +32,36 @@ with open(data_dir+'tune_val/dataset.pkl', 'rb') as f:  # val_set
 cv_set = positive_only(pos_neg_cv_set)
 tune_set = positive_only(pos_neg_tune_set)
 
+num_encoder_tokens_cv, num_decoder_tokens_cv, max_encoder_seq_length_cv, max_decoder_seq_length_cv, n_input_samples_cv = \
+    data_shapes(cv_set)
+num_encoder_tokens_tune, num_decoder_tokens_tune, max_encoder_seq_length_tune, max_decoder_seq_length_tune, n_input_samples_tune = \
+    data_shapes(tune_set)
+print("================")
+print("CV set info:-")
+shape_info(n_input_samples_cv, num_encoder_tokens_cv, num_decoder_tokens_cv, max_encoder_seq_length_cv, max_decoder_seq_length_cv)
+print("================")
+print("Tune set info:-")
+shape_info(n_input_samples_tune, num_encoder_tokens_tune, num_decoder_tokens_tune, max_encoder_seq_length_tune, max_decoder_seq_length_tune)
+
 print("================")
 print("Batch size:", batch_size)
 print("Number of model layers:", num_layers)
 print("Embedding dimensionality:", latent_dim)
+
+# print("================")
+# print("Real # unique input tokens:", len(set(tokenize(cv_set.input_lists) + tokenize(tune_set.input_lists))))
+# print("Real # unique comment words:", len(set(tokenize(cv_set.comment_lists) + tokenize(tune_set.comment_lists))))
+
+# sys.exit()
 
 name_info = "emb" + str(latent_dim) + "_b" + str(batch_size) + "_" + str(num_layers) + "l"  # Model name to be saved
 # Make train-models directories
 # if not os.path.exists(trained_models_dir+name_info):
     # for i in range(1, 11):
     #     os.makedirs(trained_models_dir+name_info+"/fold"+str(i))
-if not os.path.exists(trained_models_dir):
-    os.makedirs(trained_models_dir)
+
+# if not os.path.exists(trained_models_dir):
+#     os.makedirs(trained_models_dir)
 
 start_time = datetime.datetime.now().replace(microsecond=0)
 print("================")
@@ -98,13 +116,13 @@ for train_index, test_index in kf.split(cv_set.input_lists):
     model_name = "td_gen_cv_" + name_info + "_f" + str(fold)
     model.fit([encoder_input_train, decoder_input_train], decoder_target_train, batch_size=batch_size,
               validation_data=([encoder_input_val, decoder_input_val], decoder_target_val), epochs=epochs)
-    model.save(trained_models_dir + model_name + '.h5')
+    # model.save(trained_models_dir + model_name + '.h5')
     end_time = datetime.datetime.now().replace(microsecond=0)
     print("================")
     print("Training of fold "+str(fold)+" completed at:", end_time)
     print("Training of fold "+str(fold)+" took (h:m:s)", end_time - start_time)
     print("================")
-    send_email(model_name + " TRAINING DONE!")
+    # send_email(model_name + " TRAINING DONE!")
 
     # Validate
     print("================")
@@ -118,7 +136,7 @@ for train_index, test_index in kf.split(cv_set.input_lists):
     bs.append(bleu)
     to_email = "Bleu-1 Score: %.3f" % bleu1 + "\nBleu-2 Score: %.3f" % bleu2 + "\nBleu-3 Score: %.3f" % bleu3 + \
                "\nBleu-4 Score: %.3f" % bleu4 + "\nBleu Score: %.3f" % bleu
-    send_email(model_name + " TESTING DONE!", to_email)
+    # send_email(model_name + " TESTING DONE!", to_email)
 
     clear_session()
     fold += 1

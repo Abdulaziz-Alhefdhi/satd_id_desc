@@ -23,8 +23,9 @@ public class ASTToSBT {
 
     public static void main(String[] args) {
 
-        String data_dir   = "/home/aa043/sea/data/td/ours/v2/CT/parser_processing/9";
-        String write_path = data_dir + "/draft_ast_seqs9.txt";
+        String group_no = "9";
+        String data_dir   = "/home/aa043/sea/gpu/experiments/gpu_data_packup/data/satd/comgen_bm/parsable/parser_processing/"+group_no;
+        String write_path = data_dir + "/draft_ast_seqs"+group_no+".txt";
 
         File projectDir = new File(data_dir);
         //File projectDir = new File("C:\\Users\\ahh14\\OneDrive\\Documents\\UOW\\docgen\\testartifactname\\src\\main\\java\\thisone");
@@ -118,6 +119,10 @@ public class ASTToSBT {
         }).explore(projectDir);
 
 
+        System.out.println("==========================");
+        String lines[] = codeSB.toString().split("\\n");
+        System.out.println("# parsed code fragments: " + lines.length);
+        System.out.println("==========================");
         if (writeToDisk(write_path, codeSB.toString()))
             System.out.println("Code sequences have been written to disk.");
         //if (writeToDisk("/home/aa043/sea/output/method2javadoc/sequence_code-javadoc/aggregated/all_javadocs.txt", commentSB.toString()))
