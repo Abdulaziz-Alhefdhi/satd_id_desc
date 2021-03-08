@@ -13,14 +13,14 @@ from support_functions import DataObject, data_shapes, shape_info, token_integer
 
 
 
-batch_size = 64    # Batch size for training.
-epochs = 40        # Number of epochs to train for.
-num_layers = 1     # Number of model layers
-latent_dim = 1024  # Latent dimensionality of the encoding space.
+batch_size = 90    # Batch size for training.
+epochs = 50        # Number of epochs to train for.
+num_layers = 2     # Number of model layers
+latent_dim = 512  # Latent dimensionality of the encoding space.
 
-data_dir = '/home/aziz/experiments/gpu_data_packup/data/satd/comgen_bm/framework_ready/'
-results_dir = '/home/aziz/experiments/gpu_data_packup/output/satd/comgen_bm/'
-trained_models_dir = '/home/aziz/experiments/gpu_data_packup/trained_models/satd/comgen_bm/'
+data_dir = '/home/aziz/experiments/gpu_data_packup/data/satd/comgen_bm/bm_exp_ready/'
+results_dir = '/home/aziz/experiments/gpu_data_packup/output/satd/bm_exp/'
+trained_models_dir = '/home/aziz/experiments/gpu_data_packup/trained_models/satd/bm_exp/'
 
 # Get data
 with open(data_dir+'dataset.pkl', 'rb') as f:  # train_set

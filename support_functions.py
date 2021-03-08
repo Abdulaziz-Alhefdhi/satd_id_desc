@@ -1,5 +1,5 @@
 import string
-from random import sample
+from random import sample, seed
 import sys
 import numpy as np
 import pickle
@@ -11,7 +11,7 @@ from nltk.translate.bleu_score import corpus_bleu
 from lxml import etree as ET
 from collections import Counter, defaultdict
 import pandas as pd
-
+seed(30)
 
 
 def extract_data(data_path):
@@ -100,22 +100,27 @@ def retrieve_data(data_path, num_samples, max_input_length, max_comment_length):
                 txt = txt.replace(char, " ")
         draft_comment_lists.append(txt.lower().split())
     # Add start and end symbols to target lists
-    for i in range(len(draft_comment_lists)):
-        draft_comment_lists[i] = ["<sos>"] + draft_comment_lists[i] + ["<eos>"]
+    # for i in range(len(draft_comment_lists)):
+    #     draft_comment_lists[i] = ["<sos>"] + draft_comment_lists[i] + ["<eos>"]
 
     # Codes
     draft_code_lines = []
     for item in dataset:
         draft_code_lines.append(item[3])
 
-    # Remove too-long codes and comments
+    # Truncate too-long codes and comments
     input_lists, labels, comment_lists, code_lines = [], [], [], []
     for il, lbl, cl, co in zip(draft_input_lists, draft_labels, draft_comment_lists, draft_code_lines):
-        if len(il) <= max_input_length and len(cl) <= max_comment_length:
-            input_lists.append(il)
-            labels.append(lbl)
-            comment_lists.append(cl)
-            code_lines.append(co)
+        input_lists.append(il[:max_input_length])
+        labels.append(lbl)
+        # Add start and end symbols to target lists
+        comment_lists.append(["<sos>"] + cl[:max_comment_length] + ["<eos>"])
+        code_lines.append(co)
+        # if len(il) <= max_input_length and len(cl) <= max_comment_length:
+        #     input_lists.append(il)
+        #     labels.append(lbl)
+        #     comment_lists.append(cl)
+        #     code_lines.append(co)
 
     # Separate positive from negative
     pos_data, neg_data = [], []
@@ -500,10 +505,10 @@ def calculate_bleu(target_lists, predicted_lists):
         references.append([a_list[1:-1]])
 
     bleu1 = corpus_bleu(references, predicted_lists, weights=(1., 0., 0., 0.))
-    bleu2 = corpus_bleu(references, predicted_lists, weights=(0., 1., 0., 0.))
-    bleu3 = corpus_bleu(references, predicted_lists, weights=(0., 0., 1., 0.))
-    bleu4 = corpus_bleu(references, predicted_lists, weights=(0., 0., 0., 1.))
-    bleu  = corpus_bleu(references, predicted_lists)
+    bleu2 = corpus_bleu(references, predicted_lists, weights=(1/2, 1/2, 0., 0.))
+    bleu3 = corpus_bleu(references, predicted_lists, weights=(1/3, 1/3, 1/3, 0.))
+    bleu4 = corpus_bleu(references, predicted_lists, weights=(1/4, 1/4, 1/4, 1/4))
+    bleu = corpus_bleu(references, predicted_lists)
     print("Bleu-1 Score: %.3f" % bleu1, " Bleu-2 Score: %.3f" % bleu2, " Bleu-3 Score: %.3f" % bleu3, " Bleu-4 Score: %.3f" % bleu4, " Bleu Score: %.3f" % bleu)
 
     return bleu1, bleu2, bleu3, bleu4, bleu
