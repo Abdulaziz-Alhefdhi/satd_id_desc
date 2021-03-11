@@ -9,6 +9,9 @@ from pathlib import Path
 
 # data_path = '/home/aa043/sea/data/td/ours/v2/CT/'  # Path to the data txt files on disk.
 data_dir = '/home/aa043/sea/gpu/experiments/gpu_data_packup/data/satd/comgen_bm/'  # Path to the data txt files on disk.
+cv_folder_name = "framework_ready"
+tune_folder_name = "tune_val"
+parsed_folder = "parsable"
 num_samples = 1000000  # Number of samples to train on.
 # num_samples = 5000  # Number of samples to train on.
 max_input_length = 1500  # Number of largest acceptibale input length
@@ -18,7 +21,7 @@ max_comment_length = 150  # Number of largest acceptibale target length
 
 # Get data
 inputs_array, labels_array, comments_array, codes_array = \
-    retrieve_data(data_dir+'parsable/', num_samples, max_input_length, max_comment_length)
+    retrieve_data(data_dir+parsed_folder+'/', num_samples, max_input_length, max_comment_length)
     # retrieve_data(data_dir, num_samples, max_input_length, max_comment_length)
 
 # Separate tuning set
@@ -51,9 +54,9 @@ shape_info(tune_n_samples, tune_n_encoder_tokens, tune_n_decoder_tokens, tune_ma
 print("================\nWriting framework-ready data to disk...")
 
 # Create Framework-ready data dir
-Path(data_dir+"framework_ready/tune_val").mkdir(parents=True, exist_ok=True)
+Path(data_dir+cv_folder_name+"/"+tune_folder_name).mkdir(parents=True, exist_ok=True)
 # Save data to disk
-write_to_disk(data_dir+"framework_ready/", cv_set)  # cv_set
-write_to_disk(data_dir+"framework_ready/tune_val/", tune_set)  # tune_set
+write_to_disk(data_dir+cv_folder_name+"/", cv_set)  # cv_set
+write_to_disk(data_dir+cv_folder_name+"/"+tune_folder_name+"/", tune_set)  # tune_set
 
 print("Data have been written to disk.")

@@ -1,5 +1,5 @@
 import string
-from random import sample
+from random import sample, seed
 import sys
 import numpy as np
 import pickle
@@ -11,7 +11,7 @@ from nltk.translate.bleu_score import corpus_bleu
 from lxml import etree as ET
 from collections import Counter, defaultdict
 import pandas as pd
-
+seed(30)
 
 
 def extract_data(data_path):
@@ -500,9 +500,9 @@ def calculate_bleu(target_lists, predicted_lists):
         references.append([a_list[1:-1]])
 
     bleu1 = corpus_bleu(references, predicted_lists, weights=(1., 0., 0., 0.))
-    bleu2 = corpus_bleu(references, predicted_lists, weights=(0., 1., 0., 0.))
-    bleu3 = corpus_bleu(references, predicted_lists, weights=(0., 0., 1., 0.))
-    bleu4 = corpus_bleu(references, predicted_lists, weights=(0., 0., 0., 1.))
+    bleu2 = corpus_bleu(references, predicted_lists, weights=(1/2, 1/2, 0., 0.))
+    bleu3 = corpus_bleu(references, predicted_lists, weights=(1/3, 1/3, 1/3, 0.))
+    bleu4 = corpus_bleu(references, predicted_lists, weights=(1/4, 1/4, 1/4, 1/4))
     bleu  = corpus_bleu(references, predicted_lists)
     print("Bleu-1 Score: %.3f" % bleu1, " Bleu-2 Score: %.3f" % bleu2, " Bleu-3 Score: %.3f" % bleu3, " Bleu-4 Score: %.3f" % bleu4, " Bleu Score: %.3f" % bleu)
 
