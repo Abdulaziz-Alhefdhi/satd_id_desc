@@ -17,9 +17,10 @@ batch_size = 64    # Batch size for training.
 epochs = 40        # Number of epochs to train for.
 num_layers = 1     # Number of model layers
 latent_dim = 1024  # Latent dimensionality of the encoding space.
+num_cands = 10      # Number of candidate comments to generate for every testing code
 
 data_dir = '/home/aziz/experiments/gpu_data_packup/data/satd/comgen_bm/framework_ready/'
-results_dir = '/home/aziz/experiments/gpu_data_packup/output/satd/comgen_bm/'
+results_dir = '/home/aziz/experiments/gpu_data_packup/output/satd/beam_exps/beam10_engdict/'
 trained_models_dir = '/home/aziz/experiments/gpu_data_packup/trained_models/satd/comgen_bm/'
 
 # Get data
@@ -47,12 +48,11 @@ print("================")
 print("Batch size:", batch_size)
 print("Number of model layers:", num_layers)
 print("Embedding dimensionality:", latent_dim)
+print("Beam width (k) =", num_cands)
 
 # print("================")
 # print("Real # unique input tokens:", len(set(tokenize(cv_set.input_lists) + tokenize(tune_set.input_lists))))
 # print("Real # unique comment words:", len(set(tokenize(cv_set.comment_lists) + tokenize(tune_set.comment_lists))))
-
-# sys.exit()
 
 name_info = "emb" + str(latent_dim) + "_b" + str(batch_size) + "_" + str(num_layers) + "l"  # Model name to be saved
 # Make train-models directories
@@ -80,13 +80,11 @@ for train_index, test_index in kf.split(cv_set.input_lists):
     x_train = np.concatenate((x_train, tune_set.input_lists))
     y_train = np.concatenate((y_train, tune_set.comment_lists))
     # Tokenization
-    train_input_vocab = tokenize(x_train)
-    train_output_vocab = tokenize(y_train)
-    test_input_vocab = tokenize(x_test)
-    test_output_vocab = tokenize(y_test)
+    input_vocab = tokenize(np.concatenate((x_train, x_test)))
+    output_vocab = tokenize(np.concatenate((y_train, y_test)))
     # Convert tokens to integers since the DL model accepts only integers
     input_token_index, target_token_index, reverse_input_token_index, reverse_target_token_index = \
-        token_integer_mapping(train_input_vocab, train_output_vocab)
+        token_integer_mapping(input_vocab, output_vocab)
     # Prepare model training data
     train_max_encoder_seq_length = max([len(txt) for txt in x_train])
     train_max_decoder_seq_length = max([len(txt) for txt in y_train])
@@ -94,16 +92,16 @@ for train_index, test_index in kf.split(cv_set.input_lists):
         x_train, y_train, input_token_index, target_token_index,
         train_max_encoder_seq_length, train_max_decoder_seq_length, True)
     # Prepare model validation data
-    val_input_data = replace_unseen(test_input_vocab, train_input_vocab, x_test)
-    val_target_data = replace_unseen(test_output_vocab, train_output_vocab, y_test)
+    val_input_data = replace_unseen(input_vocab, input_vocab, x_test)
+    val_target_data = replace_unseen(output_vocab, output_vocab, y_test)
     val_max_encoder_seq_length = max([len(txt) for txt in x_test])
     val_max_decoder_seq_length = max([len(txt) for txt in y_test])
     encoder_input_val, decoder_input_val, decoder_target_val = prepare_model_data(
         val_input_data, val_target_data, input_token_index, target_token_index, val_max_encoder_seq_length,
         val_max_decoder_seq_length, True)
     # Build the model
-    encoder_inputs, decoder_inputs, decoder_outputs = build_generator(latent_dim, len(train_input_vocab),
-                                                                      len(train_output_vocab), num_layers)
+    encoder_inputs, decoder_inputs, decoder_outputs = build_generator(latent_dim, len(input_vocab),
+                                                                      len(output_vocab), num_layers)
     model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
     model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
     model.summary()
@@ -126,26 +124,32 @@ for train_index, test_index in kf.split(cv_set.input_lists):
 
     # Validate
     print("================")
-    predicted_lists = translate_corpus(model, encoder_input_val, y_test, val_max_decoder_seq_length,
-                                       target_token_index, reverse_target_token_index, results_dir, model_name)
+    predicted_lists = translate_corpus(model, encoder_input_val, y_test, val_max_decoder_seq_length, target_token_index,
+                                       reverse_target_token_index, results_dir, model_name, num_cands)
     bleu1, bleu2, bleu3, bleu4, bleu = calculate_bleu(y_test, predicted_lists)
     b1s.append(bleu1)
     b2s.append(bleu2)
     b3s.append(bleu3)
     b4s.append(bleu4)
     bs.append(bleu)
-    to_email = "Bleu-1 Score: %.3f" % bleu1 + "\nBleu-2 Score: %.3f" % bleu2 + "\nBleu-3 Score: %.3f" % bleu3 + \
-               "\nBleu-4 Score: %.3f" % bleu4 + "\nBleu Score: %.3f" % bleu
+    print("================")
+    print("Average BLEU-1 Score:", "%.3f" % (sum(b1s) / len(b1s)))
+    print("Average BLEU-2 Score:", "%.3f" % (sum(b2s) / len(b2s)))
+    print("Average BLEU-3 Score:", "%.3f" % (sum(b3s) / len(b3s)))
+    print("Average BLEU-4 Score:", "%.3f" % (sum(b4s) / len(b4s)))
+    print("Average BLEU Score:  ", "%.3f" % (sum(bs) / len(bs)))
+    # to_email = "Bleu-1 Score: %.3f" % bleu1 + "\nBleu-2 Score: %.3f" % bleu2 + "\nBleu-3 Score: %.3f" % bleu3 + \
+    #            "\nBleu-4 Score: %.3f" % bleu4 + "\nBleu Score: %.3f" % bleu
     # send_email(model_name + " TESTING DONE!", to_email)
 
     clear_session()
     fold += 1
 
 # Show average scores
-print("================")
-print("Average BLEU-1 Score:", "%.3f" % (sum(b1s)/len(b1s)))
-print("Average BLEU-2 Score:", "%.3f" % (sum(b2s)/len(b2s)))
-print("Average BLEU-3 Score:", "%.3f" % (sum(b3s)/len(b3s)))
-print("Average BLEU-4 Score:", "%.3f" % (sum(b4s)/len(b4s)))
-print("Average BLEU Score:  ", "%.3f" % (sum(bs)/len(bs)))
-
+# print("================")
+# print("Average BLEU-1 Score:", "%.3f" % (sum(b1s)/len(b1s)))
+# print("Average BLEU-2 Score:", "%.3f" % (sum(b2s)/len(b2s)))
+# print("Average BLEU-3 Score:", "%.3f" % (sum(b3s)/len(b3s)))
+# print("Average BLEU-4 Score:", "%.3f" % (sum(b4s)/len(b4s)))
+# print("Average BLEU Score:  ", "%.3f" % (sum(bs)/len(bs)))
+#

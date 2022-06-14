@@ -7,10 +7,11 @@ from keras.models import Sequential, Model
 from keras.layers import LSTM, Dense, Embedding, Input, dot, Activation, concatenate, GlobalAveragePooling1D, GlobalMaxPooling1D
 import smtplib
 from tqdm import tqdm
-from nltk.translate.bleu_score import corpus_bleu
+from nltk.translate.bleu_score import corpus_bleu, sentence_bleu
 from lxml import etree as ET
 from collections import Counter, defaultdict
 import pandas as pd
+import beam_search
 seed(30)
 
 
@@ -226,8 +227,10 @@ def write_to_disk(data_path, dataset):
 
 
 def token_integer_mapping(input_tokens, target_tokens):
-    input_token_index  = dict([(token, i+1) for i, token in enumerate(input_tokens)])
-    target_token_index = dict([(token, i+1) for i, token in enumerate(target_tokens)])
+    input_token_index  = dict([(token, i+1) for i, token in enumerate(input_tokens) if token != "<unknown>"])
+    target_token_index = dict([(token, i+1) for i, token in enumerate(target_tokens) if token != "<unknown>"])
+    input_token_index["<unknown>"]  = 0
+    target_token_index["<unknown>"] = 0
     reverse_input_token_index  = dict((i, token) for token, i in input_token_index.items())
     reverse_target_token_index = dict((i, token) for token, i in target_token_index.items())
 
@@ -240,7 +243,7 @@ def prepare_model_data(input_lists, target_lists, input_token_index, target_toke
     encoder_input_data = np.zeros((len(input_lists), max_encoder_seq_length), dtype='int32')
     decoder_input_data = np.zeros((len(target_lists), max_decoder_seq_length), dtype='int32')
     if generation:
-        decoder_target_data = np.zeros((len(target_lists), max_decoder_seq_length, len(target_token_index)+1), dtype='float32')
+        decoder_target_data = np.zeros((len(target_lists), max_decoder_seq_length, len(target_token_index)), dtype='float32')
     else:
         decoder_target_data = np.zeros((len(target_lists), max_decoder_seq_length), dtype='int32')
     # Loop samples
@@ -341,8 +344,8 @@ def build_generator(latent_dim, num_encoder_tokens, num_decoder_tokens, num_laye
         sys.exit("Error: Number of model layers must be 1, 2, or 3")
     encoder_inputs = Input(shape=(None,))
     decoder_inputs = Input(shape=(None,))
-    en_x = Embedding(num_encoder_tokens + 2, latent_dim, mask_zero=True)(encoder_inputs)
-    de_x = Embedding(num_decoder_tokens + 2, latent_dim, mask_zero=True)(decoder_inputs)
+    en_x = Embedding(num_encoder_tokens + 1, latent_dim, mask_zero=True)(encoder_inputs)
+    de_x = Embedding(num_decoder_tokens + 1, latent_dim, mask_zero=True)(decoder_inputs)
     if num_layers == 1:
         encoder_outputs, state_h, state_c = LSTM(latent_dim, return_sequences=True, return_state=True)(en_x)
         decoder_outputs = LSTM(latent_dim, return_sequences=True)(de_x, initial_state=[state_h, state_c])
@@ -364,7 +367,7 @@ def build_generator(latent_dim, num_encoder_tokens, num_decoder_tokens, num_laye
     context = dot([attention, encoder_outputs], axes=[2, 1])
     decoder_combined_context = concatenate([context, decoder_outputs])
     attention_context_output = Dense(latent_dim, activation="tanh")(decoder_combined_context)
-    model_output = Dense(num_decoder_tokens + 1, activation="softmax")(attention_context_output)
+    model_output = Dense(num_decoder_tokens, activation="softmax")(attention_context_output)
 
     return encoder_inputs, decoder_inputs, model_output
 
@@ -424,7 +427,7 @@ def results_baseline(predictions, y_test):
 
 
 def send_email(title, content="No content!"):
-    TO = 'ahh1427@gmail.com'
+    TO = 'username@email.com'
     SUBJECT = title
     TEXT = content
 
@@ -470,27 +473,49 @@ def decode_sequence(input_seq, model, max_decoder_seq_length, target_token_index
     return decoded_sentence
 
 
-def translate_corpus(model, encoder_input_data, comment_lists, max_decoder_seq_length_test, target_token_index, reverse_target_token_index, results_dir, model_name):
-    predicted_lists = []
+def translate_corpus(model, encoder_input_data, comment_lists, max_decoder_seq_length_test, target_token_index,
+                     reverse_target_token_index, results_dir, model_name, cand_num):
+
+    generated_probs = beam_search.generate_probs(model, encoder_input_data, max_decoder_seq_length_test,
+                                                      target_token_index, reverse_target_token_index)
+    gnrtd_cands = [beam_search.cand_gnrtr_beam(test_dp, cand_num, target_token_index) for test_dp in tqdm(generated_probs)]
+    cand_codes = [beam_search.decode_ints(cand, reverse_target_token_index) for cand in gnrtd_cands]
+
     c = 1
-    for seq_index in tqdm(range(len(encoder_input_data))):
-        # Take one sequence (part of the testing set) for trying out decoding.
-        input_seq = encoder_input_data[seq_index:seq_index + 1]
-        decoded_sentence = decode_sequence(
-            input_seq, model, max_decoder_seq_length_test, target_token_index, reverse_target_token_index)
-        predicted_lists.append(decoded_sentence)
-        print_deocded = ''
-        for token in decoded_sentence:
-            print_deocded += token + ' '
-        print_target = ''
-        for i, token in enumerate(comment_lists[seq_index]):
-            if 0 < i and i < len(comment_lists[seq_index]) - 1:  # Don't print "<sos>" and "<eos>"
-                print_target += token + ' '
+    for comment, cand_group in zip(comment_lists, cand_codes):
+        # print('=============')
+        # print('=============')
+        # print('Fixed code:', ' '.join(comment[1:-1]))
         with open(results_dir + model_name + ".txt", "a", encoding='utf-8') as f:
-            f.write(str(c) + '. Target sentence:  ' + print_target + "\n")
-            f.write(str(c) + '. Decoded sentence: ' + print_deocded + "\n-\n")
+            f.write(str(c) + '. Target sentence:  ' + ' '.join(comment[1:-1]) + "\n")
+            for cand in cand_group:
+                f.write(str(c) + '. Decoded sentence: ' + ' '.join(cand[1:-1]) + "\n")
+            f.write("=============\n")
         c += 1
-    return predicted_lists
+
+
+    # predicted_lists = []
+    # c = 1
+    # for seq_index in tqdm(range(len(encoder_input_data))):
+    #     # Take one sequence (part of the testing set) for trying out decoding.
+    #     input_seq = encoder_input_data[seq_index:seq_index + 1]
+    #     decoded_sentence = decode_sequence(
+    #         input_seq, model, max_decoder_seq_length_test, target_token_index, reverse_target_token_index)
+    #     predicted_lists.append(decoded_sentence)
+    #     print_deocded = ''
+    #     for token in decoded_sentence:
+    #         print_deocded += token + ' '
+    #     print_target = ''
+    #     for i, token in enumerate(comment_lists[seq_index]):
+    #         if 0 < i and i < len(comment_lists[seq_index]) - 1:  # Don't print "<sos>" and "<eos>"
+    #             print_target += token + ' '
+    #     with open(results_dir + model_name + ".txt", "a", encoding='utf-8') as f:
+    #         f.write(str(c) + '. Target sentence:  ' + print_target + "\n")
+    #         f.write(str(c) + '. Decoded sentence: ' + print_deocded + "\n-\n")
+    #     c += 1
+
+    return cand_codes
+    # return "dummy"
 
 
 def calculate_bleu(target_lists, predicted_lists):
@@ -498,13 +523,41 @@ def calculate_bleu(target_lists, predicted_lists):
     references = []
     for a_list in target_lists:
         references.append([a_list[1:-1]])
+    hypotheses = []
+    for a_group in predicted_lists:
+        cleaned = [cand[1:-1] for cand in a_group]
+        hypotheses.append(cleaned)
 
-    bleu1 = corpus_bleu(references, predicted_lists, weights=(1., 0., 0., 0.))
-    bleu2 = corpus_bleu(references, predicted_lists, weights=(1/2, 1/2, 0., 0.))
-    bleu3 = corpus_bleu(references, predicted_lists, weights=(1/3, 1/3, 1/3, 0.))
-    bleu4 = corpus_bleu(references, predicted_lists, weights=(1/4, 1/4, 1/4, 1/4))
-    bleu  = corpus_bleu(references, predicted_lists)
-    print("Bleu-1 Score: %.3f" % bleu1, " Bleu-2 Score: %.3f" % bleu2, " Bleu-3 Score: %.3f" % bleu3, " Bleu-4 Score: %.3f" % bleu4, " Bleu Score: %.3f" % bleu)
+    # pick cands with highest bleu-4s
+    highest_cands = []
+    for i, ref in enumerate(references):
+        highest_bleu = 0.
+        for hypo in hypotheses[i]:
+            bleu = sentence_bleu(ref, hypo)
+            if bleu >= highest_bleu:
+                highest_bleu = bleu
+                best_cand = hypo
+        highest_cands.append(best_cand)
+
+    # for i in range(len(references)):
+    #     print(' '.join(references[i][0]))
+    #     print('--')
+    #     print('--')
+    #     for cand in hypotheses[i]:
+    #         print(' '.join(cand))
+    #         print('--')
+    #     print('--')
+    #     print(' '.join(highest_cands[i]))
+    #     print('==========')
+    #     print('==========')
+
+    bleu1 = corpus_bleu(references, highest_cands, weights=(1., 0., 0., 0.))
+    bleu2 = corpus_bleu(references, highest_cands, weights=(1/2, 1/2, 0., 0.))
+    bleu3 = corpus_bleu(references, highest_cands, weights=(1/3, 1/3, 1/3, 0.))
+    bleu4 = corpus_bleu(references, highest_cands, weights=(1/4, 1/4, 1/4, 1/4))
+    bleu  = corpus_bleu(references, highest_cands)
+    print("Bleu-1 Score: %.3f" % bleu1, " Bleu-2 Score: %.3f" % bleu2, " Bleu-3 Score: %.3f" % bleu3,
+          " Bleu-4 Score: %.3f" % bleu4, " Bleu Score: %.3f" % bleu)
 
     return bleu1, bleu2, bleu3, bleu4, bleu
 
@@ -521,6 +574,9 @@ def positive_only(dataset):
             labels.append(lbl)
             comment_lists.append(comment)
             code_lines.append(code)
+
+
+    # tenth = round(len(input_lists) / 10)
 
     input_array   = np.array(input_lists)
     label_array   = np.array(labels)

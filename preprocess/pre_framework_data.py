@@ -5,8 +5,6 @@ from sklearn.model_selection import StratifiedKFold
 from pathlib import Path
 
 
-
-
 # data_path = '/home/aa043/sea/data/td/ours/v2/CT/'  # Path to the data txt files on disk.
 data_dir = '/home/aa043/sea/gpu/experiments/gpu_data_packup/data/satd/comgen_bm/'  # Path to the data txt files on disk.
 cv_folder_name = "framework_ready"
