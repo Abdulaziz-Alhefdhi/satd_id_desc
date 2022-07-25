@@ -1,115 +1,51 @@
 import sys
 sys.path.append('/home/aa043/sea/gpu/experiments/problems/tech_debt/')
-sys.path.append('/home/aa043/sea/gpu/experiments/problems/tech_debt/classify/code2class/')
+# sys.path.append('/home/aziz/experiments/problems/tech_debt/')
 from support_functions import DataObject
 # from utils import build_model, train_model
-from tqdm import tqdm
-from keras.models import load_model
+# from tqdm import tqdm
+# from keras.models import load_model
 import datetime
 from sklearn.model_selection import StratifiedKFold
 import numpy as np
-from keras.models import Sequential
-from keras.layers import Dense, LSTM, Embedding, GlobalAveragePooling1D, GlobalMaxPooling1D
+# from keras.models import Sequential
+# from keras.layers import Dense, LSTM, Embedding, GlobalAveragePooling1D, GlobalMaxPooling1D
 from keras.backend import clear_session
-from cv_utils import retrieve_dataset, encode_integers
+from cv_utils import retrieve_dataset, token_integer_mapping, encode_integers, build_model, results
 
 
-def build_model(latent_dim, v_size, num_layers, pooling=None, drop_prob=0.2):
-    if num_layers not in [1, 2, 3]:
-        sys.exit("Error: Number of model layers must be 1, 2, or 3")
-    new_model = Sequential()
-    new_model.add(Embedding(v_size, latent_dim))
-    if num_layers == 1:
-        if pooling is None:
-            new_model.add(LSTM(latent_dim, dropout=drop_prob, recurrent_dropout=drop_prob))
-        else:
-            new_model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
-    elif num_layers == 2:
-        new_model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
-        if pooling is None:
-            new_model.add(LSTM(latent_dim, dropout=drop_prob, recurrent_dropout=drop_prob))
-        else:
-            new_model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
-    else:
-        new_model.add(LSTM(latent_dim*2, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
-        new_model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
-        if pooling is None:
-            new_model.add(LSTM(latent_dim//2, dropout=drop_prob, recurrent_dropout=drop_prob))
-        else:
-            new_model.add(LSTM(latent_dim//2, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
-    # old_model = load_model('/home/aa043/sea/gpu/experiments/trained_models/td/pretrain/dp50311_v27359_ep15_1lay_lat32_b2048.h5')
-    # new_model = Sequential()
-    # new_model.add(old_model.layers[0])
-    # new_model.add(old_model.layers[1])
-    if pooling is not None:
-        if pooling == 'max':
-            new_model.add(GlobalMaxPooling1D())
-        else:
-            new_model.add(GlobalAveragePooling1D())
-    new_model.add(Dense(1, activation='sigmoid'))
-    new_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-
-    return new_model
-
-
-def results(predictions, y_test):
-    tp, tn, fp, fn = 0, 0, 0, 0
-    for pred, lbl in zip(predictions, y_test):
-        if lbl == 1 and pred[0] == 1:
-            tp += 1
-        if lbl == 0 and pred[0] == 0:
-            tn += 1
-        if lbl == 0 and pred[0] == 1:
-            fp += 1
-        if lbl == 1 and pred[0] == 0:
-            fn += 1
-    print("TPs =", tp, "- TNs =", tn, "- FPs =", fp, "- FNs =", fn, "- Total # of testing samples =", tp + tn + fp + fn)
-    p, r, f1, acc = 0, 0, 0, 0
-    if tp + fp > 0 and tp + fn > 0:
-        p, r = tp / (tp + fp), tp / (tp + fn)
-    elif tp + fp > 0:
-        p = tp / (tp + fp)
-    elif tp + fn > 0:
-        r = tp / (tp + fn)
-    if (p + r) > 0:
-        f1 = 2 * p * r / (p + r)
-    acc = (tp+tn)/(tp+tn+fp+fn)
-    print("Precision =", "%.3f" % p, "- Recall =", "%.3f" % r, "- F1 Score =", "%.3f" % f1, "- Accuracy =", "%.3f" % acc)
-
-    return tp, tn, fp, fn, p, r, f1, acc
-
-
-data_dir = '/home/aa043/sea/gpu/experiments/data/td/CT/data_objects/'
+data_dir = '/home/aa043/sea/data/td/after_major_revision/framework_ready/'
+# data_dir = '/home/aziz/experiments/gpu_data/data/satd/after_major_revision/framework_ready/'
 # cp_dir = '/home/aziz/experiments/trained_models/td/pretrain/'
 # max_seq_length = 1000000  # To reduce the huge size of the dataset
 n_layers = 2              # Number of RNN layers
-latent = 32               # Dimensionality for embedding and model layers
-batch_size = 256         # How many data points to train in every batch
+latent = 8                # Dimensionality for embedding and model layers
+batch_size = 16          # How many data points to train in every batch
 epochs = 20
 pool = 'mean'
 
 print("================\nRetrieving dataset...")
-cv_set, tune_set, tokens_to_ints, ints_to_tokens = retrieve_dataset(data_dir)
-vocab_size = len(tokens_to_ints)
+cv_set, tune_set = retrieve_dataset(data_dir)
+vocab = sorted(set(cv_set.input_vocab+tune_set.input_vocab))
+vocab_size = len(vocab)
+tokens_to_ints, ints_to_tokens = token_integer_mapping(vocab)
 print('================')
-
-
 print("Batch size:", batch_size)
 print("Number of model layers:", n_layers)
 print("Latent dimensionality:", latent)
 print('Pooling:', 'none' if pool is None else pool)
 print('================')
-
 print('Encode tokens to integers and convert to numpy arrays...')
+
 cv_ints = encode_integers(cv_set.input_lists, tokens_to_ints)
 tune_ints = encode_integers(tune_set.input_lists, tokens_to_ints)
-cv_labels = np.array(cv_set.labels)
-tune_labels = np.array(tune_set.labels)
+
+cv_labels = cv_set.labels
+tune_labels = tune_set.labels
 
 start_time = datetime.datetime.now().replace(microsecond=0)
 print("================")
 print("Training started at:", start_time)
-
 # Stratified 10-fold cross-validation
 skf = StratifiedKFold(n_splits=10)  # Number of folds
 fold = 1
@@ -117,6 +53,7 @@ precisions, recalls, f1_scores, accs = [], [], [], []
 for train_index, test_index in skf.split(cv_ints, cv_labels):
     print("================")
     print("Fold " + str(fold) + ":")
+    fold_start_time = datetime.datetime.now().replace(microsecond=0)
     # Split
     X_train, X_test = cv_ints[train_index], cv_ints[test_index]
     y_train, y_test = cv_labels[train_index], cv_labels[test_index]
@@ -160,6 +97,8 @@ for train_index, test_index in skf.split(cv_ints, cv_labels):
     recalls.append(f_rs)
     f1_scores.append(f_f1s)
     accs.append(f_accs)
+    fold_end_time = datetime.datetime.now().replace(microsecond=0)
+    print("Fold {} CV took (h:m:s) {}".format(fold, fold_end_time - fold_start_time))
     fold += 1
     clear_session()
 

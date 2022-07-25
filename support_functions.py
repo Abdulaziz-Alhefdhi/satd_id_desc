@@ -53,7 +53,7 @@ def extract_data(data_path):
     for inp_ln, lbl_ln, com_ln, cod_ln in zip(input_lines, label_lines, comment_lines, code_lines):
         aggregated.append((inp_ln, lbl_ln, com_ln, cod_ln))
     # Remove duplicates
-    aggregated = set(aggregated)
+    aggregated = sorted(set(aggregated))
     # Re-order data (pos before neg)
     dataset = []
     for item in aggregated:
@@ -125,7 +125,7 @@ def retrieve_data(data_path, num_samples, max_input_length, max_comment_length):
         else:
             neg_data.append((il, lbl, cl, co))
 
-    # Clean, shuffle, and cut negative data
+    # Clean, shuffle, and down-sample negative data
     # Lengths as in positive data
     max_pos_seq = max([len(x[0]) for x in pos_data])
     max_pos_com = max([len(x[2]) for x in pos_data])
@@ -133,8 +133,8 @@ def retrieve_data(data_path, num_samples, max_input_length, max_comment_length):
     for item in neg_data:
         if len(item[0]) <= max_pos_seq and len(item[2]) <= max_pos_com:
             clean_neg_data.append(item)
-    neg_data = sample(clean_neg_data, k=len(clean_neg_data))  # Shuffle
-    neg_data = neg_data[:len(pos_data)]  # Cut
+    # Shuffle & down-sample (10% SATD & 90% non-SATD)
+    neg_data = sample(clean_neg_data, k=len(pos_data)*9)
 
     # Use num_samples or less, deducting form positive and negative data equally
     pos_data = sample(pos_data, k=len(pos_data))  # Shuffle positive data

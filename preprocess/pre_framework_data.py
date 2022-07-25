@@ -5,10 +5,9 @@ from sklearn.model_selection import StratifiedKFold
 from pathlib import Path
 
 
-
-
 # data_path = '/home/aa043/sea/data/td/ours/v2/CT/'  # Path to the data txt files on disk.
-data_dir = '/home/aa043/sea/gpu/experiments/gpu_data_packup/data/satd/comgen_bm/'  # Path to the data txt files on disk.
+data_dir = '/home/aa043/sea/gpu/experiments/gpu_data/data/satd/comgen_bm/'  # Path to the data txt files on disk.
+output_dir = '/home/aa043/sea/data/td/after_major_revision/'
 cv_folder_name = "framework_ready"
 tune_folder_name = "tune_val"
 parsed_folder = "parsable"
@@ -51,12 +50,12 @@ print("================\nCV set info:-")
 shape_info(cv_n_samples, cv_n_encoder_tokens, cv_n_decoder_tokens, cv_max_encoder_seq_length, cv_max_decoder_seq_length)
 print("================\nTuning set info:-")
 shape_info(tune_n_samples, tune_n_encoder_tokens, tune_n_decoder_tokens, tune_max_encoder_seq_length, tune_max_decoder_seq_length)
-print("================\nWriting framework-ready data to disk...")
 
+print("================\nWriting framework-ready data to disk...")
 # Create Framework-ready data dir
-Path(data_dir+cv_folder_name+"/"+tune_folder_name).mkdir(parents=True, exist_ok=True)
+Path(output_dir+cv_folder_name+"/"+tune_folder_name).mkdir(parents=True, exist_ok=True)
 # Save data to disk
-write_to_disk(data_dir+cv_folder_name+"/", cv_set)  # cv_set
-write_to_disk(data_dir+cv_folder_name+"/"+tune_folder_name+"/", tune_set)  # tune_set
+write_to_disk(output_dir+cv_folder_name+"/", cv_set)  # cv_set
+write_to_disk(output_dir+cv_folder_name+"/"+tune_folder_name+"/", tune_set)  # tune_set
 
 print("Data have been written to disk.")
