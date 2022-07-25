@@ -2,8 +2,8 @@ from random import seed, sample
 import datetime
 import numpy as np
 import sys
-# sys.path.append('/home/aa043/sea/problems/tech_debt/classify/com2class/')
-sys.path.append('/home/aziz/experiments/problems/tech_debt/classify/com2class/')
+sys.path.append('/home/aa043/sea/problems/tech_debt/classify/com2class/')
+# sys.path.append('/home/aziz/experiments/problems/tech_debt/classify/com2class/')
 from com2class_utils import retrieve_dataset, model_ready_data, build_model, results, dummy_fun
 from keras.backend import clear_session
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
@@ -15,8 +15,8 @@ from sklearn.ensemble import RandomForestClassifier
 
 random_seed = 30
 seed(random_seed)
-# data_dir = '/home/aa043/sea/gpu/experiments/data/td/com2class/data_objects/'
-data_dir = '/home/aziz/experiments/data/td/com2class/data_objects/'
+data_dir = '/home/aa043/sea/gpu_data/data/td/com2class/data_objects/'
+# data_dir = '/home/aziz/experiments/data/td/com2class/data_objects/'
 
 
 # Retrieve dataset from disk
@@ -87,15 +87,23 @@ print('Average F1 score: ',  '%.3f' % (sum(f1s)/len(f1s)))
 
 
 '''
-n_layers = 1      # Number of RNN layers
-latent = 32       # Dimensionality for embedding and model layers
-batch_size = 512  # How many data points to train in every batch
+# n_layers = 1      # Number of RNN layers
+# latent = 32       # Dimensionality for embedding and model layers
+# batch_size = 512  # How many data points to train in every batch
+# epochs = 20
+# class_weight = {1: 0.75, 0: 0.25}
+
+n_layers = 3      # Number of RNN layers
+latent = 128       # Dimensionality for embedding and model layers
+batch_size = 256  # How many data points to train in every batch
+pool = None
 epochs = 20
 class_weight = {1: 0.75, 0: 0.25}
 
 print("Batch size:", batch_size)
 print("Number of model layers:", n_layers)
 print("Latent dimensionality:", latent)
+print('Pooling:', 'none' if pool is None else pool)
 
 # Start training and testing
 start_time = datetime.datetime.now().replace(microsecond=0)
@@ -161,8 +169,7 @@ for i, proj in enumerate(project_list):
     # from collections import Counter
     # print(Counter(y_train))
 
-
-    model = build_model(latent, vocab_size, n_layers)
+    model = build_model(latent, vocab_size, n_layers, pool)
     model.summary()
 
     from collections import Counter

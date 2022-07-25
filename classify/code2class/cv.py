@@ -4,10 +4,10 @@ import datetime
 import pickle
 import sys
 import os
-# sys.path.append('/home/aa043/sea/problems/tech_debt/')
-sys.path.append('/home/aziz/experiments/problems/tech_debt/')
+sys.path.append('/home/aa043/sea/problems/tech_debt/')
+# sys.path.append('/home/aziz/experiments/problems/tech_debt/')
 from support_functions import DataObject, data_shapes, shape_info, token_integer_mapping, \
-    prepare_model_data, replace_unseen, build_classifier, results, send_email, tokenize
+    prepare_model_data, replace_unseen, build_classifier_w_pooling, results, send_email, tokenize
 from sklearn.model_selection import StratifiedKFold
 from keras.callbacks import ModelCheckpoint
 
@@ -19,10 +19,12 @@ latent_dim = 64   # Latent dimensionality of the encoding space (8, 32, 32, 16)
 
 # exp_sets = [(64, 64, 1), (8, 16, 2), (32, 256, 1), (32, 256, 2), (16, 64, 2)]  # (emb, b, l)
 # exp_sets = [(32, 256, 1), (32, 256, 2), (64, 64, 1), (16, 64, 2), (8, 16, 2)]  # (emb, b, l)
-exp_sets = [(1024, 64, 1)]  # (emb, b, l)
+# exp_sets = [(1024, 64, 1)]  # (emb, b, l)
+exp_sets = [(32, 256, 2)]  # (emb, b, l)
 
 # data_dir    = '/home/aa043/sea/gpu/experiments/data/td/CT/'
-data_dir    = '/home/aziz/experiments/data/td/CT/'
+# data_dir    = '/home/aziz/experiments/data/td/CT/'
+data_dir = '/home/aa043/sea/gpu_data/data/td/CT/framework_ready/'
 # results_dir = '/home/aziz/experiments/output/td/classify/code2class/v2/cv/dim64_b64/'
 # trained_models_dir = "/home/aa043/sea/gpu/experiments/trained_models/td/classify/CT/cv/"
 
@@ -110,7 +112,7 @@ for setting in exp_sets:
                 test_model_inputs[i, t] = input_token_index[token]
 
         # Build, train, and test the model
-        model = build_classifier(dim, len(train_vocab), nl)
+        model = build_classifier_w_pooling(dim, len(train_vocab), nl)
         model.summary()
         # Let the model iterate through the entire training data 'epochs' times, testing its performance on the
         # testing data each time
@@ -170,5 +172,5 @@ for setting in exp_sets:
     print("Average Accuracy: ", "%.3f" % (sum(best_accs)/len(best_accs)))
     print("================")
 
-    send_email(name_info + " S10F-CV DONE!")
+    # send_email(name_info + " S10F-CV DONE!")
 

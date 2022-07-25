@@ -3,7 +3,7 @@ from collections import Counter
 import pickle
 import numpy as np
 from keras.models import Sequential
-from keras.layers import Dense, LSTM, Embedding
+from keras.layers import Dense, LSTM, Embedding, GlobalAveragePooling1D, GlobalMaxPooling1D
 import sys
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import SGDClassifier
@@ -191,26 +191,37 @@ def train_classifier(project_list, project_name, tokens_to_ints):
     return clf
 
 
-def build_model(latent_dim, v_size, num_layers):
+def build_model(latent_dim, v_size, num_layers, pooling=None, drop_prob=0.2):
     # print('dropout + recurrent_dropout')
     if num_layers not in [1, 2, 3]:
         sys.exit("Error: Number of model layers must be 1, 2, or 3")
     new_model = Sequential()
     new_model.add(Embedding(v_size, latent_dim, mask_zero=True))
     if num_layers == 1:
-        new_model.add(LSTM(latent_dim))
-        # new_model.add(LSTM(latent_dim, dropout=0.2, recurrent_dropout=0.2))
+        if pooling is None:
+            new_model.add(LSTM(latent_dim, dropout=drop_prob, recurrent_dropout=drop_prob))
+        else:
+            new_model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
     elif num_layers == 2:
-        new_model.add(LSTM(latent_dim, return_sequences=True))
-        new_model.add(LSTM(latent_dim))
+        new_model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+        if pooling is None:
+            new_model.add(LSTM(latent_dim, dropout=drop_prob, recurrent_dropout=drop_prob))
+        else:
+            new_model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
     else:
-        new_model.add(LSTM(latent_dim*2, return_sequences=True))
-        new_model.add(LSTM(latent_dim, return_sequences=True))
-        new_model.add(LSTM(latent_dim//2))
-    # old_model = load_model('/home/aa043/sea/gpu/experiments/trained_models/td/pretrain/dp50311_v27359_ep15_1lay_lat32_b2048.h5')
-    # new_model = Sequential()
-    # new_model.add(old_model.layers[0])
-    # new_model.add(old_model.layers[1])
+        new_model.add(LSTM(latent_dim * 2, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+        new_model.add(LSTM(latent_dim, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+        if pooling is None:
+            new_model.add(LSTM(latent_dim // 2, dropout=drop_prob, recurrent_dropout=drop_prob))
+        else:
+            new_model.add(LSTM(latent_dim // 2, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
+
+    if pooling is not None:
+        if pooling == 'max':
+            new_model.add(GlobalMaxPooling1D())
+        else:
+            new_model.add(GlobalAveragePooling1D())
+
     new_model.add(Dense(1, activation='sigmoid'))
     new_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 

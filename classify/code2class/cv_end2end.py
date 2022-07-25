@@ -1,6 +1,8 @@
 import sys
-sys.path.append('/home/aa043/sea/gpu/experiments/problems/tech_debt/')
-sys.path.append('/home/aa043/sea/gpu/experiments/problems/tech_debt/classify/code2class/')
+# sys.path.append('/home/aa043/sea/gpu/experiments/problems/tech_debt/')
+# sys.path.append('/home/aa043/sea/gpu/experiments/problems/tech_debt/classify/code2class/')
+sys.path.append('/home/aa043/sea/problems/tech_debt/')
+sys.path.append('/home/aa043/sea/problems/tech_debt/classify/code2class/')
 from support_functions import DataObject
 # from utils import build_model, train_model
 from tqdm import tqdm
@@ -18,7 +20,7 @@ def build_model(latent_dim, v_size, num_layers, pooling=None, drop_prob=0.2):
     if num_layers not in [1, 2, 3]:
         sys.exit("Error: Number of model layers must be 1, 2, or 3")
     new_model = Sequential()
-    new_model.add(Embedding(v_size, latent_dim))
+    new_model.add(Embedding(v_size, latent_dim, mask_zero=True))
     if num_layers == 1:
         if pooling is None:
             new_model.add(LSTM(latent_dim, dropout=drop_prob, recurrent_dropout=drop_prob))
@@ -38,9 +40,14 @@ def build_model(latent_dim, v_size, num_layers, pooling=None, drop_prob=0.2):
         else:
             new_model.add(LSTM(latent_dim//2, return_sequences=True, dropout=drop_prob, recurrent_dropout=drop_prob))
     # old_model = load_model('/home/aa043/sea/gpu/experiments/trained_models/td/pretrain/dp50311_v27359_ep15_1lay_lat32_b2048.h5')
+    # old_model = load_model('/home/aa043/sea/gpu_data/trained_models/td/pretrain/dp50311_v27359_'
+    #                        + str(num_layers) + 'lay_lat' + str(latent_dim) + '_b2048_ep30000.h5')
+    #
     # new_model = Sequential()
     # new_model.add(old_model.layers[0])
     # new_model.add(old_model.layers[1])
+    # new_model.add(old_model.layers[2])
+
     if pooling is not None:
         if pooling == 'max':
             new_model.add(GlobalMaxPooling1D())
@@ -79,14 +86,15 @@ def results(predictions, y_test):
     return tp, tn, fp, fn, p, r, f1, acc
 
 
-data_dir = '/home/aa043/sea/gpu/experiments/data/td/CT/data_objects/'
+# data_dir = '/home/aa043/sea/gpu/experiments/data/td/CT/data_objects/'
+data_dir = '/home/aa043/sea/gpu_data/data/td/CT/data_objects/'
 # cp_dir = '/home/aziz/experiments/trained_models/td/pretrain/'
 # max_seq_length = 1000000  # To reduce the huge size of the dataset
-n_layers = 2              # Number of RNN layers
+n_layers = 1              # Number of RNN layers
 latent = 32               # Dimensionality for embedding and model layers
 batch_size = 256         # How many data points to train in every batch
 epochs = 20
-pool = 'mean'
+pool = None
 
 print("================\nRetrieving dataset...")
 cv_set, tune_set, tokens_to_ints, ints_to_tokens = retrieve_dataset(data_dir)

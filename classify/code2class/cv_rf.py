@@ -6,14 +6,18 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import svm
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import SGDClassifier
 
 
-data_dir = '/home/aa043/sea/gpu/experiments/data/td/CT/data_objects/'
-cp_num = 21500
-cp_path = '/home/aa043/sea/gpu/experiments/trained_models/td/pretrain/dp50311_v27359_1lay_lat32_b2048_ep' \
+# data_dir = '/home/aa043/sea/gpu_data/data/td/CT/data_objects/'
+data_dir = '/home/aa043/sea/gpu_data/data/td/CT/data_objects/'
+# cp_num = 21500
+cp_num = 30000
+# cp_path = '/home/aa043/sea/gpu/experiments/trained_models/td/pretrain/dp50311_v27359_1lay_lat32_b2048_ep' \
+#           + str(cp_num) + '.h5'
+cp_path = '/home/aa043/sea/trained_models/td/pretrain/dp50311_v27359_1lay_lat32_b2048/dp50311_v27359_1lay_lat32_b2048_ep' \
           + str(cp_num) + '.h5'
-
 
 print("================\nRetrieving dataset...")
 cv_set, tune_set, tokens_to_ints, ints_to_tokens = retrieve_dataset(data_dir)
@@ -50,13 +54,15 @@ for train_index, test_index in skf.split(cv_features, cv_labels):
     y_train = np.concatenate((y_train, tune_labels))
 
     # Build, train, and test the model
-    clf = RandomForestClassifier(n_estimators=100, max_depth=2, random_state=0).fit(X_train, y_train)
+    # clf = RandomForestClassifier(n_estimators=100, max_depth=2, random_state=0).fit(X_train, y_train)
     # clf = RandomForestClassifier(n_estimators=100).fit(X_train, y_train)
     # clf = RandomForestClassifier().fit(X_train, y_train)
     # clf = MultinomialNB().fit(X_train, y_train)
-    # clf = svm.LinearSVC().fit(X_train, y_train)
+    clf = svm.LinearSVC().fit(X_train, y_train)
     # clf = SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=5, tol=None).fit(X_train, y_train)
     # clf = SGDClassifier().fit(X_train, y_train)
+    # clf = DecisionTreeClassifier(random_state=0, max_depth=2).fit(X_train, y_train)
+
     # print(clf.feature_importances_.argsort())
     predictions = clf.predict(X_test)
     tp, tn, fp, fn, p, r, f1, acc = results(predictions, y_test)  # Calculate scores

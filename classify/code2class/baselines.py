@@ -5,14 +5,20 @@ import datetime
 from support_functions import DataObject, data_shapes, shape_info, results_baseline, dummy_fun
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.model_selection import StratifiedKFold
+
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import SGDClassifier
 from sklearn import svm
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+
 # from sklearn import metrics
 # import pandas as pd
 
-sys.path.append('/home/aa043/sea/problems/tech_debt/')
-data_dir    = '/home/aa043/sea/gpu/experiments/data/td/CT/'
+# sys.path.append('/home/aa043/sea/problems/tech_debt/')
+# data_dir = '/home/aa043/sea/gpu/experiments/data/td/CT/'
+data_dir = '/home/aa043/sea/gpu_data/data/td/CT/framework_ready/'
 
 
 # Get data
@@ -51,15 +57,22 @@ for train_index, test_index in skf.split(cv_set.input_lists, cv_set.labels):
     # Feature extraction
     bow = CountVectorizer(analyzer='word', tokenizer=dummy_fun, preprocessor=dummy_fun, token_pattern=None)
     X_train = bow.fit_transform(X_train)
-    # tfidf = TfidfTransformer()
-    # X_train = tfidf.fit_transform(X_train)
+    tfidf = TfidfTransformer()
+    X_train = tfidf.fit_transform(X_train)
     X_test = bow.transform(X_test)
-    # X_test = tfidf.transform(X_test)
+    X_test = tfidf.transform(X_test)
 
     # Model training
-    # clf = MultinomialNB().fit(X_train, y_train)
+    clf = MultinomialNB().fit(X_train, y_train)
     # clf = SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=5, tol=None).fit(X_train, y_train)
-    clf = svm.LinearSVC().fit(X_train, y_train)
+    # clf = svm.LinearSVC().fit(X_train, y_train)
+
+    # clf = RandomForestClassifier(n_estimators=100, max_depth=2, random_state=0).fit(X_train, y_train)
+    # clf = RandomForestClassifier(n_estimators=100).fit(X_train, y_train)
+    # clf = RandomForestClassifier().fit(X_train, y_train)
+    # clf = DecisionTreeClassifier(random_state=0, max_depth=2).fit(X_train, y_train)
+    # clf = DecisionTreeClassifier(random_state=0).fit(X_train, y_train)
+    # clf = DecisionTreeClassifier().fit(X_train, y_train)
 
     # Model testing
     predictions = clf.predict(X_test)

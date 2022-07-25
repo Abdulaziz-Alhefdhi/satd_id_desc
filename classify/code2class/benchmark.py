@@ -2,10 +2,15 @@ import pandas as pd
 from sklearn.model_selection import StratifiedKFold
 import datetime
 import numpy as np
+
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import svm
 from sklearn.linear_model import SGDClassifier
+# import sys
+# sys.path.append('/home/aa043/sea/problems/tech_debt/')
 from support_functions import results_baseline
 
 
@@ -37,9 +42,14 @@ for train_index, test_index in skf.split(X_cv, y_cv):
     y_train = np.concatenate((y_train, y_tune))
 
     # Model training
-    clf = RandomForestClassifier(n_estimators=100, max_depth=2, random_state=0).fit(X_train, y_train)
+    # clf = RandomForestClassifier(n_estimators=100, max_depth=2, random_state=0).fit(X_train, y_train)
     # clf = RandomForestClassifier(n_estimators=100).fit(X_train, y_train)
     # clf = RandomForestClassifier().fit(X_train, y_train)
+
+    clf = DecisionTreeClassifier(random_state=0, max_depth=2).fit(X_train, y_train)
+    # clf = DecisionTreeClassifier(random_state=0).fit(X_train, y_train)
+    # clf = DecisionTreeClassifier().fit(X_train, y_train)
+
     # clf = MultinomialNB().fit(X_train, y_train)
     # clf = svm.LinearSVC().fit(X_train, y_train)
     # clf = SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=5, tol=None).fit(X_train, y_train)
